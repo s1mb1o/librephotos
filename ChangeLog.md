@@ -2,6 +2,8 @@
 
 ## 2026-11-02 — Persistent MCP HTTP deployment
 
+Deployed application and MCP images from revision `c7c165ac849c` on docker-srv. Preserved 32,166 photos and all 66 original catalog and queue tables. Verified live API keys, persistent-token revocation, semantic search, similarity, previews, people, jobs, and the API Keys browser interface.
+
 Added persistent MCP HTTP bearer tokens with verifier-only storage, immediate revocation, per-account keys, and a LAN deployment service. Preserved the deployed model-settings Test action.
 
 ## 2026-11-02 — MCP adapter
