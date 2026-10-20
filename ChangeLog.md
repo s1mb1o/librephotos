@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-02 — MCP adapter
+
+Added a separate MCP service with nine read tools, stdio, authenticated Streamable HTTP, per-subject API-key mappings, and optional metadata, album, scan, and caption tools. Added bounded automation REST endpoints. Added a non-root Docker image and deployment documentation.
+
 ## 2026-11-02 — Permanent API keys
 
 - Keep standard HTTP header names outside the JSON snake_case guard. Preserve JSON and query parameter checks.

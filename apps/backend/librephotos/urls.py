@@ -68,6 +68,7 @@ from api.views import (
     gallery,
     geocode,
     health,
+    integration,
     jobs,
     library_folders,
     library_shares,
@@ -423,6 +424,25 @@ urlpatterns = [
         r"^media/(?P<path>.*)/(?P<fname>.*)",
         media.UnifiedMediaAccessView.as_view(),
         name="media",
+    ),
+    path(
+        "api/integrations/search/",
+        integration.IntegrationSearchView.as_view({"get": "list"}),
+    ),
+    path(
+        "api/integrations/photos/<uuid:photo_id>/",
+        integration.IntegrationPhotoView.as_view({"get": "retrieve"}),
+    ),
+    path(
+        "api/integrations/photos/<uuid:photo_id>/similar/",
+        integration.IntegrationSimilarView.as_view(),
+    ),
+    path(
+        "api/integrations/albums/<int:album_id>/photos/",
+        integration.IntegrationAlbumView.as_view(),
+    ),
+    path(
+        "api/integrations/jobs/<uuid:job_id>/", integration.IntegrationJobView.as_view()
     ),
     # Ahead of the router: its api/photos/<pk>/ route would take "no-album",
     # "public", "date-summary", "map-points", "in-bounds", "reapply-date-rules",

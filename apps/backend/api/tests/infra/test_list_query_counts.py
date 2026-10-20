@@ -311,6 +311,7 @@ def _gallery_photo(
 # Every measured list route: the exact normalised route the walker reports,
 # and one fixture per kind of requester whose response differs.
 LIST_ROUTE_FIXTURES: dict[str, tuple[ListFixture, ...]] = {
+    "api/integrations/search/": (ListFixture(lambda owner, index: _tile_photo(owner)),),
     "api/auth/keys/": (ListFixture(lambda owner, index: create_test_api_key(owner)),),
     "api/user/": (
         ListFixture(_public_user, requester="admin"),

@@ -650,3 +650,23 @@ Whenever both `userName` and `userPass` are set, the entrypoint runs `createadmi
 - `adminEmail` is only applied when the account is first created; on later starts `createadmin` ignores it (and says so in the log when it differs), so the address you set in the UI stays. Releases up to 1.3.0 had the single-container image write `adminEmail` to the account on every start, clearing the address when `adminEmail` was blank.
 
 To stop the password from being reset, clear `userPass` (or `userName`): the entrypoint then skips `createadmin`. Releases up to 1.3.0 still ran it with only `userName` set, and it aborted on each start with "Admin password cannot be empty".
+
+## MCP adapter
+
+<Since version="1.6.0" />
+
+These variables configure the separate MCP service. They do not configure Django.
+See [MCP clients](../user-guide/mcp.md) for authentication and deployment examples.
+
+| Variable | Purpose |
+| --- | --- |
+| `LIBREPHOTOS_URL` | LibrePhotos REST and media base URL. Use HTTPS outside a trusted network. |
+| `LIBREPHOTOS_API_KEY_FILE` | Owner-only API-key file for local stdio. |
+| `LIBREPHOTOS_API_KEY` | Alternative API key for local stdio. Prefer the file. |
+| `LIBREPHOTOS_MCP_ISSUER` | Exact HTTPS OAuth issuer for shared HTTP. |
+| `LIBREPHOTOS_MCP_JWKS_URL` | HTTPS signing-key discovery URL. |
+| `LIBREPHOTOS_MCP_RESOURCE_URL` | Public HTTPS MCP resource URL and token audience. |
+| `LIBREPHOTOS_MCP_PRINCIPALS_FILE` | Owner-only subject-to-API-key mapping inside the service. |
+| `LIBREPHOTOS_MCP_PRINCIPALS_PATH` | Host mapping-file path for the MCP compose bind mount. |
+| `LIBREPHOTOS_MCP_ENABLE_WRITES` | Register write tools when `true`. Default: `false`. |
+| `LIBREPHOTOS_NETWORK` | Existing Docker network for the MCP compose service. Default: `librephotos_default`. |

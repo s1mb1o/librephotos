@@ -52,6 +52,7 @@ ENTRYPOINT_SOURCE = BACKEND_ENTRYPOINT.relative_to(REPO_ROOT).as_posix()
 
 # Dockerfiles with a CMD/ENTRYPOINT that run no backend, with the reason.
 NO_BACKEND_IMAGES = {
+    "deploy/docker/mcp/Dockerfile": "standalone REST adapter; does not run Django",
     "deploy/docker/frontend/Dockerfile": "static file server for the web app build",
     "deploy/docker/frontend/Dockerfile.dev": "Vite dev server, with its own entrypoint",
     "deploy/docker/proxy/Dockerfile": "nginx",

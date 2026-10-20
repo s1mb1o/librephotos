@@ -1,0 +1,476 @@
+{
+  "metadata_write": 200,
+  "album_add": 200,
+  "search": {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+      {
+        "id": "e656f09d-b83b-4ce7-b8f7-c3cadfa170ab",
+        "image_hash": "1808877e826cce03ed6fd8083764dd071",
+        "dominantColor": "",
+        "url": "1808877e826cce03ed6fd8083764dd071",
+        "location": "",
+        "date": "",
+        "birthTime": "",
+        "aspectRatio": 1.0,
+        "type": "image",
+        "video_length": "",
+        "is_hdr": false,
+        "animated_preview": false,
+        "video_poster": false,
+        "person_video_time": null,
+        "rating": 0,
+        "owner": {
+          "id": 1,
+          "username": "wesley7815222aa3",
+          "first_name": "Jose",
+          "last_name": "Chung"
+        },
+        "exif_gps_lat": null,
+        "exif_gps_lon": null,
+        "removed": false,
+        "in_trashcan": false,
+        "archived": false,
+        "trashed_at": null,
+        "stacks": null,
+        "has_raw_variant": false,
+        "local_orientation": 1,
+        "projection_type": null
+      }
+    ],
+    "page": 1,
+    "page_size": 25,
+    "num_pages": 1
+  },
+  "people": {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+      {
+        "name": "Private Person",
+        "face_url": "/media/test.jpg",
+        "face_count": 0,
+        "face_photo_url": "1808877e826cce03ed6fd8083764dd071",
+        "video": false,
+        "id": 1,
+        "group_ids": [],
+        "birth_date": null
+      }
+    ],
+    "page": 1,
+    "page_size": 25,
+    "num_pages": 1
+  },
+  "albums": {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+      {
+        "id": 1,
+        "cover_photo": {
+          "image_hash": "1808877e826cce03ed6fd8083764dd071",
+          "rating": 0,
+          "hidden": false,
+          "exif_timestamp": null,
+          "public": false,
+          "video": false
+        },
+        "created_on": "2026-11-01T23:16:07.239030Z",
+        "favorited": false,
+        "locked": false,
+        "title": "Contract album",
+        "shared_to": [],
+        "owner": {
+          "id": 1,
+          "username": "wesley7815222aa3",
+          "first_name": "Jose",
+          "last_name": "Chung"
+        },
+        "photo_count": 1,
+        "first_photo_date": null,
+        "public": false,
+        "public_slug": "",
+        "public_expires_at": null,
+        "public_sharing_options": null,
+        "collection_ids": [],
+        "my_role": "owner"
+      }
+    ],
+    "page": 1,
+    "page_size": 25,
+    "num_pages": 1
+  },
+  "album": {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+      {
+        "id": "e656f09d-b83b-4ce7-b8f7-c3cadfa170ab",
+        "image_hash": "1808877e826cce03ed6fd8083764dd071",
+        "dominantColor": "",
+        "url": "1808877e826cce03ed6fd8083764dd071",
+        "location": "",
+        "date": "",
+        "birthTime": "",
+        "aspectRatio": 1.0,
+        "type": "image",
+        "video_length": "",
+        "is_hdr": false,
+        "animated_preview": false,
+        "video_poster": false,
+        "person_video_time": null,
+        "rating": 0,
+        "owner": {
+          "id": 1,
+          "username": "wesley7815222aa3",
+          "first_name": "Jose",
+          "last_name": "Chung"
+        },
+        "exif_gps_lat": null,
+        "exif_gps_lon": null,
+        "removed": false,
+        "in_trashcan": false,
+        "archived": false,
+        "trashed_at": null,
+        "stacks": null,
+        "has_raw_variant": false,
+        "local_orientation": 1,
+        "projection_type": null
+      }
+    ],
+    "page": 1,
+    "page_size": 25,
+    "num_pages": 1,
+    "album": {
+      "id": 1,
+      "title": "Contract album"
+    }
+  },
+  "job": {
+    "job_id": "321172d4-a490-4538-9cc8-5f035fee571b",
+    "finished": true,
+    "failed": true,
+    "cancelled": false,
+    "progress_current": 0,
+    "progress_target": 0,
+    "progress_step": null,
+    "started_at": null,
+    "finished_at": null,
+    "result": {
+      "errors": [
+        "Cannot read /volume1/Family Photos/a.jpg"
+      ],
+      "error_count": 1
+    }
+  },
+  "content_md5": "1808877e826cce03ed6fd8083764dd07",
+  "exists": {
+    "exists": true,
+    "photo_id": "e656f09d-b83b-4ce7-b8f7-c3cadfa170ab"
+  },
+  "preview": {
+    "mime_type": "image/webp",
+    "data": "UklGRjoAAABXRUJQVlA4IC4AAACQAQCdASoIAAgAAUAmJaACdLoAA5gA/vtV4/+lwf/S4P/pcH/pcH8bss4bpAAA"
+  },
+  "photo": {
+    "id": "e656f09d-b83b-4ce7-b8f7-c3cadfa170ab",
+    "image_hash": "1808877e826cce03ed6fd8083764dd071",
+    "exif_timestamp": null,
+    "people": [
+      {
+        "name": "Private Person",
+        "face_id": 1
+      }
+    ],
+    "rating": 0,
+    "width": null,
+    "height": null,
+    "video": false,
+    "square_thumbnail_url": "/media/square_thumbnails/1808877e826cce03ed6fd8083764dd071.webp",
+    "caption": "A blue square",
+    "album_refs": [
+      {
+        "id": 1,
+        "title": "Contract album"
+      }
+    ]
+  },
+  "foreign_album_add": 400,
+  "album_remove": 200,
+  "video_search": {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+      {
+        "id": "336f1d4a-379a-408b-ab1a-00a511adecfc",
+        "image_hash": "59cb91f52797a33e89aa297f5f418d191",
+        "dominantColor": "",
+        "url": "59cb91f52797a33e89aa297f5f418d191",
+        "location": "",
+        "date": "",
+        "birthTime": "",
+        "aspectRatio": 1.0,
+        "type": "video",
+        "video_length": "",
+        "is_hdr": false,
+        "animated_preview": true,
+        "video_poster": false,
+        "person_video_time": null,
+        "rating": 0,
+        "owner": {
+          "id": 1,
+          "username": "wesley7815222aa3",
+          "first_name": "Jose",
+          "last_name": "Chung"
+        },
+        "exif_gps_lat": null,
+        "exif_gps_lon": null,
+        "removed": false,
+        "in_trashcan": false,
+        "archived": false,
+        "trashed_at": null,
+        "stacks": null,
+        "has_raw_variant": false,
+        "local_orientation": 1,
+        "projection_type": null
+      }
+    ],
+    "page": 1,
+    "page_size": 25,
+    "num_pages": 1
+  },
+  "video_photo": {
+    "id": "336f1d4a-379a-408b-ab1a-00a511adecfc",
+    "image_hash": "59cb91f52797a33e89aa297f5f418d191",
+    "exif_timestamp": null,
+    "people": [],
+    "rating": 0,
+    "width": 0,
+    "height": 0,
+    "video": true,
+    "square_thumbnail_url": "/media/square_thumbnails/59cb91f52797a33e89aa297f5f418d191.mp4",
+    "caption": "",
+    "album_refs": []
+  },
+  "video_preview": {
+    "mime_type": "image/webp",
+    "data": "UklGRjoAAABXRUJQVlA4IC4AAACQAQCdASoIAAgAAUAmJaACdLoAA5gA/vtV4/+lwf/S4P/pcH/pcH8bss4bpAAA"
+  },
+  "scan_job": {
+    "status": true,
+    "job_id": "9f77abf6-8fc2-4d51-bd73-16eaf670fc9a",
+    "job_ids": [
+      "9f77abf6-8fc2-4d51-bd73-16eaf670fc9a"
+    ]
+  },
+  "shared_photo_hidden": {
+    "id": "e656f09d-b83b-4ce7-b8f7-c3cadfa170ab",
+    "image_hash": "1808877e826cce03ed6fd8083764dd071",
+    "exif_timestamp": null,
+    "people": [],
+    "rating": 0,
+    "width": null,
+    "height": null,
+    "video": false,
+    "square_thumbnail_url": "/media/square_thumbnails/1808877e826cce03ed6fd8083764dd071.webp",
+    "caption": "",
+    "album_refs": null
+  },
+  "shared_photo_caption": {
+    "id": "e656f09d-b83b-4ce7-b8f7-c3cadfa170ab",
+    "image_hash": "1808877e826cce03ed6fd8083764dd071",
+    "exif_timestamp": null,
+    "people": [],
+    "rating": 0,
+    "width": null,
+    "height": null,
+    "video": false,
+    "square_thumbnail_url": "/media/square_thumbnails/1808877e826cce03ed6fd8083764dd071.webp",
+    "caption": "A blue square",
+    "album_refs": null
+  },
+  "shared_preview": {
+    "mime_type": "image/webp",
+    "data": "UklGRjoAAABXRUJQVlA4IC4AAACQAQCdASoIAAgAAUAmJaACdLoAA5gA/vtV4/+lwf/S4P/pcH/pcH8bss4bpAAA"
+  },
+  "member_photo": {
+    "id": "e656f09d-b83b-4ce7-b8f7-c3cadfa170ab",
+    "image_hash": "1808877e826cce03ed6fd8083764dd071",
+    "exif_timestamp": null,
+    "people": [],
+    "rating": 0,
+    "width": null,
+    "height": null,
+    "video": false,
+    "square_thumbnail_url": "/media/square_thumbnails/1808877e826cce03ed6fd8083764dd071.webp",
+    "caption": "",
+    "album_refs": null
+  },
+  "member_album": {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+      {
+        "id": "e656f09d-b83b-4ce7-b8f7-c3cadfa170ab",
+        "image_hash": "1808877e826cce03ed6fd8083764dd071",
+        "dominantColor": "",
+        "url": "1808877e826cce03ed6fd8083764dd071",
+        "location": "",
+        "date": "",
+        "birthTime": "",
+        "aspectRatio": 1.0,
+        "type": "image",
+        "video_length": "",
+        "is_hdr": false,
+        "animated_preview": false,
+        "video_poster": false,
+        "person_video_time": null,
+        "rating": 0,
+        "owner": {
+          "id": 1,
+          "username": "wesley7815222aa3",
+          "first_name": "Jose",
+          "last_name": "Chung"
+        },
+        "exif_gps_lat": null,
+        "exif_gps_lon": null,
+        "removed": false,
+        "in_trashcan": false,
+        "archived": false,
+        "trashed_at": null,
+        "stacks": null,
+        "has_raw_variant": false,
+        "local_orientation": 1,
+        "projection_type": null
+      }
+    ],
+    "page": 1,
+    "page_size": 25,
+    "num_pages": 1,
+    "album": {
+      "id": 1,
+      "title": "Contract album"
+    }
+  },
+  "person_photo": {
+    "id": "e656f09d-b83b-4ce7-b8f7-c3cadfa170ab",
+    "image_hash": "1808877e826cce03ed6fd8083764dd071",
+    "exif_timestamp": null,
+    "people": [],
+    "rating": 0,
+    "width": null,
+    "height": null,
+    "video": false,
+    "square_thumbnail_url": "/media/square_thumbnails/1808877e826cce03ed6fd8083764dd071.webp",
+    "caption": "",
+    "album_refs": null
+  },
+  "contributor_photo": {
+    "id": "7d950956-ec62-4a97-81a9-360b9a554d68",
+    "image_hash": "00de7f0ec1e299809f23253fa006394a3",
+    "exif_timestamp": null,
+    "people": [],
+    "rating": 0,
+    "width": 0,
+    "height": 0,
+    "video": false,
+    "square_thumbnail_url": "/media/square_thumbnails/00de7f0ec1e299809f23253fa006394a3.webp",
+    "caption": "",
+    "album_refs": null
+  },
+  "contributor_album": {
+    "count": 2,
+    "next": null,
+    "previous": null,
+    "results": [
+      {
+        "id": "7d950956-ec62-4a97-81a9-360b9a554d68",
+        "image_hash": "00de7f0ec1e299809f23253fa006394a3",
+        "dominantColor": "",
+        "url": "00de7f0ec1e299809f23253fa006394a3",
+        "location": "",
+        "date": "",
+        "birthTime": "",
+        "aspectRatio": 1.0,
+        "type": "image",
+        "video_length": "",
+        "is_hdr": false,
+        "animated_preview": false,
+        "video_poster": false,
+        "person_video_time": null,
+        "rating": 0,
+        "owner": {
+          "id": 3,
+          "username": "wolfenathan358e817e",
+          "first_name": "Jeffrey",
+          "last_name": "Martin"
+        },
+        "exif_gps_lat": null,
+        "exif_gps_lon": null,
+        "removed": false,
+        "in_trashcan": false,
+        "archived": false,
+        "trashed_at": null,
+        "stacks": null,
+        "has_raw_variant": false,
+        "local_orientation": 1,
+        "projection_type": null
+      },
+      {
+        "id": "e656f09d-b83b-4ce7-b8f7-c3cadfa170ab",
+        "image_hash": "1808877e826cce03ed6fd8083764dd071",
+        "dominantColor": "",
+        "url": "1808877e826cce03ed6fd8083764dd071",
+        "location": "",
+        "date": "",
+        "birthTime": "",
+        "aspectRatio": 1.0,
+        "type": "image",
+        "video_length": "",
+        "is_hdr": false,
+        "animated_preview": false,
+        "video_poster": false,
+        "person_video_time": null,
+        "rating": 0,
+        "owner": {
+          "id": 1,
+          "username": "wesley7815222aa3",
+          "first_name": "Jose",
+          "last_name": "Chung"
+        },
+        "exif_gps_lat": null,
+        "exif_gps_lon": null,
+        "removed": false,
+        "in_trashcan": false,
+        "archived": false,
+        "trashed_at": null,
+        "stacks": null,
+        "has_raw_variant": false,
+        "local_orientation": 1,
+        "projection_type": null
+      }
+    ],
+    "page": 1,
+    "page_size": 25,
+    "num_pages": 1,
+    "album": {
+      "id": 1,
+      "title": "Contract album"
+    }
+  },
+  "caption_job": {
+    "status": true,
+    "job_id": "c39575ed-3f33-42f8-957f-9269374cbf0a",
+    "job_ids": [
+      "c39575ed-3f33-42f8-957f-9269374cbf0a"
+    ],
+    "downloads_model": false
+  }
+}
