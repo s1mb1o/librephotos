@@ -36,7 +36,24 @@ These checks do not measure model quality.
 
 ## Deployment
 
-The application image and live HTTP verification will be recorded after deployment.
+Built image: `registry.my.3simbio.ru/librephotos/app:20261101T212901Z-a365b8741c4d`.
+Manifest digest: `sha256:5e319b46fd35c48cc01a4286060d5a98d980e959ed7e164959cf4af73186418a`.
+Application commit: `a365b8741c4d`.
+
+The first activation refused a started embedding calculation before any queue pause.
+The original application remains healthy. No processing progress was reset.
+A one-time waiter will activate the built image after other started jobs finish.
+Its process ID at launch was `1428144` on docker-srv.
+It checks every 30 seconds and refuses to replace a different selected image.
+It stops with a recorded failure if processing is still active after 24 hours.
+It does not cancel jobs or release their leases while it waits.
+
+Runtime waiter: `/srv/librephotos/bin/deploy-model-test-20261102.py`.
+Status: `/srv/librephotos/backups/model-test-deployment-pending.json`.
+Log: `/srv/librephotos/backups/model-test-deployment-wait.log`.
+After activation, the waiter checks both model test paths with an ephemeral loopback provider.
+That check sends only synthetic input and compares saved settings and active index state.
+Live HTTP verification is pending until activation.
 The original photo scan completed while this update was in validation.
 Automatic per-photo tag generation is now covered by the verified deployment drain.
 Other started jobs still prevent container replacement.
