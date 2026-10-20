@@ -1,5 +1,9 @@
 # Smoke tests
 
+## 2026-11-02 — Persistent MCP HTTP deployment
+
+Connect with a persistent MCP token. Refuse missing tokens and LibrePhotos API keys as MCP tokens. Verify two subjects use different account keys. Remove a verifier and confirm immediate HTTP 401. Confirm search and authenticated still previews on docker-srv.
+
 ## MCP integration
 
 Connect an official SDK client over stdio and HTTP. Search and retrieve a preview. Test two OAuth subjects with separate keys. Reject expired tokens, incorrect audiences, invalid identifiers, oversized responses, and foreign objects. Verify write tools are absent by default. Enable writes with restricted scopes and verify immediate job identifiers.

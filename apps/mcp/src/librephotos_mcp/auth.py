@@ -1,14 +1,38 @@
 """OAuth resource-server verification. MCP tokens never authenticate REST calls."""
 
 import asyncio
+import hashlib
 import time
 
 import jwt
 from mcp.server.auth.provider import AccessToken
 
-from librephotos_mcp.config import Config
+from librephotos_mcp.config import Config, token_subjects
 
 MCP_SCOPE = "librephotos:mcp"
+
+
+class PersistentTokenVerifier:
+    def __init__(self, config: Config) -> None:
+        self.config = config
+
+    async def verify_token(self, token: str) -> AccessToken | None:
+        if not token.startswith("lpmcp_") or not 40 <= len(token) <= 256:
+            return None
+        try:
+            subjects = token_subjects(self.config.tokens_file, self.config.principals)
+        except (OSError, ValueError):
+            return None
+        subject = subjects.get(hashlib.sha256(token.encode()).hexdigest())
+        if subject is None:
+            return None
+        return AccessToken(
+            token=token,
+            client_id=subject,
+            subject=subject,
+            scopes=[MCP_SCOPE],
+            resource=self.config.resource_url,
+        )
 
 
 class OAuthVerifier:

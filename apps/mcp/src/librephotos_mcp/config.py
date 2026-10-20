@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import stat
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -33,6 +34,24 @@ def checked_url(value: str, *, https: bool = False) -> str:
     return value
 
 
+def token_subjects(path: str, principals: dict[str, str]) -> dict[str, str]:
+    """Load token verifiers on every request so removal revokes access immediately."""
+    raw: object = json.loads(protected_file(path))
+    if (
+        not isinstance(raw, dict)
+        or not raw
+        or not all(
+            isinstance(digest, str)
+            and re.fullmatch(r"[a-f0-9]{64}", digest)
+            and isinstance(subject, str)
+            and subject in principals
+            for digest, subject in raw.items()
+        )
+    ):
+        raise ValueError("Configure SHA-256 MCP token verifiers mapped to known subjects.")
+    return {str(digest): str(subject) for digest, subject in raw.items()}
+
+
 @dataclass(frozen=True, repr=False)
 class Config:
     base_url: str
@@ -43,6 +62,8 @@ class Config:
     jwks_url: str = ""
     resource_url: str = ""
     principals: dict[str, str] = field(default_factory=dict, repr=False)
+    auth_mode: str = "oauth"
+    tokens_file: str = ""
 
     @classmethod
     def from_environment(cls, transport: str) -> "Config":
@@ -56,9 +77,22 @@ class Config:
             if not key.startswith("lp_"):
                 raise ValueError("Configure a LibrePhotos API key for stdio.")
             return cls(base, key, transport, writes == "true")
-        issuer = checked_url(os.environ.get("LIBREPHOTOS_MCP_ISSUER", ""), https=True)
-        jwks = checked_url(os.environ.get("LIBREPHOTOS_MCP_JWKS_URL", ""), https=True)
-        resource = checked_url(os.environ.get("LIBREPHOTOS_MCP_RESOURCE_URL", ""), https=True)
+        mode = os.environ.get("LIBREPHOTOS_MCP_AUTH_MODE", "oauth")
+        if mode not in {"oauth", "token"}:
+            raise ValueError("LIBREPHOTOS_MCP_AUTH_MODE must be oauth or token.")
+        issuer = (
+            checked_url(os.environ.get("LIBREPHOTOS_MCP_ISSUER", ""), https=True)
+            if mode == "oauth"
+            else ""
+        )
+        jwks = (
+            checked_url(os.environ.get("LIBREPHOTOS_MCP_JWKS_URL", ""), https=True)
+            if mode == "oauth"
+            else ""
+        )
+        resource = checked_url(
+            os.environ.get("LIBREPHOTOS_MCP_RESOURCE_URL", ""), https=mode == "oauth"
+        )
         raw: object = json.loads(
             protected_file(os.environ.get("LIBREPHOTOS_MCP_PRINCIPALS_FILE", ""))
         )
@@ -76,7 +110,10 @@ class Config:
             raise ValueError("Configure a subject-to-LibrePhotos-key mapping.")
         principals: dict[str, str] = {str(subject): str(key) for subject, key in raw.items()}
         if len(set(principals.values())) != len(principals):
-            raise ValueError("Each OAuth subject requires a separate LibrePhotos API key.")
+            raise ValueError("Each MCP subject requires a separate LibrePhotos API key.")
+        tokens_file = os.environ.get("LIBREPHOTOS_MCP_TOKENS_FILE", "") if mode == "token" else ""
+        if mode == "token":
+            token_subjects(tokens_file, principals)
         return cls(
             base,
             transport=transport,
@@ -85,4 +122,6 @@ class Config:
             jwks_url=jwks,
             resource_url=resource,
             principals=principals,
+            auth_mode=mode,
+            tokens_file=tokens_file,
         )

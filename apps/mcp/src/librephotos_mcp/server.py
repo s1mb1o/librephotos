@@ -44,7 +44,11 @@ JOB = ToolAnnotations(
 
 
 def create_server(config: Config) -> MCPServer:
-    verifier = OAuthVerifier(config) if config.transport == "streamable-http" else None
+    verifier = (
+        OAuthVerifier(config)
+        if config.transport == "streamable-http" and config.auth_mode == "oauth"
+        else None
+    )
     url_adapter = TypeAdapter(Annotated[AnyHttpUrl, UrlConstraints(preserve_empty_path=True)])
     auth = (
         AuthSettings(

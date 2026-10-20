@@ -670,3 +670,8 @@ See [MCP clients](../user-guide/mcp.md) for authentication and deployment exampl
 | `LIBREPHOTOS_MCP_PRINCIPALS_PATH` | Host mapping-file path for the MCP compose bind mount. |
 | `LIBREPHOTOS_MCP_ENABLE_WRITES` | Register write tools when `true`. Default: `false`. |
 | `LIBREPHOTOS_NETWORK` | Existing Docker network for the MCP compose service. Default: `librephotos_default`. |
+
+`LIBREPHOTOS_MCP_AUTH_MODE` selects `oauth` (default) or `token`.
+`LIBREPHOTOS_MCP_TOKENS_FILE` contains SHA-256 verifiers and subjects for persistent HTTP tokens.
+In token mode, `LIBREPHOTOS_MCP_RESOURCE_URL` can use HTTP on a trusted LAN.
+The issuer and JWKS variables are unused in that mode.

@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-02 — Persistent MCP HTTP deployment
+
+Added persistent MCP HTTP bearer tokens with verifier-only storage, immediate revocation, per-account keys, and a LAN deployment service. Preserved the deployed model-settings Test action.
+
 ## 2026-11-02 — MCP adapter
 
 Added a separate MCP service with nine read tools, stdio, authenticated Streamable HTTP, per-subject API-key mappings, and optional metadata, album, scan, and caption tools. Added bounded automation REST endpoints. Added a non-root Docker image and deployment documentation.
