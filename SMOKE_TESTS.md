@@ -36,6 +36,20 @@ These checks are pending. They are not passing claims for the initial fork.
 - Verify a PostgreSQL backup with `pg_restore --list`.
 - Start the PhotoLibrary scan after the deployment checks.
 
+## Active scan image replacement
+
+Verified on 2026-11-02:
+
+- Drain prefetched tasks while permitting worker recycling.
+- Preserve the scan job ID, start time, target, and completed counters.
+- Verify completed scan groups plus pending groups equal the target.
+- Back up frozen PostgreSQL state. Verify the dump with `pg_restore --list`.
+- Apply migrations before workers start. Compare all old API and queue rows.
+- Retain the PostgreSQL container, original mount, and persistent media.
+- Resume the same scan. Verify forward progress and existing media access.
+- Keep local model defaults. Verify new Admin Area provider fields.
+- Run the isolated 20-task exercise. Verify pause at 8 and resume to 20.
+
 ## PhotoLibrary remount
 
 Verified on 2026-11-01:

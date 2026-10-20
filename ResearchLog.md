@@ -1,5 +1,27 @@
 # Research log
 
+## 2026-11-02 — Deploy during an active scan
+
+A photo scan stores each pending group in the PostgreSQL ORM queue.
+Completed group counters plus queued scan groups must equal the scan target.
+The deployment verified this invariant before replacement.
+It compared 62 pre-existing table fingerprints across the offline migration.
+The same scan continued after startup. See `docs/validation/remote-ai-deployment.md`.
+
+A direct queue cluster `SIGTERM` can deadlock during worker recycling.
+The sentinel first stops the pusher. A full queue can block the pusher.
+A recycled worker then leaves the stopping sentinel with no consumer.
+Do not kill the application to resolve this state while a worker is active.
+
+Options considered: wait for the complete scan, stop the container immediately,
+or drain prefetched tasks while the sentinel still replaces workers.
+The owner authorized a temporary pause. The drain preserves durable progress.
+The helper suspends the pusher, drains leased task IDs, then stops the cluster.
+It renews captured leases while workers finish. It refuses ambiguous processes.
+A real isolated queue exercise passed with frequent worker recycling.
+The helper depends on Linux `/proc` and the current queue process layout.
+Keep that layout check and the isolated exercise when queue dependencies change.
+
 ## 2026-11-01 — Remote AI implementation
 
 The owner authorized issues #1 and #2 for implementation.

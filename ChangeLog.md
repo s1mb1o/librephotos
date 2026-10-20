@@ -1,5 +1,12 @@
 # Change log
 
+## 2026-11-02
+
+- Deployed the remote AI image to docker-srv. Preserved the active scan and all 62 pre-existing catalog and queue tables.
+- Added a frozen checkpoint, offline migration verification, and scan advancement checks to the deployment helper.
+- Added a queue drain that permits worker recycling. Verified pause and resume in an isolated container.
+- Recorded the image digest, private recovery location, HTTP checks, and deployment procedure.
+
 ## 2026-11-01
 
 - Added OpenAI-compatible captioning with URL, encrypted access token, and model settings in Admin Area.

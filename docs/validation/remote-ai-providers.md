@@ -80,8 +80,9 @@ Cancel an interrupted running job before starting another build.
 
 ## Deployment state
 
-This implementation has not replaced the running docker-srv image.
-The initial library scan was still active at validation time.
-It had processed 24,306 of 35,274 groups and created 22,830 photo rows.
+The implementation was deployed to docker-srv on 2026-11-01 at 20:39 UTC.
+The existing scan resumed from 30,120 of 35,274 groups.
+All 62 pre-existing catalog and queue table fingerprints matched after migration.
 The production provider selection remains unchanged.
 No full-library remote reindex was started.
+See [the deployment validation](remote-ai-deployment.md).

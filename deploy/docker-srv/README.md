@@ -16,10 +16,31 @@ The command includes current uncommitted source changes. It does not push Git.
 It reuses the Docker dependency caches and the frontend build when its sources
 have not changed. Keep the Docker build cache between builds.
 
-The deployment command copies only Compose and the activation script. Runtime
+The deployment command copies Compose, the activation script, and the scan checkpoint helper. Runtime
 credentials stay in `/srv/librephotos/.env`, mode `0600`. They never enter the
 image or the Git repository. The admin password is stored in macOS Keychain
 under `librephotos-docker-srv-admin`, account `ashmelev`.
+
+## Preserve an active scan
+
+The activation helper pulls the replacement image before maintenance.
+It drains prefetched tasks before it stops the application.
+Pending tasks remain in PostgreSQL. The scan keeps its job ID and counters.
+The helper refuses a started job other than a photo scan.
+Wait for caption generation or an embedding rebuild before deployment.
+
+The helper suspends the queue pusher while workers finish prefetched tasks.
+The sentinel can replace recycled workers during this drain.
+A direct `SIGTERM` can deadlock this django-q2 version during worker recycling.
+Do not replace the container until the drain completes.
+The helper checks that completed scan groups plus queued groups equal the target.
+
+After the application stops, the helper saves a private recovery checkpoint.
+It applies migrations in a separate container with no queue worker.
+It compares all pre-existing API and queue rows before releasing stale leases.
+It then starts the new image and verifies forward progress of the same scan.
+Read [the deployment validation](../../docs/validation/remote-ai-deployment.md).
+The isolated pause exercise is in [tests/README.md](tests/README.md).
 
 ## State and resources
 
@@ -57,8 +78,9 @@ ssh root@192.168.86.16 'docker logs --tail 100 librephotos-app'
 
 ## Backup and rollback
 
-Before each replacement, the activation script stores a PostgreSQL dump and
-the previous environment in `/srv/librephotos/backups`. The environment backup
+Before each replacement, the activation script stores a frozen PostgreSQL dump,
+the previous environment, Compose, scan counters, and verification receipts in
+`/srv/librephotos/backups/deploy-<UTC timestamp>/`. The environment backup
 contains credentials. It is readable only by root. These are local recovery
 copies. Independent backup coverage must be configured separately.
 
