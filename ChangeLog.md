@@ -2,6 +2,10 @@
 
 ## 2026-11-02
 
+- Extended the verified deployment drain to preserve per-photo tag generation after the initial scan.
+- Added Test beside remote model settings. Validate draft captioning and image/text embedding requests before saving.
+- Reuse saved tokens without exposing them. Keep provider selection, jobs, cached vectors, and indexes unchanged during tests.
+
 - Deployed the remote AI image to docker-srv. Preserved the active scan and all 62 pre-existing catalog and queue tables.
 - Added a frozen checkpoint, offline migration verification, and scan advancement checks to the deployment helper.
 - Added a queue drain that permits worker recycling. Verified pause and resume in an isolated container.

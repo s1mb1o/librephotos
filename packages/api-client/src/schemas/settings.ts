@@ -51,8 +51,23 @@ export const RemoteModelSettings = z.object({
 });
 export type RemoteModelSettings = z.infer<typeof RemoteModelSettings>;
 export type RemoteModelSettingsUpdate = Partial<
-  Omit<RemoteModelSettings, "has_token"> & { token: string; clear_token: boolean }
+  Omit<RemoteModelSettings, "has_token"> & {
+    token: string;
+    clear_token: boolean;
+  }
 >;
+
+export type RemoteModelTestRequest = {
+  kind: "captioning" | "embeddings";
+  settings: RemoteModelSettingsUpdate;
+};
+
+/** Result of testing draft settings without saving them. */
+export const RemoteModelTest = z.object({
+  kind: z.enum(["captioning", "embeddings"]),
+  dimension: z.number().nullable(),
+});
+export type RemoteModelTest = z.infer<typeof RemoteModelTest>;
 
 /** The active index can differ from the selected model while its replacement builds. */
 export const EmbeddingStatus = z.object({

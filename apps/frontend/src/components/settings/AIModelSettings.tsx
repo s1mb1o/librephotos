@@ -1,4 +1,9 @@
-import type { SiteSettings, SiteSettingsUpdate } from "@librephotos/api-client";
+import {
+  ApiError,
+  type RemoteModelTestRequest,
+  type SiteSettings,
+  type SiteSettingsUpdate,
+} from "@librephotos/api-client";
 import {
   Accordion,
   Alert,
@@ -20,7 +25,11 @@ import { Link } from "@tanstack/react-router";
 import React, { useEffect, useEffectEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useRunProcessingStageMutation } from "../../api_client/jobs/hooks";
-import { useFollowModelDownload, useUpdateSettingsMutation } from "../../api_client/settings/hooks";
+import {
+  useFollowModelDownload,
+  useTestModelSettingsMutation,
+  useUpdateSettingsMutation,
+} from "../../api_client/settings/hooks";
 import { notification } from "../../service/notifications";
 import { makeAIModelSettingsSchema } from "./AIModelSettings.schema";
 import { CONTROL_SPAN, LABEL_SPAN } from "./ScanSettings";
@@ -30,6 +39,7 @@ type ModelKind = "captioning" | "embeddings";
 function ModelSetting({ kind, settings }: { kind: ModelKind; settings: SiteSettings }) {
   const { t } = useTranslation();
   const { mutate, isPending } = useUpdateSettingsMutation();
+  const test = useTestModelSettingsMutation();
   const stored = kind === "captioning" ? settings.captioning_api : settings.embedding_api;
   const selected = kind === "captioning" ? settings.captioning_model : (settings.embedding_model ?? "openclip_vitb32");
   const form = useForm({
@@ -92,6 +102,10 @@ function ModelSetting({ kind, settings }: { kind: ModelKind; settings: SiteSetti
         { value: "siglip2_naflex", label: "SigLIP2 NaFlex" },
       ];
 
+  const { provider: _provider, ...draft } = form.values;
+  const testInput: RemoteModelTestRequest = { kind, settings: draft };
+  const tested = remote && JSON.stringify(test.variables) === JSON.stringify(testInput);
+
   const submit = form.onSubmit(values => {
     const { provider, ...config } = values;
     const update: SiteSettingsUpdate = captioning
@@ -99,6 +113,7 @@ function ModelSetting({ kind, settings }: { kind: ModelKind; settings: SiteSetti
       : { embedding_model: provider, ...(remote ? { embedding_api: config } : {}) };
     mutate(update, {
       onSuccess: () => {
+        test.reset();
         form.setFieldValue("token", "");
         form.setFieldValue("clear_token", false);
         form.resetDirty({ ...values, token: "", clear_token: false });
@@ -203,8 +218,33 @@ function ModelSetting({ kind, settings }: { kind: ModelKind; settings: SiteSetti
               <Alert color="yellow">{t("aimodelsettings.unsaved_index_change")}</Alert>
             </Grid.Col>
           )}
+          {tested && (test.isSuccess || test.isError) && (
+            <Grid.Col span={12}>
+              <Alert color={test.isSuccess ? "green" : "red"} role="status">
+                {test.isSuccess
+                  ? captioning
+                    ? t("aimodelsettings.test_caption_success")
+                    : t("aimodelsettings.test_embedding_success")
+                  : test.error instanceof ApiError
+                    ? (test.error.serverMessage ?? t("aimodelsettings.test_failed"))
+                    : t("aimodelsettings.test_failed")}
+              </Alert>
+            </Grid.Col>
+          )}
           <Grid.Col span={12}>
             <Group justify="flex-end">
+              {remote && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  loading={test.isPending}
+                  onClick={() => {
+                    if (!form.validate().hasErrors) test.mutate(testInput);
+                  }}
+                >
+                  {t("aimodelsettings.test")}
+                </Button>
+              )}
               <Button type="submit" loading={isPending}>
                 {t("aimodelsettings.save")}
               </Button>

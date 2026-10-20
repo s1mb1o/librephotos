@@ -18,7 +18,8 @@ docker cp deploy/docker-srv/scan_checkpoint.py "$name":/tmp/scan_checkpoint.py
 for file in pause_test_settings.py pause_test_tasks.py test_pause_workflow.py; do
   docker cp "deploy/docker-srv/tests/$file" "$name":/tmp/
 done
-docker exec -w /code "$name" python /tmp/test_pause_workflow.py
+docker exec -w /code "$name" python /tmp/test_pause_workflow.py scan
+docker exec -w /code "$name" python /tmp/test_pause_workflow.py tags
 ```
 
 Expected result: `isolated_pause_resume_passed` is `true`.

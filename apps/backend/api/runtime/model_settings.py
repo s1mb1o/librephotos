@@ -31,9 +31,16 @@ def public_remote_config(kind: str) -> dict[str, object]:
     }
 
 
-def save_remote_config(kind: str, values: Mapping[str, object]) -> None:
+def preview_remote_config(kind: str, values: Mapping[str, object]) -> RemoteModelConfig:
+    """Apply draft values in memory. Do not write settings or index state."""
     config = remote_config(kind)
-    previous_tag_threshold = config.tag_threshold
+    _apply_remote_config(config, values)
+    return config
+
+
+def _apply_remote_config(
+    config: RemoteModelConfig, values: Mapping[str, object]
+) -> None:
     for name in CONFIG_FIELDS:
         if name in values:
             setattr(config, name, values[name])
@@ -42,6 +49,12 @@ def save_remote_config(kind: str, values: Mapping[str, object]) -> None:
         config.token = token.strip()
     if values.get("clear_token") is True:
         config.token = ""
+
+
+def save_remote_config(kind: str, values: Mapping[str, object]) -> None:
+    config = remote_config(kind)
+    previous_tag_threshold = config.tag_threshold
+    _apply_remote_config(config, values)
     config.save()
     if kind == "embeddings":
         # Token rotation does not change the vector space or require reindexing.

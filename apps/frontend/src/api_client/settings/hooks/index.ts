@@ -10,3 +10,4 @@ export * from "./useWriteMetadataPreviewQuery";
 export * from "./useDateRuleOptionsQuery";
 export * from "./useCheckDateRuleMutation";
 export * from "./useDateRulesTestQuery";
+export * from "./useTestModelSettingsMutation";

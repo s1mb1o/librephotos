@@ -1,5 +1,21 @@
 # Research log
 
+## 2026-11-02 — Test draft model settings
+
+A model-list request does not verify image input or the embedding dimension.
+The Test action therefore uses the existing inference clients with synthetic input.
+Captioning checks nonempty final text. SigLIP2 checks both image and text vectors.
+Draft settings merge with saved credentials in memory. The test does not save them.
+The response contains only the provider kind and nullable vector dimension.
+Provider response bodies and credentials stay out of error messages.
+A result applies only while the form matches the tested values.
+
+The photo scan finished while this update was in validation.
+Its automatic Generate Tags job queues one task per photo.
+`generate_tag_job` updates the durable counter after each completed photo.
+The deployment drain can preserve this job at the same queue boundary as a scan.
+Other started jobs remain excluded from image replacement.
+
 ## 2026-11-02 — Deploy during an active scan
 
 A photo scan stores each pending group in the PostgreSQL ORM queue.

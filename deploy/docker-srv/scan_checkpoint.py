@@ -32,6 +32,8 @@ from django_q.models import OrmQ
 from django_q.signing import SignedPackage
 
 ROOT = Path(os.environ.get("LP_CHECKPOINT_DIR", "/deployment"))
+# Both jobs queue one durable task per item and acknowledge each completed item.
+DRAINABLE_JOBS = (LongRunningJob.JOB_SCAN_PHOTOS, LongRunningJob.JOB_GENERATE_TAGS)
 
 
 def clusters() -> list[dict[str, int]]:
@@ -88,9 +90,9 @@ def check_scans(state: dict) -> None:
     for job in state["jobs"]:
         if not job["started_at"]:
             continue
-        if job["job_type"] != LongRunningJob.JOB_SCAN_PHOTOS:
+        if job["job_type"] not in DRAINABLE_JOBS:
             raise RuntimeError(
-                "A started job other than a photo scan is active. Wait for it before deployment."
+                "A started job other than a photo scan or tag generation is active. Wait for it before deployment."
             )
         if job["progress_current"] + job["queued_tasks"] != job["progress_target"]:
             raise RuntimeError(
@@ -101,8 +103,10 @@ def check_scans(state: dict) -> None:
 def quiesce() -> None:
     before = scan_state()
     for job in before["jobs"]:
-        if job["started_at"] and job["job_type"] != LongRunningJob.JOB_SCAN_PHOTOS:
-            raise RuntimeError("A started job other than a photo scan is active.")
+        if job["started_at"] and job["job_type"] not in DRAINABLE_JOBS:
+            raise RuntimeError(
+                "A started job other than a photo scan or tag generation is active."
+            )
     processes = before["clusters"]
     pids = {process["pid"] for process in processes}
     roots = [process for process in processes if process["ppid"] not in pids]
@@ -320,7 +324,7 @@ def after() -> None:
     assert state["photos"] >= saved["state"]["photos"]
     progress = []
     for old in saved["state"]["jobs"]:
-        if old["job_type"] != LongRunningJob.JOB_SCAN_PHOTOS or not old["started_at"]:
+        if old["job_type"] not in DRAINABLE_JOBS or not old["started_at"]:
             continue
         current = LongRunningJob.objects.get(job_id=old["job_id"])
         assert not current.cancelled

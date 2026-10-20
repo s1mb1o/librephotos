@@ -69,6 +69,25 @@ Before another path migration, stop the app and back up PostgreSQL and
 `protected_media`. Update both catalog paths and signed queued scan tasks.
 Keep user captions and photo identities unchanged. Refresh derived search paths.
 
+## Tag generation during image replacement
+
+- Drain a Generate Tags job after all per-photo tasks enter the durable queue.
+- Preserve the job ID, start time, target, completed count, and pending photo tasks.
+- Verify queue conservation before replacement and forward progress after restart.
+- Keep other started job types blocked until they finish.
+- Run both scan and tags in the isolated pause exercise.
+
+## Test draft remote settings
+
+- Select a remote model. Confirm Test appears beside Save model settings.
+- Change the URL, token, and model. Confirm Test uses the draft without saving it.
+- Leave the token blank. Confirm the test uses the saved token.
+- Select Remove the saved access token. Confirm Test omits authentication and preserves the saved token.
+- Confirm caption tests use a synthetic image. Confirm embedding tests check image and text vectors.
+- Refuse invalid URLs, provider errors, empty captions, and incompatible embedding vectors.
+- Show a pending state and an inline result. Hide stale results after a field changes or settings save.
+- Confirm non-admins cannot test a provider. Confirm catalog rows and active indexes stay unchanged.
+
 ## Remote AI models
 
 - [ ] In Admin Area, select OpenAI API. Confirm URL, Access Token, and Model name appear.
