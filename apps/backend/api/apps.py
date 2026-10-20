@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 # calls them in this order, once all models are loaded.
 # api/tests/infra/test_signal_receivers.py enforces the list.
 SIGNAL_MODULES = (
+    "api.classification.identity_signals",
     # Photo counts and covers of thing albums and tags.
     "api.models.album_thing",
     "api.models.tag",

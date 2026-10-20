@@ -25,7 +25,7 @@ The **Captions** section is only shown while captioning is on: the **Image capti
 
 ## Which model writes the captions?
 
-Captions come from [LFM2.5-VL](https://huggingface.co/LiquidAI/LFM2.5-VL-450M), a small vision-language model from Liquid AI that runs on ONNX Runtime like every other model in LibrePhotos. There is nothing to pick: the files (about 370 MB) are fetched with the other models while captioning is on. <Since version="1.4.0" /> With captioning turned off they are not downloaded; turning it on again downloads them when you save the site settings or ask for a caption. The model needs about 0.9 GB of RAM while it captions and takes a few seconds per photo on an older desktop CPU, under a second on a recent one.
+The default local caption model is [LFM2.5-VL](https://huggingface.co/LiquidAI/LFM2.5-VL-450M), a small vision-language model from Liquid AI that runs on ONNX Runtime like every other model in LibrePhotos. Its files (about 370 MB) are fetched with the other models while local captioning is on. An administrator can also select an [OpenAI-compatible provider](./settings/remote-ai.md) in the Admin Area. <Since version="1.4.0" /> With captioning turned off they are not downloaded; turning it on again downloads them when you save the site settings or ask for a caption. The model needs about 0.9 GB of RAM while it captions and takes a few seconds per photo on an older desktop CPU, under a second on a recent one.
 
 It writes one natural sentence, for example "A rocket is taking off from a launch pad at night, with two tall metal towers flanking the launch site." Because it is a vision-language model it also takes instructions, which is what the caption context settings below use.
 
@@ -33,10 +33,56 @@ To turn automatic captioning off, set `Captioning Model` to `None` in the `Admin
 
 ## Caption context: names and places
 
-A caption is better when it can say who is in the photo and where it was taken. LibrePhotos already knows both, from face recognition and reverse geocoding, and passes them to the captioning model in its prompt. Each user controls this in their own `Settings`, under **Caption Context**:
+LibrePhotos can use face recognition and reverse geocoding to add names and places to captions. The model receives the location and face references. LibrePhotos resolves trusted names after inference. Each user controls this in their own `Settings`, under **Caption Context**:
 
 - **Tell the captioning model what LibrePhotos knows about a photo** turns the context on. Default `On`.
-- **Use the names of recognised people in captions** adds the recognised, named person to the prompt. The model is asked to use the name directly, as a friend tagging a photo would ("Grace in a simple gray shirt, standing against a blue background"). Only has an effect when the photo has a recognised, named person. Default `On`.
+- **Use the names of recognised people in captions** allows trusted face labels in generated captions. Default `On`. See the face identity rules below.
 - **Mention where the photo was taken in captions** adds the photo's geocoded location. Only has an effect when the photo has one. Default `On`.
 
 With the context switched off, the model is simply asked to describe the photo.
+
+## Face identities and caption updates
+
+<Since version="1.6.0" />
+
+LibrePhotos can update a generated caption after it identifies a face.
+For example, "A person is wearing a hat" can become "Alexander is wearing a hat".
+
+The model receives a temporary copy of the thumbnail with numbered face boxes.
+The prompt gives each box a stable reference token and its pixel coordinates.
+The model describes people through these references.
+LibrePhotos replaces a reference with a trusted name after the model responds.
+The face database's personal names are not sent in the caption prompt.
+The original photo and thumbnail stay unchanged.
+
+An existing confirmed face label is eligible when it names one of the owner's people.
+Imported named face regions use the same label field as confirmed labels.
+An inferred identity requires agreement between classification and clustering.
+Both finite scores must reach **0.99** or your higher person-confidence threshold.
+This threshold is a model score. It is not a measured correctness probability.
+Unknown people, rejected identities, other owners' people, invalid or ambiguous boxes,
+and faces from later video frames do not supply names.
+
+A generated caption stores its face references internally.
+A rename, corrected label, or confidence loss updates the displayed generated text
+without another model call when the face geometry stays unchanged.
+If a face no longer qualifies, its reference becomes "a person".
+New or changed boxes queue a fresh caption request.
+An outdated response cannot overwrite newer face information.
+Internal face evidence stays out of photo API responses and shared search.
+
+A caption that you saved manually stays unchanged.
+This also applies to an AI suggestion that you copied into your manual caption.
+Generated caption updates refresh search and the photo's modification timestamp.
+The Caption Context switches continue to control name use.
+
+Previously generated captions need one fresh model pass before local name updates
+and confidence-based anonymization can use their face references.
+Face changes queue that pass for an existing generated caption.
+You can also use **Generate captions again for all photos** to refresh the library.
+**Generate** retries captions marked stale after a failed update.
+Provider failures preserve the current safe generated text and your manual caption.
+
+Face recognition confidence does not prove that the VLM associated an action
+with the correct face. Review important captions.
+A model that omits the reference tokens can leave the caption anonymous.

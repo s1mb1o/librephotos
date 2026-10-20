@@ -30,6 +30,7 @@ from django.db import transaction
 from django.db.models import Prefetch
 from django.utils import timezone
 
+from api.classification.identity_updates import defer_caption_updates
 from api.faces.clustering_gate import record_face_label
 from api.jobs.queue import enqueue_task
 from api.metadata.photo_writer import write_photo_metadata, write_target
@@ -301,6 +302,7 @@ def _finish(
         record_face_label(user)
     photos = _photos_of(faces)
     recreate_search_captions(photos)
+    defer_caption_updates(photo.pk for photo in photos)
     if queue_write:
         return RelabelResult(
             faces,

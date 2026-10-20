@@ -35,6 +35,33 @@ This avoids a second credential and consent system. It requires an existing OAut
 OpenAPI header names use their standard HTTP spelling. The JSON naming guard must exclude header parameters and header security schemes. Keep property and query parameter checks active.
 
 Enforce API-key capabilities in authentication because views can replace their permission classes. Use exact view identities and HTTP methods. Deny unknown routes. The custom media view needs the new authenticator explicitly. High-entropy secrets permit SHA-256 verifiers without password storage.
+
+## 2026-11-02 — Face-grounded caption updates
+
+The existing caption context passed the first Face.person name without geometry.
+Face.person also holds imported named face regions. Automatic suggestions use
+classification_person and cluster_person with separate model scores.
+Face coordinates refer to the big thumbnail. Later video frames have separate coordinates.
+
+Options considered: replace generic words in caption text; send names with boxes;
+or send opaque face references and resolve names inside LibrePhotos.
+Word replacement cannot distinguish two people. A name prompt does not prove grounding.
+Opaque references preserve the face association and allow cheap corrections.
+The selected design annotates all eligible face boxes, including anonymous faces.
+Later trusted labels can enrich an existing template without another VLM request.
+Changed boxes and old untracked captions need a new grounded model pass.
+
+The inferred gate requires agreement and finite scores at least max(0.99, user threshold).
+These methods share face evidence. Their agreement is not independent calibration.
+Stored confirmed labels, including imported named regions, are treated as authoritative.
+Names are not sent to the VLM. A provider can still make visual grounding mistakes.
+
+Face labels and classifier prediction pages use bulk writes, which do not emit signals.
+Their commit paths therefore invalidate caption state explicitly.
+Queued work checks a current fingerprint. Generated text merges into the latest locked row.
+Internal evidence must be filtered from API output and from whole-JSON shared search.
+Otherwise a stale provenance name could remain searchable after visible text is anonymized.
+
 ## 2026-11-02 — Captioning feature and local service status
 
 The owner requested image captioning enablement after a Disabled service tooltip.
