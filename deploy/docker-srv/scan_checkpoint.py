@@ -22,11 +22,12 @@ import django
 
 django.setup()
 import psutil
+from api.jobs.broker import LEASE
 from api.models import LongRunningJob, Photo, Thumbnail
 from django.apps import apps
 from django.conf import settings
 from django.core.management import call_command
-from django.db import connection
+from django.db import connection, transaction
 from django.utils import timezone
 from django_q.models import OrmQ
 from django_q.signing import SignedPackage
@@ -104,7 +105,30 @@ def check_scans(state: dict) -> None:
             )
 
 
-def quiesce() -> None:
+def defer_available(frozen: set[int]) -> None:
+    """Lease pending rows without blocking the pusher's feeder thread."""
+    with transaction.atomic():
+        ids = list(
+            OrmQ.objects.select_for_update()
+            .filter(lock__lte=timezone.now())
+            .values_list("pk", flat=True)
+        )
+        for offset in range(0, len(ids), 500):
+            OrmQ.objects.filter(pk__in=ids[offset : offset + 500]).update(
+                lock=timezone.now() + LEASE
+            )
+        frozen.update(ids)
+
+
+def release_barrier(frozen: set[int]) -> None:
+    ids = list(frozen)
+    for offset in range(0, len(ids), 500):
+        OrmQ.objects.filter(pk__in=ids[offset : offset + 500]).update(
+            lock=timezone.now() - datetime.timedelta(seconds=1)
+        )
+
+
+def quiesce(timeout: float = 1200) -> None:
     before = scan_state()
     for job in before["jobs"]:
         if job["started_at"] and job["job_type"] not in DRAINABLE_JOBS:
@@ -118,57 +142,49 @@ def quiesce() -> None:
         raise RuntimeError(
             "Multiple queue clusters found. Refusing an ambiguous drain."
         )
-    pushers = []
-    for process in processes:
-        names = []
-        for path in Path("/proc", str(process["pid"]), "task").glob("*/comm"):
-            try:
-                names.append(path.read_text().strip())
-            except OSError:
-                continue
-        if "task-leases" in names:
-            pushers.append(process["pid"])
-    if len(pushers) > 1 or (before["held"] and len(pushers) != 1):
-        raise RuntimeError("Cannot identify the queue pusher safely.")
     print(json.dumps({"phase": "draining", "state": before}), flush=True)
-    deadline = time.monotonic() + 1200
-    stopped = False
+    deadline = time.monotonic() + timeout
+    frozen: set[int] = set()
+    renewed = 0.0
     try:
-        # Stop new dequeues while the sentinel still replaces recycled workers.
-        # One leased task can remain in the pusher before its blocked queue put.
-        if pushers:
-            os.kill(pushers[0], signal.SIGSTOP)
-            stopped = True
-            held_ids = list(
-                OrmQ.objects.filter(lock__gt=timezone.now()).values_list(
-                    "pk", flat=True
+        while True:
+            defer_available(frozen)
+            active = set(OrmQ.objects.values_list("pk", flat=True)) - frozen
+            if time.monotonic() - renewed >= 30:
+                # Keep the barrier alive even when the broker clamps long leases.
+                ids = list(frozen | active)
+                for offset in range(0, len(ids), 500):
+                    OrmQ.objects.filter(pk__in=ids[offset : offset + 500]).update(
+                        lock=timezone.now() + LEASE
+                    )
+                renewed = time.monotonic()
+                print(
+                    json.dumps(
+                        {
+                            "phase": "drain-progress",
+                            "active_tasks": len(active),
+                            "deferred_tasks": len(frozen),
+                        }
+                    ),
+                    flush=True,
                 )
-            )
-            while OrmQ.objects.filter(pk__in=held_ids).count() > 1:
-                OrmQ.objects.filter(pk__in=held_ids).update(
-                    lock=timezone.now() + datetime.timedelta(minutes=10)
-                )
-                if time.monotonic() > deadline:
-                    raise TimeoutError("The prefetched queue is still draining.")
-                time.sleep(2)
+            if not active:
+                break
+            if time.monotonic() > deadline:
+                raise TimeoutError("The prefetched queue is still draining.")
             time.sleep(2)
         if roots:
             os.kill(roots[0]["pid"], signal.SIGTERM)
-            # The sentinel sets event_out before the pusher continues. It then
-            # flushes at most one pending task before the worker poison pill.
-            time.sleep(2)
-        if stopped:
-            os.kill(pushers[0], signal.SIGCONT)
-            stopped = False
         while clusters():
+            defer_available(frozen)
             if time.monotonic() > deadline:
                 raise TimeoutError(
                     "The queue is still stopping. Do not replace the container."
                 )
             time.sleep(2)
     finally:
-        if stopped:
-            os.kill(pushers[0], signal.SIGCONT)
+        # On error the old cluster can take pending work again. Payloads are untouched.
+        release_barrier(frozen)
     after = scan_state()
     check_scans(after)
     print(json.dumps({"phase": "drained", "state": after}), flush=True)

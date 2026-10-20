@@ -1,5 +1,16 @@
 # Research log
 
+## 2026-11-02 — Feeder-safe queue drain
+
+SIGSTOP stops the pusher's feeder thread as well as its main loop.
+With a full prefetch and larger task messages, the worker can wait for a partial pipe write.
+A six-item test queue did not expose this condition.
+The first caption activation was interrupted before replacement. The old job resumed.
+Use temporary ORM leases for pending tasks. Keep feeder and worker recycling active.
+Test 80 tasks with prefetch 50, 64 KiB arguments and an enqueue during the drain.
+Release temporary leases after shutdown or when the drain fails.
+
+
 ## 2026-11-02 — Pause a caption job for deployment
 
 Generate Captions queues one generate_caption_job task per photo.

@@ -13,7 +13,7 @@ Q_CLUSTER = {
     "workers": 1,
     "recycle": 2,
     "max_rss": 0,
-    "queue_limit": 6,
+    "queue_limit": 50,
     "guard_cycle": 0.2,
     "testing": False,
 }

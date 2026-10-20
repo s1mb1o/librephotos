@@ -62,6 +62,7 @@ A self-hosted photo manager. This is a monorepo; each app has its own stack and 
 Do not stop an active scan with a direct container replacement.
 Use `deploy/docker-srv/deploy.sh` and its verified queue drain.
 A direct queue cluster shutdown can deadlock during worker recycling.
+Do not suspend the pusher. Use the pending-task lease barrier to keep its feeder active.
 Run `deploy/docker-srv/tests/README.md` after queue lifecycle changes.
 
 ## Commands

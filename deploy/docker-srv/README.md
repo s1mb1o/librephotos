@@ -30,8 +30,9 @@ The helper supports photo scans, per-photo tag generation, and per-photo caption
 It refuses other started jobs.
 Wait for an embedding rebuild or another unsupported job before deployment.
 
-The helper suspends the queue pusher while workers finish prefetched tasks.
-The sentinel can replace recycled workers during this drain.
+The helper leases pending ORM tasks while workers finish prefetched tasks.
+The feeder thread and worker replacement continue during this drain.
+The helper releases the temporary leases on success or failure.
 A direct `SIGTERM` can deadlock this django-q2 version during worker recycling.
 Do not replace the container until the drain completes.
 The helper checks that completed scan groups plus queued groups equal the target.

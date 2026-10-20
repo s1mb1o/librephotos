@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-11-02 — Queue feeder correction
+
+- Replace pusher suspension with temporary pending-task leases during deployment. Keep feeder threads active.
+- Restore pending leases on success or failure. Test the production prefetch size and large task messages.
+
 ## 2026-11-02 — Identity-aware caption deployment preparation
 
 - Combined identity-aware captions with the deployed API-key and MCP code.

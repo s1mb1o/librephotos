@@ -24,6 +24,10 @@ docker exec -w /code "$name" python /tmp/test_pause_workflow.py captions
 ```
 
 Expected result: `isolated_pause_resume_passed` is `true`.
-The same job completes all 20 tasks after a partial pause.
-Completed tasks plus remaining tasks equal 20 at the pause.
+The same job completes all 80 tasks after a partial pause.
+Each task carries 64 KiB of arguments. The prefetch limit is 50.
+The exercise waits for at least 50 leased tasks before the pause.
+A forced timeout verifies that the old cluster can continue.
+One task is enqueued during the pause.
+Completed tasks plus remaining tasks equal 80 at the pause.
 The log confirms that workers recycled during the exercise.
