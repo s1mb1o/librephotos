@@ -2961,3 +2961,17 @@ export async function deleteAllAutoAlbums(client: ApiClient): Promise<string> {
   const res = await client.post<unknown>("/albums/auto/delete_all/");
   return parseResponse(z.string(), res, "delete all event albums");
 }
+
+export async function fetchAPIKeys(client: ApiClient, page = 1): Promise<S.APIKeyPage> {
+  const res = await client.get<unknown>(`/auth/keys/?page=${page}&page_size=25`);
+  return parseResponse(S.APIKeyPage, res, "API keys");
+}
+
+export async function createAPIKey(client: ApiClient, values: S.APIKeyCreateRequest): Promise<S.APIKeyCreated> {
+  const res = await client.post<unknown>("/auth/keys/", values);
+  return parseResponse(S.APIKeyCreated, res, "created API key");
+}
+
+export async function revokeAPIKey(client: ApiClient, id: string): Promise<void> {
+  await client.delete(`/auth/keys/${encodeURIComponent(id)}/`);
+}

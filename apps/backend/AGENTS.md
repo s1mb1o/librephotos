@@ -241,3 +241,9 @@ every sidecar (`librephotos/standalone.py` dispatches on `run`/`manage`/`service
 with `scripts/smoke_standalone.py` (server, sidecars, a scan, the shutdown; `--from-source` tries it without a
 build) and only then attaches it to the release and marks the release latest; its release path is guarded by
 `api/tests/infra/test_standalone_windows_workflow.py`.
+
+## API-key capabilities
+
+API keys use an explicit method and view map in `api/accounts/api_key_policy.py`.
+Unlisted operations are denied. New integration routes need capability tests.
+Never add credential management to the API-key map.

@@ -10,6 +10,7 @@ import { useApplyDateRules } from "../../api_client/jobs/hooks";
 import { useFetchUserSelfDetailsQuery, useUpdateUserMutation } from "../../api_client/user/hooks";
 import { reportUserSaveError } from "../../util/apiErrors";
 import { PageHeader } from "../PageHeader";
+import { ApiKeysCard } from "./ApiKeysCard";
 import { ApplyDateRulesOffer } from "./ApplyDateRulesOffer";
 import { CaptionContextCard } from "./CaptionContextCard";
 import { ConfigBurstDetection } from "./ConfigBurstDetection";
@@ -70,6 +71,7 @@ export function Settings() {
   const cardProps = { user: editedUserDetails, onChange: edit };
 
   const sections = [
+    { id: SETTINGS_SECTIONS.apiKeys, label: t("settings.apiKeys.title") },
     { id: SETTINGS_SECTIONS.scan, label: t("settings.scanoptions") },
     { id: SETTINGS_SECTIONS.metadata, label: t("settings.metadata") },
     { id: SETTINGS_SECTIONS.faces, label: t("settings.face_options") },
@@ -87,6 +89,9 @@ export function Settings() {
       <PageHeader icon={SettingIcon} title={t("settings.header")} />
       <SectionNav sections={sections}>
         <Stack>
+          <SettingsSection id={SETTINGS_SECTIONS.apiKeys}>
+            <ApiKeysCard />
+          </SettingsSection>
           <SettingsSection id={SETTINGS_SECTIONS.scan}>
             <ScanOptionsCard {...cardProps} />
           </SettingsSection>

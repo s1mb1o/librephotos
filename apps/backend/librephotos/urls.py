@@ -59,6 +59,7 @@ from api.views import (
     album_folder,
     album_members,
     albums,
+    api_keys,
     dataviz,
     date_rules,
     duplicates,
@@ -249,6 +250,7 @@ class FrontendView(TemplateView):
 
 
 router = routers.DefaultRouter()
+router.register(r"api/auth/keys", api_keys.APIKeyViewSet, basename="api_keys")
 # In SERVE_FRONTEND mode, disable DRF's API root at '/'
 # so the frontend catch-all can serve the SPA instead of the browsable API.
 router.include_root_view = not getattr(settings, "SERVE_FRONTEND", False)

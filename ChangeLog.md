@@ -1,5 +1,9 @@
 # Change log
 
+## 2026-11-02 — Permanent API keys
+
+Added named API keys, optional expiration, immediate revocation, read-only defaults, explicit capabilities, authenticated media, account settings, and API contracts. Secrets are shown once and stored only as verifiers.
+
 ## 2026-11-02
 
 - Deployed the remote AI image to docker-srv. Preserved the active scan and all 62 pre-existing catalog and queue tables.

@@ -26,7 +26,7 @@ imported before any schema is generated.
 from typing import Any
 
 from drf_spectacular import openapi
-from drf_spectacular.authentication import BasicScheme
+from drf_spectacular.authentication import BasicScheme, OpenApiAuthenticationExtension
 from drf_spectacular.contrib.rest_framework_simplejwt import SimpleJWTScheme
 from drf_spectacular.plumbing import force_instance
 from rest_framework import serializers
@@ -111,3 +111,11 @@ def require_page_keys(
         if set(component.get("properties", {})) == PAGE_KEYS:
             component["required"] = sorted(PAGE_KEYS)
     return result
+
+
+class APIKeyScheme(OpenApiAuthenticationExtension):
+    target_class = "api.accounts.api_keys.APIKeyAuthentication"
+    name = "apiKeyAuth"
+
+    def get_security_definition(self, auto_schema: openapi.AutoSchema) -> dict[str, str]:
+        return {"type": "apiKey", "in": "header", "name": "Authorization", "description": "Api-Key lp_<identifier>.<secret>"}

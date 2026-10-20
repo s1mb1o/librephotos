@@ -4,6 +4,7 @@
  * rename a card, keep its id.
  */
 export const SETTINGS_SECTIONS = {
+  apiKeys: "settings-api-keys",
   scan: "settings-scan",
   metadata: "settings-metadata",
   faces: "settings-faces",

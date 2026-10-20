@@ -25,7 +25,7 @@ from django.http import HttpResponseBase
 from django.utils import timezone
 from faker import Faker
 
-from api.models import Cluster, Face, File, Person, Photo, User
+from api.models import APIKey, Cluster, Face, File, Person, Photo, User
 from api.models.album_auto import AlbumAuto
 from api.models.album_collection import AlbumCollection
 from api.models.album_comment import AlbumComment, AlbumLike
@@ -716,3 +716,10 @@ def write_hanging_tool(directory: str, seconds: int = 60) -> str:
         handle.write(f"#!/bin/sh\nsleep {seconds}\n")
     os.chmod(path, 0o755)
     return path
+
+
+def create_test_api_key(owner: User, **fields: object) -> APIKey:
+    """Create metadata for an account key without exposing its secret."""
+    fields.setdefault("name", "Test key")
+    fields.setdefault("verifier", "0" * 64)
+    return APIKey.objects.create(owner=owner, **fields)

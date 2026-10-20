@@ -473,3 +473,8 @@ export const userKeys = {
   /** The folders inside one folder of the signed-in user's library (#791). */
   librarySubfolders: (path: string) => [...userRoot, "librarySubfolders", path] as const,
 };
+
+export const apiKeyKeys = {
+  all: ["apiKeys"] as const,
+  page: (page: number) => ["apiKeys", "page", page] as const,
+};

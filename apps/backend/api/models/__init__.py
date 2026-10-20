@@ -11,6 +11,7 @@ from api.models.album_user import (
     AlbumUserPhoto,
 )
 from api.models.album_user_share import AlbumUserShare
+from api.models.api_key import APIKey
 from api.models.cluster import Cluster
 from api.models.copy_budget import CopyBudget
 from api.models.deletion_log import DeletionLog
@@ -45,6 +46,7 @@ from api.models.user import User
 from api.models.user_place import UserPlace
 
 __all__ = [
+    "APIKey",
     "EmbeddingSpace",
     "PhotoEmbedding",
     "RemoteModelConfig",

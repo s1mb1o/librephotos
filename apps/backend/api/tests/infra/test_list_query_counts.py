@@ -42,6 +42,7 @@ from api.tests.utils import (
     create_test_album_place,
     create_test_album_thing,
     create_test_album_user,
+    create_test_api_key,
     create_test_duplicate,
     create_test_face,
     create_test_file,
@@ -310,6 +311,7 @@ def _gallery_photo(
 # Every measured list route: the exact normalised route the walker reports,
 # and one fixture per kind of requester whose response differs.
 LIST_ROUTE_FIXTURES: dict[str, tuple[ListFixture, ...]] = {
+    "api/auth/keys/": (ListFixture(lambda owner, index: create_test_api_key(owner)),),
     "api/user/": (
         ListFixture(_public_user, requester="admin"),
         ListFixture(_public_user, requester="user"),

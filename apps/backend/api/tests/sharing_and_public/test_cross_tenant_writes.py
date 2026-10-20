@@ -86,6 +86,8 @@ THIRD_PARTY_PREFIXES = ("api/django-admin/", "api/accounts/")
 # that matches no mutating or function route fails the test. Keep the reason
 # next to each entry.
 NOT_PHOTO_SCOPED = {
+    "api/auth/keys/": "account credentials only; creates keys for the requester",
+    "api/auth/keys/(?P<pk>[^/.]+)/": "owner-scoped key revocation; tested in accounts/test_api_keys.py",
     "api/user/": "sign-up creates a new account; touches no existing rows",
     "api/user/(?P<pk>[^/.]+)/": "PATCH is IsAdminOrSelf: staff or the account itself",
     "api/manage/user/(?P<pk>[^/.]+)/": "admin-only user management",

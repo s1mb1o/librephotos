@@ -396,7 +396,32 @@
     "galleryShown": "Shown",
     "galleryHidden": "Hidden",
     "galleryNever": "Never shown: file names and folders, the exact spot on the gallery's lists, people you did not name, hidden, archived and private photos, albums, tags, favorites and ratings. The switches above decide the rest.",
-    "galleryUndated": "Without dates, your photos are listed together under Without timestamp, in no particular order."
+    "galleryUndated": "Without dates, your photos are listed together under Without timestamp, in no particular order.",
+    "apiKeys": {
+      "title": "API Keys",
+      "description": "Create separate credentials for scripts and integrations. Keys have read-only access by default. Changes to metadata can also write to sidecar or original files when metadata writeback is enabled.",
+      "photosRead": "Read photos, metadata, people, albums, and media",
+      "metadataWrite": "Change photo metadata",
+      "albumsWrite": "Change user albums",
+      "jobsRead": "Read job status",
+      "jobsSubmit": "Submit scans and caption jobs",
+      "never": "Never",
+      "revoked": "Revoked",
+      "revoke": "Revoke key",
+      "created": "Created",
+      "expires": "Expires",
+      "lastUsed": "Last used",
+      "name": "Key name",
+      "permissions": "Permissions",
+      "noExpiration": "Leave empty for no expiration.",
+      "create": "Create key",
+      "empty": "No API keys yet.",
+      "copyTitle": "Save your API key",
+      "copyOnce": "Copy this key now. The complete key will not be shown again. Store it in a password manager or a protected credentials file.",
+      "secret": "API key",
+      "done": "Done",
+      "confirmRevoke": "Revoke this key immediately? Requests that use it will fail. You can create a replacement key first."
+    }
   },
   "checkfilecontents": {
     "title": "Check file contents",

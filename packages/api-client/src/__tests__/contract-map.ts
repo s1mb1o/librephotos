@@ -12,6 +12,9 @@ import * as S from "../schemas";
 import type { ContractEntry } from "./openapi-contract";
 
 export const CONTRACT_MAP: Readonly<Record<string, ContractEntry>> = {
+  APIKey: { schema: S.APIKey, components: ["APIKey"] },
+  APIKeyCreated: { schema: S.APIKeyCreated, components: ["APIKeyCreated"] },
+  APIKeyPage: { schema: S.APIKeyPage, components: ["PaginatedAPIKeyList"] },
   // photos
   Photo: { schema: S.Photo, components: ["Photo"] },
   PhotoMetadataSummary: { schema: S.PhotoMetadataSummary, components: ["PhotoMetadataSummary"] },

@@ -41,6 +41,7 @@ _.run_upload_followups  # function in api/jobs/upload_followups.py (schedule_upl
 _.sweep_upload_imports  # function in api/jobs/upload_import.py (start_job_cleanup_service)
 
 # drf-spectacular extensions: defining one registers it, nothing names it.
+_.APIKeyScheme  # class in api/drf/openapi.py (OpenApiAuthenticationExtension)
 _.ThrottledBasicScheme  # class in api/drf/openapi.py (OpenApiAuthenticationExtension)
 _.JWTCookieScheme  # class in api/drf/openapi.py (OpenApiAuthenticationExtension)
 _.get_security_requirement  # method in api/drf/openapi.py (JWTCookieScheme, drf-spectacular calls it)

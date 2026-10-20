@@ -89,6 +89,7 @@ from librephotos.urls import (
 # viewset or a verb means adding it here, and a mutating one also needs a
 # case in sharing_and_public/test_cross_tenant_writes.py.
 ROUTER_VERBS: dict[str, set[str]] = {
+    "api/auth/keys": {"GET list", "POST create", "DELETE destroy"},
     "api/user": {"GET list", "GET retrieve", "POST create", "PATCH partial_update"},
     "api/manage/user": {"PATCH partial_update"},
     "api/delete/user": {"DELETE destroy"},

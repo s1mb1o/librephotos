@@ -40,6 +40,7 @@ vi.mock("../../api_client/user/hooks", () => ({
   useFetchUserSelfDetailsQuery: () => ({ data: mocks.user }),
   useUpdateUserMutation: () => ({ mutate: mocks.mutate, isPending: false }),
 }));
+vi.mock("./ApiKeysCard", () => ({ ApiKeysCard: () => null }));
 vi.mock("./ConfigBurstDetection", () => ({ ConfigBurstDetection: () => null }));
 vi.mock("./ConfigDateTime", () => ({ ConfigDateTime: () => null }));
 // Its own test: WriteExistingEditsRow.test.tsx.
@@ -114,6 +115,7 @@ afterEach(async () => {
 describe("Settings section anchors", () => {
   it("gives every card a stable id and lists it in the section navigation", () => {
     const ids = [
+      "settings-api-keys",
       "settings-scan",
       "settings-metadata",
       "settings-faces",

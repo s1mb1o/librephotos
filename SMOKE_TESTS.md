@@ -1,5 +1,9 @@
 # Smoke tests
 
+## Permanent API keys
+
+Create a permanent read-only key in Settings. Copy it once. Search and fetch an owned preview. Refuse metadata writes and private photos of another user. Revoke the key and verify the next request fails. Verify JWT sign-in remains available.
+
 ## Fork initialization
 
 - Verify that `origin` resolves to the personal GitHub fork.

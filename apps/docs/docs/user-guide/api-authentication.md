@@ -177,3 +177,8 @@ Development builds append an extra entry with `field` `auth` (code `authenticati
 - If testing cross-origin from a separate frontend, ensure CORS and credentials are configured properly and that cookies are allowed if relying on the `jwt` cookie.
 
 
+
+## Permanent API keys
+
+For scripts and integrations, use [API keys](./api-keys.md).
+Keys do not require JWT refresh or account password storage.
