@@ -681,6 +681,7 @@ SPECTACULAR_SETTINGS = {
     # Enum components are named after their field; a name that says whose
     # status this is keeps it stable when another "status" choice appears.
     "ENUM_NAME_OVERRIDES": {
+        "RemoteModelKindEnum": "api.serializers.site_settings.REMOTE_MODEL_KINDS",
         "HealthStatusEnum": "api.serializers.health.HEALTH_STATES",
         # A stack's type, and the narrower set the stack list returns.
         "StackTypeEnum": "api.serializers.stack.STACK_TYPES",

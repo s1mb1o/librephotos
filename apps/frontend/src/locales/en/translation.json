@@ -4345,6 +4345,10 @@
     "patches_invalid": "Enter a whole number from 1 to 4096.",
     "threshold_invalid": "Enter a number from -1 to 1.",
     "job_details": "View job details",
-    "build_help": "Builds the index for your account with the saved embedding settings."
+    "build_help": "Builds the index for your account with the saved embedding settings.",
+    "test": "Test",
+    "test_caption_success": "Captioning test passed with a synthetic image. Settings have not been saved.",
+    "test_embedding_success": "Embedding test passed for image and text input (1152 dimensions). Settings have not been saved.",
+    "test_failed": "The model test failed. Check the connection settings and try again."
   }
 }

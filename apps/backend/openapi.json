@@ -13375,6 +13375,55 @@
         }
       }
     },
+    "/api/sitesettings/test-model/": {
+      "post": {
+        "operationId": "api_sitesettings_test_model_create",
+        "description": "Test draft settings without saving providers, jobs, or index state.",
+        "tags": [
+          "api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoteModelTestRequestRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoteModelTestRequestRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoteModelTestRequestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "jwtAuth": []
+          },
+          {
+            "basicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoteModelTest"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/sitesettings/trash-retention-preview/": {
       "get": {
         "operationId": "api_sitesettings_trash_retention_preview_retrieve",
@@ -27554,6 +27603,14 @@
           "name"
         ]
       },
+      "RemoteModelKindEnum": {
+        "enum": [
+          "captioning",
+          "embeddings"
+        ],
+        "type": "string",
+        "description": "* `captioning` - captioning\n* `embeddings` - embeddings"
+      },
       "RemoteModelSettings": {
         "type": "object",
         "description": "Admin-only provider configuration. Never contains the stored token.",
@@ -27652,6 +27709,39 @@
             "minimum": -1
           }
         }
+      },
+      "RemoteModelTest": {
+        "type": "object",
+        "description": "A validated inference result. No credentials or provider response text.",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/RemoteModelKindEnum"
+          },
+          "dimension": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "dimension",
+          "kind"
+        ]
+      },
+      "RemoteModelTestRequestRequest": {
+        "type": "object",
+        "description": "Draft connection settings. Omitted fields retain their saved values.",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/RemoteModelKindEnum"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/RemoteModelSettingsRequestRequest"
+          }
+        },
+        "required": [
+          "kind",
+          "settings"
+        ]
       },
       "RemoveFromStackResponse": {
         "type": "object",

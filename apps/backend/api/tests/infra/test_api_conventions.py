@@ -606,6 +606,7 @@ ANONYMOUS_VIEWS: dict[str, str] = {
 # Views whose static permission_classes require staff. Dropping IsAdminUser
 # from one of them, or adding a new staff-only view, fails until it is here.
 STAFF_ONLY_VIEWS = {
+    "api.views.site_settings.RemoteModelTestView",
     "api.views.dataviz.ServerLogsView",
     "api.views.dataviz.ServerLogsViewerView",
     "api.views.dataviz.ServerStatsView",

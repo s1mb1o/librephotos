@@ -11,6 +11,14 @@ Added named API keys, optional expiration, immediate revocation, read-only defau
 
 ## 2026-11-02
 
+- Saved image captioning as enabled on docker-srv. Verified the configured OpenAI API model `qwen3.5-9b-nvfp4` is advertised by the provider.
+- Verified that the admin feature is enabled and unlocked. Preserved running processing jobs without a restart.
+- Documented the misleading local-service tooltip in remote captioning mode.
+
+- Extended the verified deployment drain to preserve per-photo tag generation after the initial scan.
+- Added Test beside remote model settings. Validate draft captioning and image/text embedding requests before saving.
+- Reuse saved tokens without exposing them. Keep provider selection, jobs, cached vectors, and indexes unchanged during tests.
+
 - Deployed the remote AI image to docker-srv. Preserved the active scan and all 62 pre-existing catalog and queue tables.
 - Added a frozen checkpoint, offline migration verification, and scan advancement checks to the deployment helper.
 - Added a queue drain that permits worker recycling. Verified pause and resume in an isolated container.

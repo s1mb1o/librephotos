@@ -21,8 +21,9 @@ It preserves the thumbnail aspect ratio.
 2. Enter the API base **URL**. Include `/v1` if your server requires it.
 3. Enter an **Access Token** if the provider requires authentication.
 4. Enter the exact **Model name** that the server serves.
-5. Click **Save model settings**.
-6. Start **Generate captions** from the Library page.
+5. Click **Test** to check the current URL, token, and model.
+6. Click **Save model settings** after the test succeeds.
+7. Start **Generate captions** from the Library page.
 
 The server must accept `POST {URL}/chat/completions` with image data URLs.
 The selected model must support image input.
@@ -49,8 +50,9 @@ Retain that key when you restore a database backup.
 3. Enter the embedding API base **URL** and optional **Access Token**.
 4. Set **Model name** to `siglip2-so400m-patch16-naflex`.
 5. Review **Advanced embedding settings** if required.
-6. Click **Save model settings**.
-7. Click **Build search index**.
+6. Click **Test** to check image and text embeddings.
+7. Click **Save model settings** after the test succeeds.
+8. Click **Build search index**.
 
 The build applies to the signed-in administrator's library.
 Other users build their own embeddings from the rebuild notice on their Library page.
@@ -110,6 +112,20 @@ To return to **OpenCLIP**, select it, save, and build the index again.
 The previous vectors remain stored for reuse.
 Model settings and vectors survive normal Docker image replacement.
 Keep the database, application key, and protected media on persistent storage.
+
+## Test before saving
+
+**Test** uses the current form values and a small synthetic image.
+Captioning must return caption text. Embeddings must return valid image and text vectors.
+The test does not read a library photo or save the draft settings.
+It does not change the selected model, create a job, or rebuild the index.
+A blank token field reuses the saved token. **Remove the saved access token**
+tests without that token. The saved token stays unchanged until you save.
+
+The button shows progress. A result appears beside the controls.
+Changing a field hides the earlier result. Fix a failed test and try again.
+A successful test checks connectivity and the response format.
+It does not measure caption or search quality. Saving is a separate action.
 
 ## Local sidecars
 

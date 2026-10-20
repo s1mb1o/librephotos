@@ -1,4 +1,10 @@
-import type { SiteModelDownload, SiteSettings, SiteSettingsUpdate } from "@librephotos/api-client";
+import {
+  ApiError,
+  type RemoteModelTestRequest,
+  type SiteModelDownload,
+  type SiteSettings,
+  type SiteSettingsUpdate,
+} from "@librephotos/api-client";
 import { Grid, MantineProvider } from "@mantine/core";
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
@@ -8,6 +14,15 @@ import { AIModelSettings } from "./AIModelSettings";
 
 type SaveOptions = { onSuccess?: () => void };
 const mocks = vi.hoisted(() => ({
+  resetTest: vi.fn<() => void>(),
+  testModel: vi.fn<(input: RemoteModelTestRequest) => void>(),
+  testState: {
+    variables: undefined as RemoteModelTestRequest | undefined,
+    isSuccess: false,
+    isPending: false,
+    isError: false,
+    error: null as Error | null,
+  },
   save: vi.fn<(input: SiteSettingsUpdate, options?: SaveOptions) => void>(),
   follow: vi.fn<(job: SiteModelDownload | null | undefined) => SiteModelDownload | null | undefined>(job => job),
   rebuild: vi.fn<(stage: string) => void>(),
@@ -15,6 +30,7 @@ const mocks = vi.hoisted(() => ({
 }));
 vi.mock("react-i18next", () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock("../../api_client/settings/hooks", () => ({
+  useTestModelSettingsMutation: () => ({ mutate: mocks.testModel, reset: mocks.resetTest, ...mocks.testState }),
   useUpdateSettingsMutation: () => ({ mutate: mocks.save, isPending: false }),
   useFollowModelDownload: mocks.follow,
 }));
@@ -76,6 +92,14 @@ beforeAll(() => {
 
 beforeEach(() => {
   mocks.save.mockReset();
+  mocks.testModel.mockReset();
+  Object.assign(mocks.testState, {
+    variables: undefined,
+    isSuccess: false,
+    isPending: false,
+    isError: false,
+    error: null,
+  });
   mocks.rebuild.mockReset();
   mocks.follow.mockClear();
   container = document.createElement("div");
@@ -220,5 +244,65 @@ describe("AI model settings", () => {
     });
     expect(mocks.follow).toHaveBeenCalledWith(job);
     expect(container.textContent).toContain("aimodelsettings.job_progress");
+  });
+});
+
+async function clickTest(kind: "captioning" | "embedding") {
+  const button = defined(
+    [...form(kind).querySelectorAll("button")].find(node => node.textContent === "aimodelsettings.test")
+  );
+  await act(async () => button.click());
+  return button;
+}
+
+describe("test model settings before saving", () => {
+  it("tests the draft URL, token, and model without saving or rebuilding", async () => {
+    await render({ ...BASE, captioning_model: "openai_api", captioning_api: REMOTE });
+    await type(field(form("captioning"), "aimodelsettings.url"), "http://draft.example/v1");
+    await type(field(form("captioning"), "aimodelsettings.access_token"), "draft-token");
+    await type(field(form("captioning"), "aimodelsettings.model_name"), "draft-model");
+    await clickTest("captioning");
+    expect(defined(mocks.testModel.mock.calls[0])[0]).toMatchObject({
+      kind: "captioning",
+      settings: { url: "http://draft.example/v1", token: "draft-token", model_name: "draft-model" },
+    });
+    expect(mocks.save).not.toHaveBeenCalled();
+    expect(mocks.rebuild).not.toHaveBeenCalled();
+  });
+  it("validates the draft before sending a test and hides Test for local models", async () => {
+    await render();
+    expect(container.textContent).not.toContain("aimodelsettings.test");
+    await selectProvider("captioning", "aimodelsettings.openai_api");
+    await clickTest("captioning");
+    expect(mocks.testModel).not.toHaveBeenCalled();
+    expect(container.textContent).toContain("aimodelsettings.invalid_url");
+  });
+  it("shows the test result and removes it when draft settings change", async () => {
+    const settings = { ...BASE, captioning_model: "openai_api", captioning_api: REMOTE };
+    await render(settings);
+    await clickTest("captioning");
+    mocks.testState.variables = defined(mocks.testModel.mock.calls[0])[0];
+    mocks.testState.isSuccess = true;
+    await render(settings);
+    expect(form("captioning").textContent).toContain("aimodelsettings.test_caption_success");
+    await type(field(form("captioning"), "aimodelsettings.model_name"), "changed-model");
+    expect(form("captioning").textContent).not.toContain("aimodelsettings.test_caption_success");
+  });
+  it("shows a sanitized provider error inline", async () => {
+    const settings = { ...BASE, embedding_model: "siglip2_naflex", embedding_api: REMOTE };
+    await render(settings);
+    await clickTest("embedding");
+    mocks.testState.variables = defined(mocks.testModel.mock.calls[0])[0];
+    mocks.testState.isError = true;
+    mocks.testState.error = new ApiError(
+      400,
+      "/sitesettings/test-model/",
+      "private transport detail",
+      undefined,
+      "Model provider returned HTTP 401."
+    );
+    await render(settings);
+    expect(form("embedding").textContent).toContain("Model provider returned HTTP 401.");
+    expect(form("embedding").textContent).not.toContain("private transport detail");
   });
 });

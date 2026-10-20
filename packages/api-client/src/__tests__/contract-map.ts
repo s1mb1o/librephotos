@@ -143,6 +143,7 @@ export const CONTRACT_MAP: Readonly<Record<string, ContractEntry>> = {
   SiteSettings: { schema: S.SiteSettings, components: ["SiteSettings"] },
   SiteFeatures: { schema: S.SiteFeatures, components: ["SiteFeatures"] },
   SiteModelDownload: { schema: S.SiteModelDownload, components: ["SiteModelDownload"] },
+  RemoteModelTest: { schema: S.RemoteModelTest, components: ["RemoteModelTest"] },
   RemoteModelSettings: { schema: S.RemoteModelSettings, components: ["RemoteModelSettings"] },
   EmbeddingStatus: { schema: S.EmbeddingStatus, components: ["EmbeddingStatus"] },
   SiteAutoScanStatus: { schema: S.SiteAutoScanStatus, components: ["SiteAutoScanStatus"] },

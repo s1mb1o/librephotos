@@ -26,7 +26,8 @@ under `librephotos-docker-srv-admin`, account `ashmelev`.
 The activation helper pulls the replacement image before maintenance.
 It drains prefetched tasks before it stops the application.
 Pending tasks remain in PostgreSQL. The scan keeps its job ID and counters.
-The helper refuses a started job other than a photo scan.
+The helper supports photo scans and per-photo tag generation.
+It refuses other started jobs.
 Wait for caption generation or an embedding rebuild before deployment.
 
 The helper suspends the queue pusher while workers finish prefetched tasks.

@@ -97,6 +97,7 @@ NOT_PHOTO_SCOPED = {
     "api/services/(?P<pk>[^/.]+)/start/": "admin-only service control",
     "api/services/(?P<pk>[^/.]+)/stop/": "admin-only service control",
     "api/sitesettings/": "admin-only site config",
+    "api/sitesettings/test-model/": "admin-only synthetic provider check; no photo or database writes",
     "api/email-config/": "admin-only mail config",
     "api/email-config/test/": "admin-only mail config",
     "api/upload/": "chunked upload into the requester's library",

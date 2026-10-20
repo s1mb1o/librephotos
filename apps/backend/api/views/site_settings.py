@@ -6,6 +6,7 @@ from constance import config as site_config
 from constance import settings as constance_settings
 from django.db import transaction
 from drf_spectacular.utils import extend_schema
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny, BasePermission, IsAdminUser
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -39,9 +40,13 @@ from api.runtime.ml_models import (
     latest_model_download,
     start_model_download,
 )
+from api.runtime.model_checks import check_remote_model
 from api.runtime.model_settings import public_remote_config, save_remote_config
+from api.runtime.remote_inference import RemoteInferenceError
 from api.search.semantic import OPENCLIP
 from api.serializers.site_settings import (
+    RemoteModelTestRequest,
+    RemoteModelTestSerializer,
     SiteSettingsRequest,
     SiteSettingsSerializer,
     TrashRetentionPreviewQuery,
@@ -310,3 +315,18 @@ class TrashRetentionPreviewView(APIView):
         return Response(
             {"days": days, "photo_count": photo_count, "user_count": user_count}
         )
+
+
+class RemoteModelTestView(APIView):
+    """Test draft settings without saving providers, jobs, or index state."""
+
+    permission_classes = [IsAdminUser]
+
+    @extend_schema(request=RemoteModelTestRequest, responses=RemoteModelTestSerializer)
+    def post(self, request: Request) -> Response:
+        data = parse_body(request, RemoteModelTestRequest)
+        try:
+            result = check_remote_model(data["kind"], data["settings"])
+        except RemoteInferenceError as error:
+            raise ValidationError({"provider": str(error)}) from None
+        return Response(result)

@@ -307,3 +307,39 @@ describe("custom date rules (#2272)", () => {
     );
   });
 });
+
+describe("draft model test", () => {
+  it("sends unsaved settings only to the test endpoint and parses the result", async () => {
+    const { client, requests } = fakeServer({
+      kind: "embeddings",
+      dimension: 1152,
+    });
+    const input = {
+      kind: "embeddings",
+      settings: {
+        url: "http://draft.example/v1",
+        model_name: "siglip",
+        token: "draft-token",
+      },
+    } as const;
+    await expect(endpoints.testRemoteModel(client, input)).resolves.toEqual({
+      kind: "embeddings",
+      dimension: 1152,
+    });
+    expect(requests).toEqual([
+      {
+        url: "https://demo.example.com/api/sitesettings/test-model/",
+        method: "POST",
+        body: input,
+      },
+    ]);
+  });
+  it("rejects a malformed test result", async () => {
+    await expect(
+      endpoints.testRemoteModel(fakeServer({ kind: "other" }).client, {
+        kind: "captioning",
+        settings: {},
+      })
+    ).rejects.toBeInstanceOf(ResponseParseError);
+  });
+});

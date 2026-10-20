@@ -65,6 +65,23 @@ class RemoteModelSettingsRequest(serializers.Serializer[None]):
         return attrs
 
 
+REMOTE_MODEL_KINDS = ("captioning", "embeddings")
+
+
+class RemoteModelTestRequest(serializers.Serializer[None]):
+    """Draft connection settings. Omitted fields retain their saved values."""
+
+    kind = serializers.ChoiceField(choices=REMOTE_MODEL_KINDS)
+    settings = RemoteModelSettingsRequest()
+
+
+class RemoteModelTestSerializer(serializers.Serializer[None]):
+    """A validated inference result. No credentials or provider response text."""
+
+    kind = serializers.ChoiceField(choices=REMOTE_MODEL_KINDS)
+    dimension = serializers.IntegerField(allow_null=True)
+
+
 class RemoteModelSettingsSerializer(serializers.Serializer[None]):
     """Admin-only provider configuration. Never contains the stored token."""
 
