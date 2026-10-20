@@ -2,6 +2,8 @@
 
 ## 2026-11-02 — API-key authentication
 
+OpenAPI header names use their standard HTTP spelling. The JSON naming guard must exclude header parameters and header security schemes. Keep property and query parameter checks active.
+
 Enforce API-key capabilities in authentication because views can replace their permission classes. Use exact view identities and HTTP methods. Deny unknown routes. The custom media view needs the new authenticator explicitly. High-entropy secrets permit SHA-256 verifiers without password storage.
 
 ## 2026-11-02 — Deploy during an active scan

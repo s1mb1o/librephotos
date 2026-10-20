@@ -2,6 +2,7 @@
 
 ## 2026-11-02 — Permanent API keys
 
+- Keep standard HTTP header names outside the JSON snake_case guard. Preserve JSON and query parameter checks.
 Added named API keys, optional expiration, immediate revocation, read-only defaults, explicit capabilities, authenticated media, account settings, and API contracts. Secrets are shown once and stored only as verifiers. Administrator keys remain owner-scoped for jobs and metadata. API-key headers cannot use JWT cookies to bypass upload restrictions.
 
 ## 2026-11-02

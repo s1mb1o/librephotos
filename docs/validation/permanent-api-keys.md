@@ -37,3 +37,7 @@ broken-anchor warning.
 
 All work used a temporary clone. Test containers had temporary data paths and
 no NAS mount. No production scan, database, or deployment was changed.
+
+The broader MCP regression group exposed a naming-guard false positive.
+The guard applied JSON snake_case rules to the standard `Authorization` header.
+The guard now excludes HTTP header names. It still checks JSON properties and query parameters.

@@ -131,7 +131,7 @@ def non_snake_case_fields(classes: Iterable[type]) -> dict[str, set[str]]:
 
 
 def openapi_names(document: object) -> set[str]:
-    """Every property name and parameter name in an OpenAPI document."""
+    """Every property and non-header parameter name in an OpenAPI document."""
     names: set[str] = set()
 
     def walk(node: object) -> None:
@@ -139,7 +139,11 @@ def openapi_names(document: object) -> set[str]:
             properties = node.get("properties")
             if isinstance(properties, dict):
                 names.update(str(key) for key in properties)
-            if isinstance(node.get("in"), str) and isinstance(node.get("name"), str):
+            if (
+                isinstance(node.get("in"), str)
+                and node["in"] != "header"
+                and isinstance(node.get("name"), str)
+            ):
                 names.add(node["name"])
             for value in node.values():
                 walk(value)
@@ -194,6 +198,26 @@ def stale_entries(allowed: Iterable[str], found: Iterable[str]) -> list[str]:
 
 
 class ApiNamingTest(SimpleTestCase):
+    def test_http_header_names_keep_their_standard_spelling(self) -> None:
+        names = openapi_names(
+            {
+                "components": {
+                    "securitySchemes": {
+                        "key": {
+                            "type": "apiKey",
+                            "in": "header",
+                            "name": "Authorization",
+                        }
+                    },
+                    "schemas": {
+                        "payload": {"properties": {"camelCase": {"type": "string"}}}
+                    },
+                },
+                "parameters": [{"in": "query", "name": "camelQuery"}],
+            }
+        )
+        self.assertEqual(names, {"camelCase", "camelQuery"})
+
     def test_serializer_fields_are_snake_case(self) -> None:
         found = non_snake_case_fields(project_serializers())
         new = {
