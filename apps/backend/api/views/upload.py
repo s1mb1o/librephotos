@@ -222,6 +222,10 @@ def authenticate_upload_request(request: HttpRequest) -> User:
     failures are reported the way the chunked-upload client expects: as
     ``ChunkedUploadError`` (403).
     """
+    header = request.META.get("HTTP_AUTHORIZATION", "")
+    parts = header.split() if isinstance(header, str) else []
+    if parts and parts[0].lower() == "api-key":
+        raise _forbidden("API keys do not support uploads.")
     try:
         credentials = JWTCookieAuthentication().authenticate_strict(request)
     except InvalidToken:

@@ -2963,7 +2963,7 @@ export async function deleteAllAutoAlbums(client: ApiClient): Promise<string> {
 }
 
 export async function fetchAPIKeys(client: ApiClient, page = 1): Promise<S.APIKeyPage> {
-  const res = await client.get<unknown>(`/auth/keys/?page=${page}&page_size=25`);
+  const res = await client.get<unknown>(`/auth/keys/?page=${page}&page_size=${S.API_KEYS_PAGE_SIZE}`);
   return parseResponse(S.APIKeyPage, res, "API keys");
 }
 

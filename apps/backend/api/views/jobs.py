@@ -16,6 +16,7 @@ from api.drf.params import parse_query
 from api.drf.request_user import request_user
 from api.jobs.queue import remove_queued_tasks
 from api.models import LongRunningJob
+from api.models.api_key import APIKey
 from api.serializers.fields import loaded
 from api.serializers.job import (
     CancelJobResponseSerializer,
@@ -67,7 +68,9 @@ class LongRunningJobViewSet(
         user = request_user(self.request)
         own_jobs = qs.owned_by(user)
 
-        if not (user.is_staff or user.is_superuser):
+        if isinstance(self.request.auth, APIKey) or not (
+            user.is_staff or user.is_superuser
+        ):
             # Non-staff are always confined to their own jobs. ?mine is not read
             # on this path on purpose: the parameter may only ever narrow a
             # queryset, never widen one, so no value of it — ?mine=false

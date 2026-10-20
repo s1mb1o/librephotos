@@ -3,8 +3,9 @@
 import hashlib
 import secrets
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
+from django.db.models import Q
 from django.http import HttpRequest
 from django.utils import timezone
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
@@ -68,7 +69,11 @@ class APIKeyAuthentication(BaseAuthentication):
             raise PermissionDenied(
                 "This API key does not permit this operation.", code="api_key_scope"
             )
-        APIKey.objects.filter(pk=key.pk).update(last_used_at=now)
+        cutoff = now - timedelta(minutes=1)
+        if key.last_used_at is None or key.last_used_at < cutoff:
+            APIKey.objects.filter(pk=key.pk).filter(
+                Q(last_used_at__isnull=True) | Q(last_used_at__lt=cutoff)
+            ).update(last_used_at=now)
         return key.owner, key
 
     def authenticate_header(self, request: HttpRequest) -> str:

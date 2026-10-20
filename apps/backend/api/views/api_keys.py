@@ -1,6 +1,6 @@
 """API-key management requires an account credential, never an API key."""
 
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
@@ -43,7 +43,10 @@ class APIKeyViewSet(
         values = parse_body(request, APIKeyCreateRequest)
         owner = request_user(request)
         if (
-            APIKey.objects.owned_by(owner).filter(revoked_at__isnull=True).count()
+            APIKey.objects.owned_by(owner)
+            .filter(revoked_at__isnull=True)
+            .filter(Q(expires_at__isnull=True) | Q(expires_at__gt=timezone.now()))
+            .count()
             >= 100
         ):
             raise ValidationError(
@@ -57,4 +60,6 @@ class APIKeyViewSet(
         return response
 
     def perform_destroy(self, instance: APIKey) -> None:
-        APIKey.objects.filter(pk=instance.pk).update(revoked_at=timezone.now())
+        APIKey.objects.filter(pk=instance.pk, revoked_at__isnull=True).update(
+            revoked_at=timezone.now()
+        )

@@ -381,7 +381,11 @@ class MediaServingView(APIView):
     # header. A stale cookie makes the request anonymous rather than a 401, so
     # public photos and shared albums are still served (see
     # JWTCookieAuthentication).
-    authentication_classes = (APIKeyAuthentication, JWTCookieAuthentication, ThrottledBasicAuthentication)
+    authentication_classes = (
+        APIKeyAuthentication,
+        JWTCookieAuthentication,
+        ThrottledBasicAuthentication,
+    )
 
     def _should_use_proxy(self) -> bool:
         return not getattr(settings, "SERVE_FRONTEND", False)

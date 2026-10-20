@@ -402,7 +402,7 @@
       "description": "Create separate credentials for scripts and integrations. Keys have read-only access by default. Changes to metadata can also write to sidecar or original files when metadata writeback is enabled.",
       "photosRead": "Read photos, metadata, people, albums, and media",
       "metadataWrite": "Change photo metadata",
-      "albumsWrite": "Change user albums",
+      "albumsWrite": "Change user albums, including photos in shared albums",
       "jobsRead": "Read job status",
       "jobsSubmit": "Submit scans and caption jobs",
       "never": "Never",
@@ -420,7 +420,10 @@
       "copyOnce": "Copy this key now. The complete key will not be shown again. Store it in a password manager or a protected credentials file.",
       "secret": "API key",
       "done": "Done",
-      "confirmRevoke": "Revoke this key immediately? Requests that use it will fail. You can create a replacement key first."
+      "confirmRevoke": "Revoke this key immediately? Requests that use it will fail. You can create a replacement key first.",
+      "expired": "Expired",
+      "invalidExpiration": "Select a valid expiration date and time.",
+      "emptyDescription": "Create a separate key for each script or integration."
     }
   },
   "checkfilecontents": {

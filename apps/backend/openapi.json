@@ -35,10 +35,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -77,10 +77,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -136,10 +136,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -176,10 +176,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -220,10 +220,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -281,10 +281,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -333,10 +333,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -383,10 +383,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -445,10 +445,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -486,10 +486,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -718,10 +718,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -941,10 +941,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -986,10 +986,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1068,10 +1068,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1129,10 +1129,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1171,10 +1171,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1232,10 +1232,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1293,10 +1293,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1360,10 +1360,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1429,10 +1429,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1507,10 +1507,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1564,10 +1564,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1608,10 +1608,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1657,10 +1657,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1706,10 +1706,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1760,10 +1760,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1822,10 +1822,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1892,10 +1892,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1951,10 +1951,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -1991,10 +1991,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2047,10 +2047,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2098,10 +2098,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2159,10 +2159,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2229,10 +2229,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2281,10 +2281,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2333,10 +2333,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2511,10 +2511,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2563,10 +2563,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2738,10 +2738,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2768,10 +2768,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2800,10 +2800,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2830,10 +2830,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2881,10 +2881,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2912,10 +2912,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2944,10 +2944,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -2974,10 +2974,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3026,10 +3026,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3058,10 +3058,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3102,10 +3102,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3134,10 +3134,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3166,10 +3166,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3197,10 +3197,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3239,10 +3239,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3274,10 +3274,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3319,10 +3319,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3351,10 +3351,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3381,10 +3381,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3422,10 +3422,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3477,10 +3477,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3543,10 +3543,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3586,10 +3586,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3629,10 +3629,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3672,10 +3672,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3735,10 +3735,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3778,10 +3778,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3829,10 +3829,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3861,10 +3861,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3893,10 +3893,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3942,10 +3942,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -3993,10 +3993,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4035,10 +4035,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4141,10 +4141,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4220,10 +4220,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4274,10 +4274,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4305,10 +4305,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4364,10 +4364,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4396,10 +4396,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4426,10 +4426,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4458,10 +4458,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4520,10 +4520,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4584,10 +4584,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4636,10 +4636,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4726,10 +4726,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4787,10 +4787,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4819,10 +4819,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4870,10 +4870,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4920,10 +4920,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -4978,10 +4978,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5030,10 +5030,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5190,10 +5190,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5222,10 +5222,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5273,10 +5273,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5315,10 +5315,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5355,10 +5355,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5391,10 +5391,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5442,10 +5442,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5474,10 +5474,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5526,10 +5526,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5570,10 +5570,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5602,10 +5602,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5654,10 +5654,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5704,10 +5704,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5766,10 +5766,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5807,10 +5807,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5832,10 +5832,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5864,10 +5864,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5916,10 +5916,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5947,10 +5947,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -5978,10 +5978,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6012,10 +6012,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6060,10 +6060,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6122,10 +6122,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6164,10 +6164,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6224,10 +6224,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6274,10 +6274,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6309,10 +6309,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6369,10 +6369,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6411,10 +6411,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6454,10 +6454,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6524,10 +6524,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6567,10 +6567,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6602,10 +6602,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6632,10 +6632,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6684,10 +6684,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6734,10 +6734,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6796,10 +6796,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6837,10 +6837,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6899,10 +6899,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -6941,10 +6941,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7001,10 +7001,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7059,10 +7059,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7120,10 +7120,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7162,10 +7162,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7221,10 +7221,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7261,10 +7261,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7317,10 +7317,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7380,10 +7380,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7443,10 +7443,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7495,10 +7495,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7527,10 +7527,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7558,10 +7558,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7621,10 +7621,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7669,10 +7669,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7729,10 +7729,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7793,10 +7793,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7836,10 +7836,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7896,10 +7896,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7955,10 +7955,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -7998,10 +7998,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8041,10 +8041,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8102,10 +8102,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8145,10 +8145,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8205,10 +8205,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8265,10 +8265,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8306,10 +8306,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8343,10 +8343,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8386,10 +8386,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8437,10 +8437,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8480,10 +8480,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8538,10 +8538,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8589,10 +8589,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8638,10 +8638,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8681,10 +8681,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8742,10 +8742,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8802,10 +8802,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8843,10 +8843,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8936,10 +8936,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -8990,10 +8990,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9044,10 +9044,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9076,10 +9076,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9119,10 +9119,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9200,10 +9200,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9252,10 +9252,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9305,10 +9305,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9357,10 +9357,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9441,10 +9441,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9534,10 +9534,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9627,10 +9627,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9679,10 +9679,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9711,10 +9711,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9777,10 +9777,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9829,10 +9829,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9891,10 +9891,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9943,10 +9943,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -9994,10 +9994,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10045,10 +10045,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10077,10 +10077,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10126,10 +10126,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10374,10 +10374,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10426,10 +10426,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10478,10 +10478,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10530,10 +10530,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10592,10 +10592,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10644,10 +10644,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10707,10 +10707,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10759,10 +10759,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10822,10 +10822,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10874,10 +10874,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10926,10 +10926,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -10978,10 +10978,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11009,10 +11009,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11041,10 +11041,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11093,10 +11093,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11144,10 +11144,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11196,10 +11196,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11248,10 +11248,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11300,10 +11300,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11352,10 +11352,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11404,10 +11404,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11455,10 +11455,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11507,10 +11507,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11558,10 +11558,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11590,10 +11590,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11621,10 +11621,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11671,10 +11671,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11740,10 +11740,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11791,10 +11791,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11912,10 +11912,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11964,10 +11964,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -11995,10 +11995,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12027,10 +12027,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12076,10 +12076,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12127,10 +12127,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12159,10 +12159,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12208,10 +12208,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12240,10 +12240,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12270,10 +12270,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12302,10 +12302,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12332,10 +12332,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12486,10 +12486,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12555,10 +12555,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12586,10 +12586,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12617,10 +12617,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12660,10 +12660,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12691,10 +12691,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12722,10 +12722,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12764,10 +12764,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12806,10 +12806,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12848,10 +12848,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12879,10 +12879,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12928,10 +12928,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -12973,10 +12973,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13004,10 +13004,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13062,10 +13062,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13105,10 +13105,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13146,10 +13146,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13209,10 +13209,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13252,10 +13252,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13315,10 +13315,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13378,10 +13378,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13429,10 +13429,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13480,10 +13480,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13532,10 +13532,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13564,10 +13564,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13595,10 +13595,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13626,10 +13626,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13658,10 +13658,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13709,10 +13709,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13760,10 +13760,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13811,10 +13811,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13862,10 +13862,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13913,10 +13913,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13944,10 +13944,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -13995,10 +13995,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14046,10 +14046,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14097,10 +14097,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14166,10 +14166,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14216,10 +14216,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14269,10 +14269,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14329,10 +14329,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14370,10 +14370,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14425,10 +14425,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14488,10 +14488,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14550,10 +14550,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14581,10 +14581,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14612,10 +14612,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14644,10 +14644,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14696,10 +14696,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14747,10 +14747,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14799,10 +14799,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14831,10 +14831,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14863,10 +14863,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14906,10 +14906,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -14949,10 +14949,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15001,10 +15001,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15062,10 +15062,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15113,10 +15113,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15163,10 +15163,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15215,10 +15215,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15265,10 +15265,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15308,10 +15308,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15368,10 +15368,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15409,10 +15409,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15459,10 +15459,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15534,10 +15534,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15576,10 +15576,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15636,10 +15636,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15688,10 +15688,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15732,10 +15732,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15784,10 +15784,10 @@
         },
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []
@@ -15815,10 +15815,10 @@
         ],
         "security": [
           {
-            "apiKeyAuth": []
+            "jwtAuth": []
           },
           {
-            "jwtAuth": []
+            "apiKeyAuth": []
           },
           {
             "basicAuth": []

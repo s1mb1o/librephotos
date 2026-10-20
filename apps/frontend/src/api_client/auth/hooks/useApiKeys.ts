@@ -11,7 +11,9 @@ export function useCreateApiKey() {
   return useMutation({
     mutationFn: (values: Parameters<typeof endpoints.createAPIKey>[1]) => endpoints.createAPIKey(apiClient, values),
     gcTime: 0,
-    onSuccess: () => client.invalidateQueries({ queryKey: apiKeyKeys.all }),
+    onSuccess: () => {
+      void client.invalidateQueries({ queryKey: apiKeyKeys.all });
+    },
   });
 }
 

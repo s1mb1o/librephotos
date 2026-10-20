@@ -41,7 +41,6 @@ WRITES: dict[tuple[str, str], str] = {
     ("albums.AlbumUserEditViewSet", "POST"): ALBUMS_WRITE,
     ("albums.AlbumUserEditViewSet", "PATCH"): ALBUMS_WRITE,
     ("scan_triggers.ScanPhotosView", "POST"): JOBS_SUBMIT,
-    ("scan_triggers.ScanUserPhotosView", "POST"): JOBS_SUBMIT,
     ("scan_triggers.GenerateCaptionsView", "POST"): JOBS_SUBMIT,
 }
 

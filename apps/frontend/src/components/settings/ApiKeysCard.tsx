@@ -1,4 +1,9 @@
-import { APIKeyPermission, type APIKey, type APIKeyPermission as Permission } from "@librephotos/api-client";
+import {
+  API_KEYS_PAGE_SIZE,
+  APIKeyPermission,
+  type APIKey,
+  type APIKeyPermission as Permission,
+} from "@librephotos/api-client";
 import {
   Alert,
   Badge,
@@ -36,12 +41,14 @@ const LABELS: Record<Permission, ParseKeys> = {
 
 function KeyRow({ item, onRevoke, pending }: { item: APIKey; onRevoke: () => void; pending: boolean }) {
   const { t } = useTranslation();
+  const expired = item.expires_at !== null && parseInstant(item.expires_at).toMillis() <= Date.now();
   const time = (value: string | null) => (value ? parseInstant(value).toLocaleString() : t("settings.apiKeys.never"));
   return (
     <Card withBorder>
       <Stack gap="xs">
         <Group justify="space-between">
           <Text fw={600}>{item.name}</Text>
+          {expired && !item.revoked_at && <Badge color="gray">{t("settings.apiKeys.expired")}</Badge>}
           {item.revoked_at ? (
             <Badge color="gray">{t("settings.apiKeys.revoked")}</Badge>
           ) : (
@@ -76,8 +83,10 @@ export function ApiKeysCard() {
   const [name, setName] = useState("");
   const [permissions, setPermissions] = useState<Permission[]>(["photos:read", "jobs:read"]);
   const [expiration, setExpiration] = useState<string | null>(null);
+  const [expirationError, setExpirationError] = useState(false);
   const [secret, setSecret] = useState<string | null>(null);
   const [revokeId, setRevokeId] = useState<string | null>(null);
+  const pages = query.data?.num_pages ?? Math.max(1, Math.ceil((query.data?.count ?? 0) / API_KEYS_PAGE_SIZE));
   const closeSecret = () => {
     setSecret(null);
     create.reset();
@@ -111,6 +120,8 @@ export function ApiKeysCard() {
         </Checkbox.Group>
         <DateTimePicker
           clearable
+          withSeconds
+          error={expirationError ? t("settings.apiKeys.invalidExpiration") : null}
           label={t("settings.apiKeys.expires")}
           description={t("settings.apiKeys.noExpiration")}
           value={expiration}
@@ -120,12 +131,20 @@ export function ApiKeysCard() {
           loading={create.isPending}
           onClick={() => {
             if (!name.trim() || permissions.length === 0) return;
+            const expiresAt = expiration ? fromPickerValue(expiration) : null;
+            if (expiration && expiresAt === null) {
+              setExpirationError(true);
+              return;
+            }
+            setExpirationError(false);
             create.mutate(
-              { name: name.trim(), permissions, expires_at: expiration ? fromPickerValue(expiration) : null },
+              { name: name.trim(), permissions, expires_at: expiresAt },
               {
                 onSuccess: data => {
                   setSecret(data.key);
                   setName("");
+                  setPermissions(["photos:read", "jobs:read"]);
+                  setExpiration(null);
                   create.reset();
                 },
               }
@@ -145,13 +164,18 @@ export function ApiKeysCard() {
           />
         ))}
         {query.data?.count === 0 && (
-          <EmptyState title={t("settings.apiKeys.empty")} description={t("settings.apiKeys.noExpiration")} />
+          <EmptyState title={t("settings.apiKeys.empty")} description={t("settings.apiKeys.emptyDescription")} />
         )}
-        {(query.data?.num_pages ?? 1) > 1 && (
-          <Pagination value={page} onChange={setPage} total={query.data?.num_pages ?? 1} />
-        )}
+        {pages > 1 && <Pagination value={page} onChange={setPage} total={pages} />}
       </Stack>
-      <Modal opened={secret !== null} onClose={closeSecret} title={t("settings.apiKeys.copyTitle")}>
+      <Modal
+        closeOnClickOutside={false}
+        closeOnEscape={false}
+        withCloseButton={false}
+        opened={secret !== null}
+        onClose={closeSecret}
+        title={t("settings.apiKeys.copyTitle")}
+      >
         <Stack>
           <Alert>{t("settings.apiKeys.copyOnce")}</Alert>
           <TextInput

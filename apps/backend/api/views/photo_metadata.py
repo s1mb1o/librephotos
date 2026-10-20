@@ -31,6 +31,7 @@ from api.metadata import edits
 from api.metadata.raw import MainFileMissingError, raw_metadata
 from api.metadata.reader import MetadataReadError
 from api.models import Photo
+from api.models.api_key import APIKey
 from api.models.photo_metadata import MetadataEdit, PhotoMetadata
 from api.serializers.photo_metadata import (
     BulkMetadataQuery,
@@ -75,7 +76,7 @@ class PhotoMetadataViewSet(PaginatedViewMixin, ViewSet):
         # user's photo is a 404 like an unknown one: a 403 would confirm it
         # exists, and image_hash (the file's MD5 plus the owner id) is
         # computable by anyone with the file.
-        if user.is_staff and not write:
+        if user.is_staff and not write and not isinstance(request.auth, APIKey):
             photos = Photo.objects.all()
         else:
             photos = Photo.objects.owned_by(user)

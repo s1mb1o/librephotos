@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { PageFields, UuidString } from "./common";
 
+export const API_KEYS_PAGE_SIZE = 25;
+
 export const APIKeyPermission = z.enum(["photos:read", "metadata:write", "albums:write", "jobs:read", "jobs:submit"]);
 export type APIKeyPermission = z.infer<typeof APIKeyPermission>;
 export const APIKey = z.object({

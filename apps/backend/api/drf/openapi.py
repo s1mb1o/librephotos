@@ -117,5 +117,12 @@ class APIKeyScheme(OpenApiAuthenticationExtension):
     target_class = "api.accounts.api_keys.APIKeyAuthentication"
     name = "apiKeyAuth"
 
-    def get_security_definition(self, auto_schema: openapi.AutoSchema) -> dict[str, str]:
-        return {"type": "apiKey", "in": "header", "name": "Authorization", "description": "Api-Key lp_<identifier>.<secret>"}
+    def get_security_definition(
+        self, auto_schema: openapi.AutoSchema
+    ) -> dict[str, str]:
+        return {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization",
+            "description": "Api-Key lp_<identifier>.<secret>",
+        }
