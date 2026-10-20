@@ -1,5 +1,9 @@
 # Research log
 
+## 2026-11-02 — Persistent MCP HTTP deployment
+
+The owner selected persistent tokens for LAN HTTP. Keep MCP tokens separate from LibrePhotos API keys. Use SDK bearer authentication and auth-context middleware without advertising a nonexistent OAuth issuer. Bind the credentials directory so atomic verifier replacement revokes access on the next request.
+
 ## 2026-11-02 — MCP integration
 
 Use the official MCP SDK 2.3.0. Shared HTTP is an OAuth resource server. Validate issuer, audience, expiry, signature, subject, and scope. Resolve the authenticated subject to its LibrePhotos key. Do not forward MCP bearer tokens. SQL paging must precede photo serialization. Cap semantic candidates and related detail collections. Preserve the existing sharing redaction and album grants.

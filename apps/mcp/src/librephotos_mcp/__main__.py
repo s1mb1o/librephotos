@@ -8,6 +8,7 @@ from urllib.parse import urlsplit
 from mcp.server.transport_security import TransportSecuritySettings
 
 from librephotos_mcp.config import Config
+from librephotos_mcp.http import token_http_app
 from librephotos_mcp.server import create_server
 
 
@@ -36,14 +37,26 @@ def main() -> None:
         allowed = [resource.netloc]
         if resource.port is None:
             allowed.append(f"{resource.hostname}:*")
+        security = TransportSecuritySettings(
+            allowed_hosts=allowed, allowed_origins=[f"{resource.scheme}://{resource.netloc}"]
+        )
+        if config.auth_mode == "token":
+            import uvicorn
+
+            uvicorn.run(
+                token_http_app(server, config, security),
+                host=args.host,
+                port=args.port,
+                log_level="warning",
+                access_log=False,
+            )
+            return
         server.run(
             "streamable-http",
             host=args.host,
             port=args.port,
             stateless_http=True,
-            transport_security=TransportSecuritySettings(
-                allowed_hosts=allowed, allowed_origins=[f"{resource.scheme}://{resource.netloc}"]
-            ),
+            transport_security=security,
         )
 
 

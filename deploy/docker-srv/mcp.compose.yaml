@@ -1,0 +1,47 @@
+name: librephotos-mcp
+services:
+  mcp:
+    image: ${LP_MCP_IMAGE:?Set LP_MCP_IMAGE}
+    container_name: librephotos-mcp
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    cpus: 1
+    ports:
+      - "${LP_MCP_BIND_IP:-192.168.86.16}:${LP_MCP_PORT:-19851}:8000"
+    environment:
+      LIBREPHOTOS_URL: http://librephotos-app:8001
+      LIBREPHOTOS_MCP_AUTH_MODE: token
+      LIBREPHOTOS_MCP_RESOURCE_URL: ${LP_MCP_URL:-http://192.168.86.16:19851/mcp}
+      LIBREPHOTOS_MCP_PRINCIPALS_FILE: /run/credentials/principals.json
+      LIBREPHOTOS_MCP_TOKENS_FILE: /run/credentials/tokens.json
+      LIBREPHOTOS_MCP_ENABLE_WRITES: ${LP_MCP_ENABLE_WRITES:-false}
+    volumes:
+      - type: bind
+        source: ${LP_MCP_CREDENTIALS_ROOT:-/srv/librephotos/mcp/credentials}
+        target: /run/credentials
+        read_only: true
+        bind:
+          create_host_path: false
+    networks:
+      - librephotos
+    healthcheck:
+      test: [CMD, python, -c, "import socket; socket.create_connection(('127.0.0.1',8000),timeout=3).close()"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+
+networks:
+  librephotos:
+    external: true
+    name: librephotos_default

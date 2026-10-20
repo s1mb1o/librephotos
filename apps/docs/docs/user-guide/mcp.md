@@ -181,3 +181,35 @@ LibrePhotos permission checks.
 
 Protocol references: [MCP authorization](https://modelcontextprotocol.io/specification/latest/basic/authorization)
 and the [official Python SDK](https://github.com/modelcontextprotocol/python-sdk).
+
+## Persistent HTTP tokens
+
+Set `LIBREPHOTOS_MCP_AUTH_MODE=token` to use provisioned bearer tokens without
+an OAuth provider. Clients must support an explicit `Authorization` header.
+This mode does not provide OAuth discovery or browser sign-in.
+Use HTTPS outside a trusted LAN.
+
+Keep the subject-to-API-key map in `LIBREPHOTOS_MCP_PRINCIPALS_FILE`.
+Set `LIBREPHOTOS_MCP_TOKENS_FILE` to an owner-only JSON file:
+
+```json
+{
+  "REPLACE_WITH_SHA256_HEX_DIGEST": "issuer-subject-for-alice"
+}
+```
+
+Generate each client token as `lpmcp_` plus 32 random bytes encoded with
+URL-safe Base64. Store only its SHA-256 hexadecimal digest in this file.
+The subject must exist in the API-key map. The MCP token and API key are separate.
+Tokens do not expire automatically. Remove a verifier to revoke that token.
+The service reads this file for every authenticated request.
+Mount the credentials directory so atomic file replacements are visible.
+Keep the directory mode `0700` and files mode `0600`, readable by UID 10001.
+Revoking the mapped LibrePhotos key also stops access to the library.
+
+Set `LIBREPHOTOS_MCP_RESOURCE_URL` to the exact MCP URL.
+The issuer and JWKS settings are unused in token mode.
+For example, connect to `http://192.168.86.16:19851/mcp` on the trusted LAN
+with `Authorization: Bearer <persistent MCP token>`.
+The docker-srv deployment uses `deploy/docker-srv/mcp.compose.yaml`.
+Read tools remain the default. API-key capabilities still authorize every call.
