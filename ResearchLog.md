@@ -1,5 +1,31 @@
 # Research log
 
+## 2026-11-02 — Share-link clipboard failure on LAN HTTP
+
+The live Chrome tab uses http://192.168.86.16:19850.
+PhotoShareLinkModal and PhotoSharesSection use Mantine CopyButton.
+The installed useClipboard hook calls navigator.clipboard.writeText.
+It records an error when the Clipboard API is absent.
+CopyButton exposes copied and copy, but does not expose that error to these callers.
+The dialog therefore gives no failure feedback.
+The existing copyToClipboard helper has a legacy text fallback, but these controls do not use it.
+
+The asynchronous Clipboard API requires a secure context.
+A remote LAN IP served over HTTP does not meet that requirement.
+The browser restriction and the missing UI feedback explain the reported behavior.
+The modal's read-only URL input selects its text on focus.
+The current workaround is to focus that field and use the platform copy shortcut.
+A correction should provide text-copy fallback and visible failure feedback.
+Trusted HTTPS would enable the native Clipboard API.
+No runtime or application behavior was changed during this investigation.
+
+Sources:
+- apps/frontend/src/components/sharing/PhotoShareLinkModal.tsx, lines 54-68.
+- apps/frontend/src/components/sharing/PhotoSharesSection.tsx, lines 35-48.
+- Installed Mantine useClipboard and CopyButton implementations.
+- https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText
+- https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Secure_Contexts
+
 ## 2026-11-02 — Feeder-safe queue drain
 
 SIGSTOP stops the pusher's feeder thread as well as its main loop.
