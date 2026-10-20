@@ -68,8 +68,9 @@ run `docker compose up -d --wait`. If an update migrated the database, restore
 the matching database dump before starting the previous image. Do not assume
 that an older application can use a newer schema.
 
-The fork still needs code changes for pairing across directories, configurable
-remote caption models, and photo quality scoring.
+The fork still needs code changes for pairing across directories and photo
+quality scoring. Remote caption and embedding providers are configured in
+Admin Area. See `apps/docs/docs/user-guide/settings/remote-ai.md`.
 
 ## Initial model installation
 

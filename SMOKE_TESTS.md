@@ -54,3 +54,20 @@ Verified on 2026-11-01:
 Before another path migration, stop the app and back up PostgreSQL and
 `protected_media`. Update both catalog paths and signed queued scan tasks.
 Keep user captions and photo identities unchanged. Refresh derived search paths.
+
+## Remote AI models
+
+- [ ] In Admin Area, select OpenAI API. Confirm URL, Access Token, and Model name appear.
+- [ ] Save a provider. Reload the page. Confirm the token stays blank and the saved-token hint appears.
+- [ ] Generate a caption. Confirm the existing prompt context reaches the provider and a manual caption stays unchanged.
+- [ ] Select SigLIP2 NaFlex. Save settings. Build the index and observe job progress.
+- [ ] Confirm text search and similar photos use the active profile and preserve relevance order.
+- [ ] Fail a provider request and cancel a build. Confirm the prior index still works and the next run reuses cached batches.
+- [ ] Restart the similarity sidecar. Confirm both model namespaces load from disk.
+- [ ] Switch to OpenCLIP and rebuild. Confirm local behavior and manual metadata remain intact.
+- [ ] Confirm a non-admin cannot read connection settings or change providers.
+- [ ] Evaluate search and Thing thresholds on representative photos before using the labels for curation.
+- [ ] Change the model, endpoint, revision, and patch budget. Confirm a rebuild notice appears before and after saving.
+- [ ] Change settings during a build. Confirm that build uses one captured profile.
+- [ ] Change the checkpoint revision behind the same endpoint and model. Confirm text semantic search pauses until promotion and metadata search still works.
+- [ ] Sign in as a non-admin. Confirm their Library page reports their own pending rebuild and can start it.

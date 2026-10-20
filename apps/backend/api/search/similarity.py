@@ -6,12 +6,17 @@ from typing import TYPE_CHECKING, TypedDict
 from uuid import UUID
 
 import requests
+from django.db.models import F
 
 from api.lazy_import import LazyModule
 from api.models import Photo, User
+from api.models.remote_model import PhotoEmbedding
 from api.runtime import sidecars
 from api.runtime.http_timeouts import SIMILARITY
+from api.runtime.model_settings import remote_config
+from api.search.profiles import EmbeddingProfile, active_profile
 from api.search.semantic import (
+    OPENCLIP,
     SEARCH_THRESHOLD,
     SIMILAR_THRESHOLD,
     is_current_embedding,
@@ -42,15 +47,22 @@ def search_similar_embedding(
     emb: Sequence[float],
     result_count: int = 100,
     threshold: float | None = None,
+    profile: EmbeddingProfile | None = None,
 ) -> list[str]:
     """Hashes of the user's photos closest to ``emb``, a query embedding;
     ``threshold`` defaults to the search cut."""
-    if threshold is None:
-        threshold = SEARCH_THRESHOLD
     if isinstance(user, int):
         user_id = user
     else:
         user_id = user.id
+
+    profile = profile or active_profile(user_id)
+    if threshold is None:
+        threshold = (
+            SEARCH_THRESHOLD
+            if profile.provider == OPENCLIP
+            else remote_config("embeddings").search_threshold
+        )
 
     image_embedding = np.array(emb, dtype=np.float32)
 
@@ -59,6 +71,7 @@ def search_similar_embedding(
         "image_embedding": image_embedding.tolist(),
         "n": result_count,
         "threshold": threshold,
+        **profile.index_parameters,
     }
     try:
         res = sidecars.post(
@@ -89,13 +102,24 @@ def search_similar_image(
     else:
         user_id = user.id
 
-    clip_embeddings = photo.get_clip_embeddings()
+    profile = active_profile(user_id)
+    if profile.provider == OPENCLIP:
+        clip_embeddings = (
+            photo.get_clip_embeddings() if is_current_embedding(photo) else None
+        )
+    else:
+        record = PhotoEmbedding.objects.filter(
+            photo=photo, space_id=profile.key, source_hash=photo.image_hash
+        ).first()
+        clip_embeddings = record.vector if record is not None else None
     if clip_embeddings is None:
         return []
-    if not is_current_embedding(photo):
-        return []
     if threshold is None:
-        threshold = SIMILAR_THRESHOLD
+        threshold = (
+            SIMILAR_THRESHOLD
+            if profile.provider == OPENCLIP
+            else remote_config("embeddings").similar_threshold
+        )
 
     image_embedding = np.array(clip_embeddings, dtype=np.float32)
 
@@ -103,6 +127,7 @@ def search_similar_image(
         "user_id": user_id,
         "image_embedding": image_embedding.tolist(),
         "threshold": threshold,
+        **profile.index_parameters,
     }
     try:
         res = sidecars.post(
@@ -124,12 +149,13 @@ class SimilarityIndexError(RuntimeError):
     """The similarity sidecar did not take a page of the index rebuild."""
 
 
-def build_image_similarity_index(user: User) -> int:
-    """Rebuild the user's similarity index from their CLIP embeddings.
+def build_image_similarity_index(
+    user: User, profile: EmbeddingProfile | None = None
+) -> int:
+    """Rebuild one profile's index from the user's matching cached vectors.
 
-    Only OpenCLIP's embeddings go in (api.search.semantic): while a library
-    is being converted from an earlier model, the photos not converted yet are
-    left out rather than mixed in.
+    The default is the active profile. Replacement jobs pass their captured
+    profile. Different profiles never share vector dimensions or index files.
 
     The pages go to the sidecar as one rebuild: the first carries ``begin``,
     the last ``commit``, and the sidecar swaps the new index in only after
@@ -137,6 +163,9 @@ def build_image_similarity_index(user: User) -> int:
     a failed rebuild leaves it in place. Raises SimilarityIndexError when the
     sidecar refuses or misses a page.
     """
+    profile = profile or active_profile(user)
+    if profile.provider != OPENCLIP:
+        return _build_remote_index(user, profile)
     logger.info("building similarity index for user %s", user.username)
     start = datetime.now()
     # isnull rather than exclude(clip_embeddings=None): that compares every
@@ -183,6 +212,36 @@ def build_image_similarity_index(user: User) -> int:
         "building similarity index of %d photos took %.2f seconds", index_size, elapsed
     )
     return index_size
+
+
+def _build_remote_index(user: User, profile: EmbeddingProfile) -> int:
+    records = PhotoEmbedding.objects.owned_by(user).filter(
+        space_id=profile.key, photo__hidden=False, source_hash=F("photo__image_hash")
+    )
+    last_page = max(1, ceil(records.count() / INDEX_PAGE_SIZE))
+    after: UUID | None = None
+    size = 0
+    for page in range(1, last_page + 1):
+        query = records.select_related("photo").order_by("photo_id")
+        if after is not None:
+            query = query.filter(photo_id__gt=after)
+        batch = list(query[:INDEX_PAGE_SIZE])
+        size = _post_build_page(
+            user,
+            page,
+            last_page,
+            {
+                "user_id": user.pk,
+                "image_hashes": [r.photo.image_hash for r in batch],
+                "image_embeddings": [r.vector for r in batch],
+                "begin": page == 1,
+                "commit": page == last_page,
+                **profile.index_parameters,
+            },
+        )
+        if batch:
+            after = batch[-1].photo_id
+    return size
 
 
 def _post_build_page(

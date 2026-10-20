@@ -49,7 +49,9 @@ logger = logging.getLogger(__name__)
 # The model's name: Photo.clip_embeddings_model of its embeddings, the
 # captions_json key of its tags and the prefix of its tag albums' thing_type.
 OPENCLIP = "openclip_vitb32"
+SIGLIP2 = "siglip2_naflex"
 TAG_THING_TYPE = f"{OPENCLIP}_tag"
+TAG_THING_TYPES = (TAG_THING_TYPE, f"{SIGLIP2}_tag")
 
 # Inner-product cuts: text search, and "similar photos" in the photo detail.
 SEARCH_THRESHOLD = 31.3
@@ -141,6 +143,13 @@ def generate_photo_tags(
     """
     if not feature_enabled("SCENE_CLASSIFICATION"):
         logger.info("Scene classification is disabled")
+        return
+    from constance import config as site_config
+
+    if site_config.EMBEDDING_MODEL != OPENCLIP:
+        from api.search.provider_jobs import generate_remote_tags
+
+        generate_remote_tags(caption, commit=commit, force=force)
         return
     if not _needs_tags(caption, force):
         return

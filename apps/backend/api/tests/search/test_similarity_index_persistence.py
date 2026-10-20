@@ -365,7 +365,7 @@ class BuildImageSimilarityIndexTest(TestCase):
             build_image_similarity_index(self.user)
 
 
-class SearchSimilarEmbeddingTest(SimpleTestCase):
+class SearchSimilarEmbeddingTest(TestCase):
     @patch("api.runtime.sidecars.http.post")
     def test_an_error_reply_is_no_result(self, post):
         post.return_value = _error_reply()

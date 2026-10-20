@@ -37,6 +37,7 @@ const mocks = vi.hoisted(() => {
     ApiError,
     mutate: vi.fn<(user: Partial<User>, options?: SaveOptions) => void>(),
     generateAutoAlbums: vi.fn<() => void>(),
+    rebuild: vi.fn<(stage: string) => void>(),
     updateUserError: vi.fn<(message: string) => void>(),
     regenerateEventTitles: vi.fn<() => void>(),
     applyDateRules: vi.fn<() => void>(),
@@ -69,6 +70,7 @@ vi.mock("../../api_client/folders/hooks/useFetchNextcloudDirsQuery", () => ({
   useFetchNextcloudDirsQuery: () => ({ isFetching: false, isSuccess: false, isError: false, data: [] }),
 }));
 vi.mock("../../api_client/jobs/hooks", () => ({
+  useRunProcessingStageMutation: () => ({ ...noopMutation, mutate: mocks.rebuild }),
   useApplyDateRules: () => ({ start: mocks.applyDateRules, running: false }),
   useGenerateAutoAlbumsMutation: () => ({ ...noopMutation, mutate: mocks.generateAutoAlbums }),
   useGenerateCaptionsMutation: () => noopMutation,
@@ -83,6 +85,7 @@ vi.mock("../../api_client/jobs/hooks", () => ({
 vi.mock("../../api_client/photos/hooks", () => ({ useDeleteMissingPhotosMutation: () => noopMutation }));
 vi.mock("../../api_client/settings/hooks", () => ({
   useGetSettingsQuery: () => ({ data: mocks.settings }),
+  useFollowModelDownload: (job: unknown) => job,
 }));
 vi.mock("../../api_client/stats/hooks", () => ({ useFetchCountStatsQuery: () => ({ data: undefined }) }));
 vi.mock("../../api_client/user/hooks", () => ({
@@ -471,5 +474,31 @@ describe("Library link to the Admin Area (#2037)", () => {
 
     expect(adminLink()?.getAttribute("href")).toBe("/admin");
     expect(adminLink()?.getAttribute("hash")).toBe("admin-users");
+  });
+});
+
+describe("Library embedding model changes", () => {
+  it("shows the rebuild notice for a non-admin and starts their search job", async () => {
+    mocks.auth.access.is_admin = false;
+    mocks.settings.embedding_status = {
+      selected_model: "siglip2_naflex",
+      active_model: "openclip_vitb32",
+      reindex_required: true,
+      job: null,
+    };
+    await act(async () =>
+      root.render(
+        <MantineProvider>
+          <Library />
+        </MantineProvider>
+      )
+    );
+    expect(container.textContent).toContain(i18n.t("aimodelsettings.reindex_required", { model: "OpenCLIP" }));
+    const button = defined(
+      [...container.querySelectorAll("button")].find(node => node.textContent === i18n.t("aimodelsettings.build_index"))
+    );
+    await act(async () => button.click());
+    expect(mocks.rebuild).toHaveBeenCalledWith("search");
+    delete mocks.settings.embedding_status;
   });
 });

@@ -1,7 +1,5 @@
 # Build from the repository root. Keep dependency layers before application code.
-ARG NODE_IMAGE=node:24-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c
-ARG BASE_IMAGE=reallibrephotos/librephotos-base:1.5.1@sha256:9dcf24396235ef8832fe1e5c1bcbe76eca57f5a954d2b0ad3a85179ed0783435
-FROM ${NODE_IMAGE} AS frontend
+FROM node:24-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c AS frontend
 WORKDIR /usr/src/app/apps/frontend
 ENV CLI_WIDTH=80
 COPY apps/frontend/package.json apps/frontend/yarn.lock ./
@@ -13,7 +11,7 @@ COPY packages/api-client/ /usr/src/app/packages/api-client/
 COPY apps/frontend/ ./
 RUN yarn run build
 
-FROM ${BASE_IMAGE}
+FROM reallibrephotos/librephotos-base:1.5.1@sha256:9dcf24396235ef8832fe1e5c1bcbe76eca57f5a954d2b0ad3a85179ed0783435
 WORKDIR /code
 COPY apps/backend/requirements*.txt /code/
 RUN --mount=type=cache,id=librephotos-pip,target=/root/.cache/pip \

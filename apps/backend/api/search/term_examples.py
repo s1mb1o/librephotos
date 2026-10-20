@@ -79,7 +79,8 @@ def _photo_terms(photo: Photo) -> dict[str, list[str]]:
     # caption_instance is a reverse one-to-one; the sample excludes photos
     # without captions, so the accessor never raises here.
     if photo.caption_instance.captions_json:
-        tag_result = photo.caption_instance.captions_json.get(OPENCLIP)
+        captions = photo.caption_instance.captions_json
+        tag_result = captions.get(captions.get("tagging_model", OPENCLIP))
         if tag_result is not None:
             tags = tag_result.get("tags", [])
     return {

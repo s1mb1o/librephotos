@@ -48,7 +48,9 @@ Keep each change focused to reduce future merge work.
 
 See [ResearchLog.md](ResearchLog.md) for the reviewed limitations.
 See [SMOKE_TESTS.md](SMOKE_TESTS.md) for validation targets.
-These priorities are pending. Fork creation does not implement them.
+Fork creation did not implement these priorities. Remote captioning and
+SigLIP2 NaFlex inference are now implemented. Quality scoring and directory
+organization remain future work. See `apps/docs/docs/user-guide/settings/remote-ai.md`.
 
 ## Original photos
 

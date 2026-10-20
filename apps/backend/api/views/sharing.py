@@ -33,7 +33,7 @@ from api.faces.recipients import (
     shared_person_photos,
 )
 from api.models import AlbumRole, AlbumUser, Photo, User
-from api.search.semantic import TAG_THING_TYPE
+from api.search.semantic import TAG_THING_TYPES
 from api.serializers.album_user import (
     AlbumUserListSerializer,
     LeaveSharedAlbumRequest,
@@ -118,7 +118,7 @@ class SharedToMeThingListViewSet(_SharedGroupListViewSet):
     kind = THINGS
 
     def links(self, user: User | None) -> QuerySet[Model]:
-        return thing_links(user, [TAG_THING_TYPE])
+        return thing_links(user, list(TAG_THING_TYPES))
 
 
 @extend_schema_view(list=extend_schema(parameters=[SharedGroupPhotosQuery]))
@@ -163,7 +163,7 @@ class SharedToMeThingPhotoListViewSet(_SharedGroupPhotoListViewSet):
     kind = THINGS
 
     def links(self, user: User | None) -> QuerySet[Model]:
-        return thing_links(user, [TAG_THING_TYPE])
+        return thing_links(user, list(TAG_THING_TYPES))
 
 
 class SharedToMePersonListViewSet(ListViewSet):

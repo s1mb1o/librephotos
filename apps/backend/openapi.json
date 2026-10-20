@@ -18327,6 +18327,47 @@
           "status"
         ]
       },
+      "EmbeddingModelEnum": {
+        "enum": [
+          "openclip_vitb32",
+          "siglip2_naflex"
+        ],
+        "type": "string",
+        "description": "* `openclip_vitb32` - openclip_vitb32\n* `siglip2_naflex` - siglip2_naflex"
+      },
+      "EmbeddingStatus": {
+        "type": "object",
+        "description": "The authenticated user's active index and pending provider selection.",
+        "properties": {
+          "selected_model": {
+            "type": "string"
+          },
+          "active_model": {
+            "type": "string"
+          },
+          "reindex_required": {
+            "type": "boolean"
+          },
+          "text_search_paused": {
+            "type": "boolean"
+          },
+          "job": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SiteModelDownload"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "active_model",
+          "job",
+          "reindex_required",
+          "selected_model",
+          "text_search_paused"
+        ]
+      },
       "EventTitleParts": {
         "type": "object",
         "description": "``AlbumAuto.title_parts``: what the title is made of, for clients that word it (#2235).\n\nOutput only: the fields are read-only, so the schema has no request twin.",
@@ -25568,6 +25609,105 @@
           "name"
         ]
       },
+      "RemoteModelSettings": {
+        "type": "object",
+        "description": "Admin-only provider configuration. Never contains the stored token.",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "model_name": {
+            "type": "string"
+          },
+          "has_token": {
+            "type": "boolean"
+          },
+          "disable_thinking": {
+            "type": "boolean"
+          },
+          "revision": {
+            "type": "string"
+          },
+          "max_num_patches": {
+            "type": "integer"
+          },
+          "search_threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "similar_threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "tag_threshold": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "disable_thinking",
+          "has_token",
+          "max_num_patches",
+          "model_name",
+          "revision",
+          "search_threshold",
+          "similar_threshold",
+          "tag_threshold",
+          "url"
+        ]
+      },
+      "RemoteModelSettingsRequestRequest": {
+        "type": "object",
+        "description": "Partial provider settings. Blank tokens keep the stored credential.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "model_name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "token": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "clear_token": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "disable_thinking": {
+            "type": "boolean"
+          },
+          "revision": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "max_num_patches": {
+            "type": "integer",
+            "maximum": 4096,
+            "minimum": 1
+          },
+          "search_threshold": {
+            "type": "number",
+            "format": "double",
+            "maximum": 1,
+            "minimum": -1
+          },
+          "similar_threshold": {
+            "type": "number",
+            "format": "double",
+            "maximum": 1,
+            "minimum": -1
+          },
+          "tag_threshold": {
+            "type": "number",
+            "format": "double",
+            "maximum": 1,
+            "minimum": -1
+          }
+        }
+      },
       "RemoveFromStackResponse": {
         "type": "object",
         "description": "``updated``, or ``deleted`` (with a message) when fewer than 2 photos were left.",
@@ -27895,6 +28035,18 @@
           "captioning_model": {
             "type": "string"
           },
+          "embedding_model": {
+            "type": "string"
+          },
+          "captioning_api": {
+            "$ref": "#/components/schemas/RemoteModelSettings"
+          },
+          "embedding_api": {
+            "$ref": "#/components/schemas/RemoteModelSettings"
+          },
+          "embedding_status": {
+            "$ref": "#/components/schemas/EmbeddingStatus"
+          },
           "captioning_available": {
             "type": "boolean",
             "description": "Captions can be generated: the image captioning switch is on and a captioning model is picked. Sent to everyone."
@@ -28009,6 +28161,7 @@
           "captioning_available",
           "captioning_model",
           "email_configured",
+          "embedding_model",
           "face_recognition_model",
           "geocode_language",
           "heavyweight_process",
@@ -28060,6 +28213,18 @@
           },
           "captioning_model": {
             "type": "string"
+          },
+          "captioning_api": {
+            "$ref": "#/components/schemas/RemoteModelSettingsRequestRequest"
+          },
+          "embedding_model": {
+            "$ref": "#/components/schemas/EmbeddingModelEnum"
+          },
+          "embedding_api": {
+            "$ref": "#/components/schemas/RemoteModelSettingsRequestRequest"
+          },
+          "rebuild_embeddings": {
+            "type": "boolean"
           },
           "ocr_model": {
             "type": "string"

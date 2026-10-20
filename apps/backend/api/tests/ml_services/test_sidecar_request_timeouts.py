@@ -15,7 +15,7 @@ one-place edit.
 
 from unittest.mock import MagicMock, patch
 
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, TestCase
 
 from api.runtime import http_timeouts
 
@@ -95,7 +95,7 @@ class ExifReaderTimeoutTest(SimpleTestCase):
         self.assertEqual(mock_post.call_args.kwargs["timeout"], http_timeouts.EXIF)
 
 
-class ImageSimilarityTimeoutTest(SimpleTestCase):
+class ImageSimilarityTimeoutTest(TestCase):
     @patch("api.runtime.sidecars.http.post")
     def test_search_similar_embedding_passes_timeout(self, mock_post):
         mock_post.return_value = _ok_response({"result": []})
@@ -126,7 +126,7 @@ class ServicesHealthCheckTimeoutTest(SimpleTestCase):
         )
 
 
-class CaptionTimeoutTest(SimpleTestCase):
+class CaptionTimeoutTest(TestCase):
     @patch("api.runtime.sidecars.http.post")
     def test_generate_caption_passes_timeout(self, mock_post):
         mock_post.return_value = _ok_response({"caption": "x"})

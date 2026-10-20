@@ -9,7 +9,7 @@ from typing import TypeVar, cast
 import requests
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db import connection
-from django.db.models import Model, Q, QuerySet
+from django.db.models import Case, IntegerField, Model, Q, QuerySet, When
 from rest_framework import filters
 from rest_framework.request import Request
 from rest_framework.views import APIView
@@ -20,8 +20,11 @@ from api.models.photo import Photo
 from api.models.photo_search import fold
 from api.models.tag import Tag
 from api.models.user_place import UserPlace
+from api.runtime.remote_inference import RemoteInferenceError
 from api.search.metadata_filter import metadata_filter_q, parse_metadata_filter
-from api.search.semantic import calculate_query_embeddings
+from api.search.profiles import active_profile, text_search_paused
+from api.search.remote_embeddings import remote_embeddings
+from api.search.semantic import OPENCLIP, calculate_query_embeddings
 from api.search.similarity import search_similar_embedding
 from api.sharing.library_search import library_matches
 
@@ -168,11 +171,21 @@ class SemanticSearchFilter(filters.SearchFilter):
         user = request_user(request)
         query = request.query_params.get("search")
         start = datetime.datetime.now()
-        emb, magnitude = calculate_query_embeddings(query)
+        profile = active_profile(user)
+        if text_search_paused(profile):
+            raise RemoteInferenceError(
+                "Rebuild the search index after changing the served checkpoint revision."
+            )
+        if profile.provider == OPENCLIP:
+            emb, magnitude = calculate_query_embeddings(query)
+        else:
+            emb = remote_embeddings(profile, [query or ""])[0]
         elapsed = (datetime.datetime.now() - start).total_seconds()
         logger.info("finished calculating query embedding - took %.2f seconds", elapsed)
         start = datetime.datetime.now()
-        image_hashes = search_similar_embedding(user.id, emb, user.semantic_search_topk)
+        image_hashes = search_similar_embedding(
+            user.id, emb, user.semantic_search_topk, profile=profile
+        )
         elapsed = (datetime.datetime.now() - start).total_seconds()
         logger.info("search similar embedding - took %.2f seconds", elapsed)
         return image_hashes
@@ -222,7 +235,12 @@ class SemanticSearchFilter(filters.SearchFilter):
         if request_user(request).semantic_search_topk > 0:
             try:
                 image_hashes = self._semantic_matches(request)
-            except (requests.RequestException, KeyError, ValueError) as error:
+            except (
+                requests.RequestException,
+                KeyError,
+                ValueError,
+                RemoteInferenceError,
+            ) as error:
                 # The text, tag and OCR matches still answer while the CLIP
                 # sidecar is down, busy or missing its model.
                 logger.warning(
@@ -255,4 +273,14 @@ class SemanticSearchFilter(filters.SearchFilter):
             # in the resulting queryset.
             # We try to avoid this if possible, for performance reasons.
             queryset = queryset.distinct()
+        if image_hashes:
+            rank = Case(
+                *[
+                    When(image_hash=value, then=position)
+                    for position, value in enumerate(image_hashes)
+                ],
+                default=len(image_hashes),
+                output_field=IntegerField(),
+            )
+            queryset = queryset.order_by(rank, "pk")
         return queryset

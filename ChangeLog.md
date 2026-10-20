@@ -2,6 +2,13 @@
 
 ## 2026-11-01
 
+- Added OpenAI-compatible captioning with URL, encrypted access token, and model settings in Admin Area.
+- Added remote SigLIP2 NaFlex for text search, similar photos, and generated Things.
+- Added separate embedding profiles, cached vectors, persistent similarity indexes, and an explicit index build action.
+- Added model-change warnings and a rebuild action for each user. Kept the active index during replacement.
+- Paused text semantic search when a changed checkpoint uses the same model handle. Preserved manual metadata and local provider defaults.
+- Added provider validation, failure and cancellation tests, API schemas, and setup documentation.
+
 - Remounted PhotoLibrary read-only at `/data/PhotoLibrary` on docker-srv.
 - Migrated catalog paths and signed scan tasks without changing photo identities.
 - Preserved 7,256 photos and their metadata. Verified login, captions, previews,

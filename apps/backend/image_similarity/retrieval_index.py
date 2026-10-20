@@ -14,7 +14,9 @@ embedding_size = 512
 
 
 def _reshaped_embeddings(
-    embeddings_array: npt.NDArray[np.float32], user_id: int
+    embeddings_array: npt.NDArray[np.float32],
+    user_id: int,
+    dimension: int = embedding_size,
 ) -> npt.NDArray[np.float32] | None:
     """Return the array shaped as (n_vectors, embedding_size), or None if invalid."""
     if embeddings_array.size == 0:
@@ -23,14 +25,17 @@ def _reshaped_embeddings(
 
     dimensions = len(embeddings_array.shape)
     if dimensions == 1:
-        return embeddings_array.reshape(1, -1)
-    if dimensions != 2:
+        embeddings_array = embeddings_array.reshape(1, -1)
+    elif dimensions != 2:
         logger.error("Unexpected embedding shape: %s", embeddings_array.shape)
         return None
-    if embeddings_array.shape[1] != embedding_size:
+    if (
+        embeddings_array.shape[1] != dimension
+        or not np.isfinite(embeddings_array).all()
+    ):
         logger.error(
             "Expected embedding size %s, got %s",
-            embedding_size,
+            dimension,
             embeddings_array.shape[1],
         )
         return None
@@ -53,10 +58,13 @@ class RetrievalIndex:
     ``os.replace``, then swaps it in memory.
     """
 
-    def __init__(self, store_dir: str | None = None) -> None:
+    def __init__(
+        self, store_dir: str | None = None, dimension: int = embedding_size
+    ) -> None:
         self.indices: dict[int, faiss.Index] = {}
         self.image_hashes: dict[int, list[str]] = {}
         self.store_dir = store_dir
+        self.dimension = dimension
         self._staging: dict[int, tuple[faiss.Index, list[str]]] = {}
         self._warned_missing: set[int] = set()
 
@@ -103,7 +111,7 @@ class RetrievalIndex:
         except Exception as e:
             logger.error("could not read the similarity index %s: %s", path, e)
             return False
-        if index.ntotal != len(image_hashes):
+        if index.ntotal != len(image_hashes) or index.d != self.dimension:
             logger.error(
                 "similarity index %s holds %s vectors for %s photos; ignoring it",
                 path,
@@ -145,7 +153,7 @@ class RetrievalIndex:
 
     def begin_rebuild(self, user_id: int) -> None:
         logger.info("rebuilding the similarity index of user %s", user_id)
-        self._staging[user_id] = (faiss.IndexFlatIP(embedding_size), [])
+        self._staging[user_id] = (faiss.IndexFlatIP(self.dimension), [])
 
     def add_to_rebuild(
         self, user_id: int, image_hashes: list[str], image_embeddings: list[list[float]]
@@ -160,7 +168,7 @@ class RetrievalIndex:
                 f"{len(image_embeddings)} embeddings"
             )
         embeddings_array = _reshaped_embeddings(
-            np.array(image_embeddings, dtype=np.float32), user_id
+            np.array(image_embeddings, dtype=np.float32), user_id, self.dimension
         )
         if embeddings_array is None:
             raise IndexBuildError("embeddings of the wrong shape")
@@ -197,13 +205,13 @@ class RetrievalIndex:
 
         # Initialize or get existing index and hashes
         if self._live(user_id) is None:
-            self.indices[user_id] = faiss.IndexFlatIP(embedding_size)
+            self.indices[user_id] = faiss.IndexFlatIP(self.dimension)
         if not self.image_hashes.get(user_id):
             self.image_hashes[user_id] = []
 
         # FAISS expects shape (n_vectors, embedding_size)
         embeddings_array = _reshaped_embeddings(
-            np.array(image_embeddings, dtype=np.float32), user_id
+            np.array(image_embeddings, dtype=np.float32), user_id, self.dimension
         )
         if embeddings_array is None:
             return
@@ -261,6 +269,10 @@ class RetrievalIndex:
             return []
 
         start = datetime.datetime.now()
+        if len(in_embedding) != self.dimension or not np.isfinite(in_embedding).all():
+            raise ValueError(
+                "Query embedding does not match the active index dimension or contains invalid values"
+            )
         dist, res_indices = index.search(np.array([in_embedding], dtype=np.float32), n)
         res: list[str] = []
         for distance, idx in sorted(zip(dist[0], res_indices[0]), reverse=True):

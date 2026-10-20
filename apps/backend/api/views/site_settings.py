@@ -4,6 +4,7 @@ from typing import Any
 
 from constance import config as site_config
 from constance import settings as constance_settings
+from django.db import transaction
 from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import AllowAny, BasePermission, IsAdminUser
 from rest_framework.request import Request
@@ -38,6 +39,7 @@ from api.runtime.ml_models import (
     latest_model_download,
     start_model_download,
 )
+from api.runtime.model_settings import public_remote_config, save_remote_config
 from api.search.semantic import OPENCLIP
 from api.serializers.site_settings import (
     SiteSettingsRequest,
@@ -60,6 +62,7 @@ SETTING_KEYS = (
     "MAP_TILE_PROVIDER",
     "GEOCODE_LANGUAGE",
     "CAPTIONING_MODEL",
+    "EMBEDDING_MODEL",
     "OCR_MODEL",
     "FACE_RECOGNITION_MODEL",
     "NEXTCLOUD_ENABLED",
@@ -196,13 +199,24 @@ class SiteSettingsView(APIView):
         out["map_tile_provider"] = config["MAP_TILE_PROVIDER"]
         out["geocode_language"] = config["GEOCODE_LANGUAGE"]
         out["captioning_model"] = config["CAPTIONING_MODEL"]
+        out["embedding_model"] = config["EMBEDDING_MODEL"]
         out["captioning_available"] = _captioning_available(config)
         out["things_available"] = _things_available(config)
         # There is no LLM any more; older mobile clients still expect the key.
         out["llm_model"] = "None"
         # One tagging model, not a setting: the web client reads it to find
         # the tags in captions_json.
-        out["tagging_model"] = OPENCLIP
+        from api.search.profiles import active_profile
+
+        out["tagging_model"] = (
+            active_profile(request.user).provider
+            if isinstance(request.user, User)
+            else OPENCLIP
+        )
+        if isinstance(request.user, User):
+            from api.search.provider_jobs import embedding_status
+
+            out["embedding_status"] = embedding_status(request.user)
         out["ocr_model"] = config["OCR_MODEL"]
         out["face_recognition_model"] = config["FACE_RECOGNITION_MODEL"]
         out["nextcloud_enabled"] = config["NEXTCLOUD_ENABLED"]
@@ -224,6 +238,8 @@ class SiteSettingsView(APIView):
         out["public_gallery"] = config["PUBLIC_GALLERY"]
         out["public_gallery_indexable"] = config["PUBLIC_GALLERY_INDEXABLE"]
         if request.user.is_staff:
+            out["captioning_api"] = public_remote_config("captioning")
+            out["embedding_api"] = public_remote_config("embeddings")
             # The Features card's state: admin-only, like the settings it shows.
             out["features"] = _features(config)
             out["model_download"] = _model_download()
@@ -235,15 +251,36 @@ class SiteSettingsView(APIView):
     @extend_schema(request=SiteSettingsRequest, responses=SiteSettingsSerializer)
     def post(self, request: Request, format: str | None = None) -> Response:
         data = parse_body(request, SiteSettingsRequest)
+        rebuild = data.pop("rebuild_embeddings", False)
         # Each request field is the lower-case name of its constance key.
-        for key, value in data.items():
-            setattr(site_config, key.upper(), value)
+        with transaction.atomic():
+            for field, kind in (
+                ("captioning_api", "captioning"),
+                ("embedding_api", "embeddings"),
+            ):
+                if field in data:
+                    save_remote_config(kind, data.pop(field))
+            for key, value in data.items():
+                setattr(site_config, key.upper(), value)
         if any(key.upper() in SCHEDULE_KEYS for key in data):
             sync_scan_schedule()
         if data.get("update_check") is True:
             # Check at once, so the line under the switch has an answer today.
             enqueue_task(check_for_updates)
         admin = User.objects.get(id=request_user(request).id)
+        if rebuild:
+            from api.jobs.start import start_job
+            from api.runtime.ml_models import missing_models_prerequisites
+            from api.search.embedding_jobs import batch_calculate_clip_embedding
+
+            start_job(
+                admin,
+                LongRunningJob.JOB_CALCULATE_CLIP_EMBEDDINGS,
+                batch_calculate_clip_embedding,
+                admin,
+                description="search embedding rebuild",
+                prerequisites=missing_models_prerequisites(admin),
+            )
         if not do_all_models_exist():
             # Not a new job per save: the settings form saves on every
             # toggle and blur, often while the first download is still

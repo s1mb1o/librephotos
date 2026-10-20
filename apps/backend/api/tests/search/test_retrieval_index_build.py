@@ -16,9 +16,7 @@ Quirks pinned here that a refactor must preserve:
     ``self.image_hashes`` as a side effect.
   * The ``image_embeddings`` falsy check happens before anything else, so
     ``None``/``[]`` never create an index at all.
-  * A 1-D input is reshaped to ``(1, -1)`` **without** any length check, so
-    a short 1-D vector reaches ``faiss.add`` and the resulting
-    ``AssertionError`` is swallowed by the ``except Exception`` handler.
+  * A 1-D input is reshaped to ``(1, -1)`` and checked against the index dimension.
   * ``image_hashes`` and ``image_embeddings`` are never checked against each
     other: mismatched lengths are accepted and the hash list simply gets
     every hash appended (see ``test_hash_embedding_count_mismatch_*``).
@@ -92,16 +90,12 @@ class BuildIndexForUserGuardTests(TestCase):
         self.assertEqual(self.index.image_hashes[7], [])
         self.assertIn("Unexpected embedding shape", self.logger.error.call_args[0][0])
 
-    def test_short_one_dimensional_vector_fails_inside_faiss_and_is_swallowed(self):
-        # Reshaped to (1, 3) without a length check -> faiss raises
-        # AssertionError -> caught by ``except Exception``.
+    def test_short_one_dimensional_vector_is_rejected_before_faiss(self):
         self.assertIsNone(self.index.build_index_for_user(7, ["h1"], [1.0, 2.0, 3.0]))
         self.assertEqual(self.index.indices[7].ntotal, 0)
         self.assertEqual(self.index.image_hashes[7], [])
         self.logger.error.assert_called_once()
-        self.assertIn(
-            "Error adding embeddings to index", self.logger.error.call_args[0][0]
-        )
+        self.assertIn("Expected embedding size", self.logger.error.call_args[0][0])
 
     def test_ragged_embeddings_raise_value_error(self):
         with self.assertRaises(ValueError):

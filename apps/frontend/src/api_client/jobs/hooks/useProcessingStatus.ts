@@ -1,4 +1,4 @@
-import { endpoints, jobKeys, pollWhile } from "@librephotos/api-client";
+import { endpoints, jobKeys, pollWhile, settingsKeys } from "@librephotos/api-client";
 import type { ProcessingStageKey, ProcessingStatus } from "@librephotos/api-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
@@ -43,6 +43,7 @@ export const useRunProcessingStageMutation = () => {
         // Under jobKeys.all, so the status shows the stage's job running.
         queryClient.invalidateQueries({ queryKey: jobKeys.all }),
         queryClient.invalidateQueries({ queryKey: jobKeys.worker() }),
+        queryClient.invalidateQueries({ queryKey: settingsKeys.site() }),
       ]),
   });
 };

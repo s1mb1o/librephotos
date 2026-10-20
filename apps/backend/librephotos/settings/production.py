@@ -328,6 +328,7 @@ CONSTANCE_ADDITIONAL_FIELDS = {
             "choices": (
                 ("none", "None"),
                 ("lfm2_vl_450m", "LFM2.5-VL (default)"),
+                ("openai_api", "OpenAI API"),
             ),
         },
     ],
@@ -518,6 +519,11 @@ CONSTANCE_CONFIG = {
         "lfm2_vl_450m",
         "Captioning model",
         "captioning_model",
+    ),
+    "EMBEDDING_MODEL": (
+        "openclip_vitb32",
+        "Embedding provider: openclip_vitb32 or siglip2_naflex",
+        str,
     ),
     "OCR_MODEL": (
         "None",

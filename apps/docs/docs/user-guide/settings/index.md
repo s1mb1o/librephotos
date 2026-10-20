@@ -128,6 +128,10 @@ These are settings that apply to the whole instance. Besides the panels below, t
 
 ## Site Settings
 
+<Since version="1.6.0" /> **Captioning Model** supports **OpenAI API**.
+**Embedding model** supports **SigLIP2 NaFlex**.
+See [Remote AI models](./remote-ai.md) for setup and index recovery.
+
 - `Allow user registration` will enable a sign up button on the login page.
 - `Allow uploads` sets if uploading should be possible or not
 - <Since version="1.5.0" /> `Single sign-on` A group with the switches for logging in through an OpenID Connect identity provider: `Show the single sign-on button`, `Button label` and `Allow sign-ups over single sign-on`. It lists the providers set up in the Django admin and warns when SSO cannot work yet. See [Single sign-on](./single-sign-on.md#telling-librephotos-about-the-provider).

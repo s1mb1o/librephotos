@@ -4,12 +4,19 @@ import uuid
 from collections.abc import Callable, Iterable
 from typing import NamedTuple
 
-from django.db.models import Q, QuerySet
+from django.db import transaction
+from django.db.models import F, Q, QuerySet
 
 from api.jobs.queue import enqueue_followup
 from api.models.long_running_job import JobCancelledError, LongRunningJob
 from api.models.photo import Photo
 from api.models.user import User
+from api.search.profiles import (
+    EmbeddingProfile,
+    activate_profile,
+    active_profile,
+    selected_profile,
+)
 from api.search.semantic import (
     OPENCLIP,
     create_clip_embeddings,
@@ -45,6 +52,15 @@ def photos_missing_clip_embeddings(user: User) -> QuerySet[Photo]:
 
 def needs_search_embedding() -> Q:
     """``photos_missing_clip_embeddings`` as a ``Q`` (no relations, #2741)."""
+    from constance import config as site_config
+
+    if site_config.EMBEDDING_MODEL != OPENCLIP:
+        return ~Q(
+            pk__in=Photo.objects.filter(
+                semantic_embeddings__space_id=selected_profile().key,
+                semantic_embeddings__source_hash=F("image_hash"),
+            ).values("pk")
+        )
     return Q(clip_embeddings__isnull=True) | ~produced_by_openclip()
 
 
@@ -151,7 +167,7 @@ class _EmbedOptions(NamedTuple):
 
 def _rebuild_index_while_converting(user: User) -> None:
     try:
-        build_image_similarity_index(user)
+        build_image_similarity_index(user, profile=EmbeddingProfile())
     except SimilarityIndexError as e:
         # The run goes on; the index is rebuilt again at its end.
         logger.error("Error rebuilding the similarity index mid-run: %s", e)
@@ -179,8 +195,27 @@ def batch_calculate_clip_embedding(
     if lrj is None:
         return
 
+    from api.search.provider_jobs import restore_local_tags, run_remote_embedding_job
+
+    try:
+        profile = selected_profile()
+    except Exception as error:
+        lrj.fail(error)
+        raise
+    if not lrj.set_result(
+        {"provider": profile.provider, "embedding_space": profile.key}
+    ):
+        return
+    if profile.provider != OPENCLIP:
+        run_remote_embedding_job(user, lrj, profile, heartbeat)
+        return
+
     with_tags = semantic_shares_tagger()
-    missing = photos_missing_clip_embeddings(user)
+    # The job already selected OpenCLIP. A later settings change must not
+    # change this run's source vectors or index namespace.
+    missing = Photo.objects.owned_by(user).filter(
+        Q(clip_embeddings__isnull=True) | ~produced_by_openclip()
+    )
     if wait_for_tags and with_tags:
         missing = missing.filter(caption_instance__captions_json__has_key=OPENCLIP)
     missing = missing.select_related("thumbnail").order_by("pk")
@@ -210,13 +245,30 @@ def batch_calculate_clip_embedding(
         return
 
     try:
-        build_image_similarity_index(user)
+        build_image_similarity_index(user, profile=EmbeddingProfile())
+        if (
+            active_profile(user).provider != OPENCLIP
+            and Photo.objects.owned_by(user)
+            .filter(Q(clip_embeddings__isnull=True) | ~produced_by_openclip())
+            .exists()
+        ):
+            raise SimilarityIndexError(
+                "Some photos still need OpenCLIP embeddings. Rebuild again before switching the active index."
+            )
+        with transaction.atomic():
+            locked = LongRunningJob.objects.select_for_update().get(pk=lrj.pk)
+            locked.stop_if_cancelled()
+            activate_profile(user, EmbeddingProfile())
+    except JobCancelledError:
+        logger.info("Search embeddings job %s was cancelled", lrj.job_id)
+        return
     except Exception as e:
         # The embeddings are stored; only the index is stale. Say so rather
         # than report a job that left similar-photo search behind as done.
         logger.error("Error building the similarity index: %s", e)
         lrj.fail(e)
         raise
+    restore_local_tags(user)
     lrj.complete()
 
 

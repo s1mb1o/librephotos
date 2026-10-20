@@ -140,6 +140,10 @@ The bulk actions take the same parameters in their select-all `query`. Send `sho
 
 ## Semantic Search
 
+<Since version="1.6.0" /> An administrator can select remote **SigLIP2 NaFlex**
+for semantic search, similar photos, and generated Things.
+See [Remote AI models](./settings/remote-ai.md).
+
 Semantic search uses AI (CLIP embeddings) to find photos by meaning rather than exact text matching. It understands the concept behind your query, and those matches are added to the normal text-search results rather than replacing them — so a search returns both the photos whose captions or metadata contain your words and the photos that simply look like what you described. Because of this, a result may not contain every word of your query.
 
 For example, searching "sunset at the beach" will find photos that look like a sunset at a beach, even if none of those words appear in the photo's metadata or caption.

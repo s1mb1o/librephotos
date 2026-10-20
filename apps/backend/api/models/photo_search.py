@@ -97,7 +97,8 @@ class PhotoSearch(models.Model):
             captions_json = caption_instance.captions_json
             if captions_json:
                 # The tagger stores {"tags": [...]} under its model's key.
-                tags = (captions_json.get(OPENCLIP) or {}).get("tags", [])
+                tag_model = captions_json.get("tagging_model", OPENCLIP)
+                tags = (captions_json.get(tag_model) or {}).get("tags", [])
                 if tags:
                     search_captions += " ".join(tags) + " "
 

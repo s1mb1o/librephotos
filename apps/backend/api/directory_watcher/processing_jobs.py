@@ -43,7 +43,7 @@ from api.photos.paths import folder_path_q
 from api.runtime import sidecars
 from api.runtime.ml_models import captioning_model_exists
 from api.search import semantic
-from api.search.semantic import OPENCLIP, TAG_THING_TYPE
+from api.search.semantic import OPENCLIP, TAG_THING_TYPES
 from api.thumbnails import render
 from api.video import color, transcode_cache
 
@@ -227,6 +227,18 @@ def needs_things() -> Q:
     Over one-to-one relations only, so the library processing status can
     count it in one aggregate with the other stages (#2741).
     """
+    from constance import config as site_config
+
+    if site_config.EMBEDDING_MODEL != OPENCLIP:
+        from api.models.remote_model import PhotoEmbedding
+        from api.search.profiles import selected_profile
+
+        tagged = PhotoEmbedding.objects.filter(
+            space_id=selected_profile().key,
+            tagged=True,
+            source_hash=F("photo__image_hash"),
+        ).values("photo_id")
+        return ~Q(pk__in=tagged)
     return (
         Q(caption_instance__isnull=True)
         | Q(caption_instance__captions_json__isnull=True)
@@ -588,7 +600,7 @@ def _tag_labels_for_photo(photo: Photo) -> set[str]:
     tiny (a handful of tags per photo).
     """
     titles = AlbumThing.objects.filter(
-        photos=photo, thing_type=TAG_THING_TYPE
+        photos=photo, thing_type__in=TAG_THING_TYPES
     ).values_list("title", flat=True)
     return {title.lower() for title in titles if title}
 
