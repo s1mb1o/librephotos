@@ -4,7 +4,7 @@ Date: 2026-11-02.
 Branch: codex/identity-aware-captions.
 Base: 4e4b62e45.
 Deployment: not performed.
-Issue destination: pending the owner's GitLab project URL.
+Issue: [GitHub #8](https://github.com/s1mb1o/librephotos/issues/8).
 
 ## Environment
 

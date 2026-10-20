@@ -2,6 +2,8 @@
 
 ## 2026-11-02
 
+- Created [GitHub issue #8](https://github.com/s1mb1o/librephotos/issues/8) for face-grounded captions. Linked the implementation and validation.
+
 - Added face-grounded generated captions with numbered boxes and stable reference tokens.
 - Resolve confirmed labels and strict agreeing predictions to names inside LibrePhotos.
 - Update names after relabeling, renaming, rejection, confidence changes, and bulk prediction writes.

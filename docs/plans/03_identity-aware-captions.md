@@ -2,7 +2,7 @@
 
 Date: 2026-11-02.
 Status: Implemented. Local checks passed. Not deployed.
-Issue destination: awaiting the owner's GitLab project URL.
+Issue: [GitHub #8](https://github.com/s1mb1o/librephotos/issues/8).
 
 ## Behavior
 
