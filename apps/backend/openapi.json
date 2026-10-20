@@ -5838,6 +5838,47 @@
         }
       }
     },
+    "/api/jobs/{id}/recent-photos/": {
+      "get": {
+        "operationId": "api_jobs_recent_photos_retrieve",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "tags": [
+          "api"
+        ],
+        "security": [
+          {
+            "jwtAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          },
+          {
+            "basicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecentJobPhotos"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/labelfaces/": {
       "post": {
         "operationId": "api_labelfaces_create",
@@ -27545,6 +27586,73 @@
           "family",
           "name",
           "tags"
+        ]
+      },
+      "RecentJobPhoto": {
+        "type": "object",
+        "properties": {
+          "photo_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "image_hash": {
+            "type": "string"
+          },
+          "caption": {
+            "type": "string",
+            "maxLength": 8192
+          },
+          "status": {
+            "$ref": "#/components/schemas/RecentJobPhotoStatusEnum"
+          },
+          "processed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "truncated": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "caption",
+          "image_hash",
+          "photo_id",
+          "processed_at",
+          "status",
+          "truncated"
+        ]
+      },
+      "RecentJobPhotoStatusEnum": {
+        "enum": [
+          "success",
+          "failed",
+          "skipped"
+        ],
+        "type": "string",
+        "description": "* `success` - success\n* `failed` - failed\n* `skipped` - skipped"
+      },
+      "RecentJobPhotos": {
+        "type": "object",
+        "properties": {
+          "finished": {
+            "type": "boolean"
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 20,
+            "minimum": 20
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecentJobPhoto"
+            }
+          }
+        },
+        "required": [
+          "finished",
+          "limit",
+          "results"
         ]
       },
       "RecentlyAddedPhotos": {

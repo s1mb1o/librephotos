@@ -321,6 +321,7 @@ export const geocodeKeys = {
 const jobRoot = ["jobs"] as const;
 
 export const jobKeys = {
+  recentPhotos: (id: number) => [...jobRoot, "recentPhotos", id] as const,
   /** The job lists and every job's detail. */
   all: jobRoot,
   list: (request: JobListParams) => [...jobRoot, "list", request] as const,

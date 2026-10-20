@@ -69,6 +69,7 @@ from api.views import (
     geocode,
     health,
     integration,
+    job_results,
     jobs,
     library_folders,
     library_shares,
@@ -416,6 +417,7 @@ router.register(r"api/jobs", jobs.LongRunningJobViewSet, basename="jobs")
 router.register(r"api/services", services.ServiceViewSet, basename="service")
 
 urlpatterns = [
+    path("api/jobs/<int:pk>/recent-photos/", job_results.JobRecentPhotosView.as_view()),
     # First: thumbnails are most of all requests, and Django tries patterns in
     # order; behind the ~200 router patterns each one paid ~0.5 ms to resolve.
     # Every router prefix starts with api/, so nothing else can match here.

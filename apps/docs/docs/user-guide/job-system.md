@@ -196,3 +196,26 @@ Removing a finished job deletes its record and result; nothing in your library c
 <Since version="1.4.0" /> Up to 1.3.0, the reference scan could be removed, and the next scan then read the whole library again. The confirmation dialog could not tell which scan was the reference, and it also warned about **Scan Faces**, which picks the photos whose faces have not been looked for whatever ran before.
 
 <Since version="1.4.0" /> Up to 1.3.0, **Cancel** and **Remove** acted on the first click, without asking.
+
+
+## Inspect recent caption results
+
+<Since version="1.6.0" />
+
+Open a **Generate Captions** job from **My Jobs**.
+The **Recent processed photos** card shows up to 20 recent results, newest first.
+Each result shows a preview, generated caption, outcome and processing time.
+Select the preview to open the photo.
+The list updates while the job runs. It keeps the final results after the job stops.
+
+Captions in this card are snapshots from processing time.
+A later manual edit or face-name update does not change that snapshot.
+Open the photo to see its current caption.
+A long result can be shortened in this card. The card indicates that limit.
+A retry replaces the previous entry for that photo in the same job.
+
+Only the job owner can view these photo results.
+Removed, trashed, deleted or transferred photos are omitted.
+Staff inspecting another user's job do not see this card.
+Earlier completed photos were not recorded before this update.
+The list fills as an active job processes more photos after the update.

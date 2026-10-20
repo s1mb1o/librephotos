@@ -499,3 +499,25 @@ class SharedScanFolderMediaTest(TestCase):
                 self.assertIn(own.image_hash, response["X-Accel-Redirect"])
                 response = self.get(user, f"/media/thumbnails_big/{other.image_hash}")
                 self.assertEqual(404, response.status_code)
+
+
+class RecentJobPhotoScopeTest(TestCase):
+    def test_only_the_job_owner_can_read_recent_caption_photos(self) -> None:
+        owner = create_test_user()
+        photo = create_test_photo(owner=owner)
+        job = create_test_job(owner)
+        job.record_recent_photo(photo, "success", "Private caption marker")
+        client = APIClient()
+        url = f"/api/jobs/{job.pk}/recent-photos/"
+        client.force_authenticate(owner)
+        self.assertEqual(
+            client.get(url).data["results"][0]["caption"], "Private caption marker"
+        )
+        for other in (
+            create_test_user(),
+            create_test_user(is_staff=True, is_superuser=True),
+        ):
+            client.force_authenticate(other)
+            response = client.get(url)
+            self.assertEqual(response.status_code, 404)
+            self.assertNotIn("Private caption marker", str(response.data))

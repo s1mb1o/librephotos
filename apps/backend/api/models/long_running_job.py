@@ -5,16 +5,23 @@ import time
 import uuid
 from collections.abc import Collection
 from datetime import datetime, timedelta
-from typing import Any
+from typing import TYPE_CHECKING, Any, Literal
 
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.db.models.functions import Coalesce
 from django.db.models.lookups import GreaterThanOrEqual, LessThan
 from django.utils import timezone
 
 from api.models.scopes import OwnedQuerySet
 from api.models.user import User, get_deleted_user
+
+if TYPE_CHECKING:
+    from api.models.photo import Photo
+
+RECENT_PHOTO_LIMIT = 20
+RECENT_CAPTION_LIMIT = 8192
+RecentPhotoStatus = Literal["success", "failed", "skipped"]
 
 logger = logging.getLogger(__name__)
 
@@ -273,6 +280,7 @@ class LongRunningJob(models.Model):
         max_length=100, null=True, blank=True
     )  # Current step description
     result = models.JSONField(null=True, blank=True)  # Detailed result/progress data
+    recent_photos = models.JSONField(default=list, blank=True)
     # False while an upload import job still takes files: it finishes only
     # once sealed (``api.jobs.upload_import``). Every other job is born sealed.
     sealed = models.BooleanField(default=True)
@@ -363,6 +371,39 @@ class LongRunningJob(models.Model):
         """Mark job as started."""
         self.started_at = timezone.now()
         self.save(update_fields=["started_at"])
+
+    def record_recent_photo(
+        self, photo: Photo, status: RecentPhotoStatus, caption: str = ""
+    ) -> bool:
+        """Append a bounded result without replacing counters, errors or cancellation."""
+        if photo.owner_id != self.started_by_id:
+            return False
+        with transaction.atomic():
+            current = (
+                type(self)
+                .objects.select_for_update()
+                .filter(pk=self.pk, cancelled=False, finished=False)
+                .first()
+            )
+            if current is None or current.started_by_id != photo.owner_id:
+                return False
+            previous = current.recent_photos
+            previous = previous if isinstance(previous, list) else []
+            record = {
+                "photo_id": str(photo.pk),
+                "caption": caption[:RECENT_CAPTION_LIMIT],
+                "status": status,
+                "processed_at": timezone.now().isoformat(),
+                "truncated": len(caption) > RECENT_CAPTION_LIMIT,
+            }
+            current.recent_photos = [record] + [
+                entry
+                for entry in previous
+                if isinstance(entry, dict) and entry.get("photo_id") != str(photo.pk)
+            ][: RECENT_PHOTO_LIMIT - 1]
+            current.save(update_fields=["recent_photos"])
+            self.recent_photos = current.recent_photos
+        return True
 
     def complete(self, result: dict[str, Any] | None = None) -> bool:
         """Mark job as successfully completed, unless it was cancelled.

@@ -1,5 +1,13 @@
 # Change log
 
+## 2026-11-02 — Recent caption job results
+
+- Added a recent-results card to caption job pages with previews, caption snapshots, outcomes and processing times.
+- Retain the latest 20 results per job. Merge concurrent worker updates and preserve progress, errors and cancellation.
+- Restrict the feed to the job owner and currently available owned photos. Keep snapshot data out of existing job serializers.
+- Poll through the final result response. Preserve recorded results after the job finishes.
+
+
 ## 2026-11-02 — Identity-aware captions deployed
 
 - Deployed image 20261102T070136Z-1680406af0f2 on docker-srv with API keys and MCP preserved.

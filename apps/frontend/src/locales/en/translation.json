@@ -1991,7 +1991,22 @@
     "finishedat": "Finished At",
     "errordetails": "Error Details",
     "errormessage": "Error message",
-    "resultdata": "Result Data"
+    "resultdata": "Result Data",
+    "recent": {
+      "title": "Recent processed photos",
+      "description": "Up to {{count}} recent results, newest first. Captions show the result at processing time.",
+      "loading": "Loading recent photos…",
+      "empty": "No recent results yet",
+      "emptydescription": "Photos will appear as this job processes them. Earlier results were not recorded.",
+      "success": "Caption generated",
+      "failed": "Caption failed",
+      "skipped": "Skipped",
+      "faileddescription": "Caption generation failed. See this job’s errors for details.",
+      "nocaption": "No caption was generated.",
+      "truncated": "This result is shortened. Open the photo to see its current caption.",
+      "openphoto": "Open processed photo",
+      "emptyfinished": "No recent photo results were recorded for this job."
+    }
   },
   "modaluseredit": {
     "header": "Edit User",

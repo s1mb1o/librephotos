@@ -145,3 +145,15 @@ Keep user captions and photo identities unchanged. Refresh derived search paths.
 - Resumed the same caption job from 764 to 765 of 32089.
 - Preserved API-key and MCP access and the read-only original mount.
 - Observed new face-reference metadata. Keep real-model named output evaluation pending.
+
+## Recent caption job results
+
+- Open a running Generate Captions job. Confirm recent results arrive newest first.
+- Show a preview, generated caption, status and processing timestamp for each item.
+- Retain at most 20 items and replace an existing photo entry on retry.
+- Keep the final window after completion, failure or cancellation.
+- Distinguish initial loading, no recorded results and a failed feed request.
+- Preserve existing results if a background refresh fails.
+- Hide another user's results, including on staff job pages.
+- Exclude trashed, removed, deleted and transferred photos.
+- Keep manual captions, originals, error reporting and job progress unchanged.

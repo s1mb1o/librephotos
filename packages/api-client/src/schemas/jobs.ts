@@ -230,3 +230,21 @@ export const PhotoDownloadStatus = z.looseObject({
   status: z.string(),
 });
 export type PhotoDownloadStatus = z.infer<typeof PhotoDownloadStatus>;
+
+/** A bounded snapshot of a photo processed by a caption job. */
+export const RecentJobPhoto = z.object({
+  photo_id: z.string(),
+  image_hash: z.string(),
+  caption: z.string().max(8192),
+  status: z.enum(["success", "failed", "skipped"]),
+  processed_at: z.string(),
+  truncated: z.boolean(),
+});
+export type RecentJobPhoto = z.infer<typeof RecentJobPhoto>;
+
+export const RecentJobPhotos = z.object({
+  finished: z.boolean(),
+  limit: z.number().int().min(20).max(20),
+  results: z.array(RecentJobPhoto).max(20),
+});
+export type RecentJobPhotos = z.infer<typeof RecentJobPhotos>;

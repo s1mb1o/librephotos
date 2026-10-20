@@ -26,6 +26,7 @@ import { formatJobDuration } from "./JobDuration";
 import { JobProgress } from "./JobProgress";
 import { JOB_OUTCOME_COLOR, jobOutcome } from "./jobStatus";
 import { jobTypeLabel } from "./jobTypeLabel";
+import { RecentJobPhotos } from "./RecentJobPhotos";
 
 type IJobDetailView = Readonly<{
   jobId: number;
@@ -209,6 +210,8 @@ export function JobDetailView({ jobId, backTo }: IJobDetailView) {
             </Table.Tbody>
           </Table>
         </Card>
+
+        {job.job_type === 25 && <RecentJobPhotos jobId={job.id} ownerId={job.started_by.id} />}
 
         <JobReport job={job} />
 

@@ -101,6 +101,8 @@ export const CONTRACT_MAP: Readonly<Record<string, ContractEntry>> = {
   WorkerAvailabilityResponse: { schema: S.WorkerAvailabilityResponse, components: ["QueueAvailability"] },
   Job: { schema: S.Job, components: ["LongRunningJob"] },
   JobDetail: { schema: S.JobDetail, components: ["LongRunningJob"] },
+  RecentJobPhoto: { schema: S.RecentJobPhoto, components: ["RecentJobPhoto"] },
+  RecentJobPhotos: { schema: S.RecentJobPhotos, components: ["RecentJobPhotos"] },
   JobsResponse: { schema: S.JobsResponse, components: ["PaginatedLongRunningJobList"] },
   CancelJobResponse: { schema: S.CancelJobResponse, components: ["CancelJobResponse"] },
   JobStartedResponse: { schema: S.JobStartedResponse, components: ["JobStartedResponse"] },

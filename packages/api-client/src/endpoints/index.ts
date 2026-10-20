@@ -947,6 +947,12 @@ export async function fetchJob(client: ApiClient, jobId: number): Promise<S.JobD
   return parseResponse(S.JobDetail, res, "job");
 }
 
+/** The caller's most recently processed photos in a job, newest first. */
+export async function fetchRecentJobPhotos(client: ApiClient, jobId: number): Promise<S.RecentJobPhotos> {
+  const res = await client.get<unknown>(`/jobs/${jobId}/recent-photos/`);
+  return parseResponse(S.RecentJobPhotos, res, "recent job photos");
+}
+
 /** Cancel a queued or running job (ApiError code job_finished when it has finished). */
 export async function cancelJob(client: ApiClient, jobId: number): Promise<S.CancelJobResponse> {
   const res = await client.post<unknown>(`/jobs/${jobId}/cancel/`, {});

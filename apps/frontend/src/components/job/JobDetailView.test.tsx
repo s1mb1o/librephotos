@@ -26,6 +26,9 @@ vi.mock("../../api_client/jobs/hooks", () => ({
   useDeleteJobMutation: () => ({ mutate: stubs.deleteJob, isPending: false }),
 }));
 vi.mock("@tanstack/react-router", () => ({ useNavigate: () => stubs.navigate }));
+vi.mock("./RecentJobPhotos", () => ({
+  RecentJobPhotos: ({ jobId }: { jobId: number }) => <div>Recent photos for job {jobId}</div>,
+}));
 
 function detail(overrides: Partial<JobDetail> = {}): JobDetail {
   return { ...jobFixture(), progress_current: 50, progress_target: 200, ...overrides };
@@ -129,5 +132,19 @@ describe("JobDetailView results of a job type", () => {
       detail({ job_type: 1, finished: true, finished_at: "2026-10-10T11:00:00Z", result: checkResult })
     );
     expect(other.textContent).not.toContain("files read");
+  });
+});
+
+describe("caption job results", () => {
+  it("shows the recent-photo card during and after a caption job", async () => {
+    let view = await renderPage(detail({ job_type: 25 }));
+    expect(view.textContent).toContain("Recent photos for job 7");
+    document.body.innerHTML = "";
+    view = await renderPage(detail({ job_type: 25, finished: true }));
+    expect(view.textContent).toContain("Recent photos for job 7");
+  });
+  it("does not fetch a caption feed for other job types", async () => {
+    const view = await renderPage(detail({ job_type: 1 }));
+    expect(view.textContent).not.toContain("Recent photos for job");
   });
 });

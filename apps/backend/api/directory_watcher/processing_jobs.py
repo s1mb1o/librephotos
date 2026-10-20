@@ -12,6 +12,7 @@ from uuid import UUID
 
 import requests
 from django import db
+from django.db import transaction
 from django.db.models import F, Q, QuerySet
 
 from api.classification import captioning
@@ -37,6 +38,7 @@ from api.jobs.queue import enqueue_job, enqueue_task
 from api.mime import CV2_DECODABLE_EXTENSIONS, extension
 from api.models import AlbumDate, Face, LongRunningJob, Photo, User
 from api.models.album_thing import AlbumThing
+from api.models.long_running_job import RecentPhotoStatus
 from api.models.photo_caption import PhotoCaption
 from api.models.photo_ocr import PhotoOcr
 from api.photos.paths import folder_path_q
@@ -408,13 +410,21 @@ def generate_caption_job(photo_id: UUID | Photo, job_id: str) -> None:
     if photo is None:
         return
     error = None
+    generated = ""
+    status: RecentPhotoStatus = "skipped"
     if captioning.captioning_available():
         try:
             caption, _ = PhotoCaption.objects.get_or_create(photo=photo)
-            captioning.caption_photo(caption)
+            generated = captioning.caption_photo(caption)
+            status = "success"
         except Exception as err:
+            status = "failed"
             error = _record_photo_error(photo, err)
-    update_scan_counter(job_id, error is not None, error)
+    with transaction.atomic():
+        job = LongRunningJob.objects.owned_by(photo.owner).filter(job_id=job_id).first()
+        if job is not None:
+            job.record_recent_photo(photo, status, generated)
+        update_scan_counter(job_id, error is not None, error)
 
 
 # Minimum per-block confidence handed to the OCR sidecar (its contract default).

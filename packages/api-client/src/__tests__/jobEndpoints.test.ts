@@ -78,6 +78,45 @@ describe("job list and detail", () => {
   });
 });
 
+describe("recent job photos", () => {
+  const recent = {
+    finished: false,
+    limit: 20,
+    results: [
+      {
+        photo_id: "photo-1",
+        image_hash: "hash-1",
+        caption: "A person wears a hat.",
+        status: "success",
+        processed_at: "2026-11-02T10:00:00Z",
+        truncated: false,
+      },
+    ],
+  };
+
+  it("reads bounded results while running and the final response", async () => {
+    const { client, requests } = fakeServer(recent);
+    const response = await endpoints.fetchRecentJobPhotos(client, 25);
+    expect(defined(requests[0]).url).toBe(`${API}/jobs/25/recent-photos/`);
+    expect(response.results[0]?.caption).toBe("A person wears a hat.");
+    const final = fakeServer({ ...recent, finished: true });
+    expect((await endpoints.fetchRecentJobPhotos(final.client, 25)).finished).toBe(true);
+  });
+
+  it("rejects an invalid outcome or an unbounded response", async () => {
+    const invalid = fakeServer({
+      ...recent,
+      results: [{ ...recent.results[0], status: "unknown" }],
+    });
+    await expect(endpoints.fetchRecentJobPhotos(invalid.client, 25)).rejects.toThrow();
+    const tooMany = fakeServer({
+      ...recent,
+      results: Array.from({ length: 21 }, () => recent.results[0]),
+    });
+    await expect(endpoints.fetchRecentJobPhotos(tooMany.client, 25)).rejects.toThrow();
+  });
+});
+
 describe("job triggers", () => {
   const started = { status: true, job_id: "j1", job_ids: ["j1"] };
 

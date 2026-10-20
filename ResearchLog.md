@@ -1,5 +1,26 @@
 # Research log
 
+## 2026-11-02 — Recent processed photos on a job page
+
+The job page stores progress and errors, but has no per-photo completion history.
+PhotoCaption.updated_at does not identify which job processed a photo.
+Manual changes and identity updates can also change that timestamp.
+Do not reconstruct job membership from current caption timestamps.
+
+Options considered: query current captions, add a result table, or keep a bounded job field.
+Use a separate recent_photos field with 20 result snapshots.
+The existing result field is replaced on cancellation and some failure paths.
+Keeping snapshots separate preserves them through those transitions.
+A row lock merges worker updates into the latest window.
+Snapshot recording and progress advancement share a transaction after inference.
+The feed reports completion with the final window, so polling does not stop too early.
+
+Resolve thumbnail identities only for photos the owner still owns and can open.
+Keep the backing field out of existing serializers, including global staff job lists.
+The new feed is owner-only. Its unknown view stays excluded by API-key default-deny policy.
+Completed results from before this update cannot be assigned to jobs reliably.
+
+
 ## 2026-11-02 — Share-link clipboard failure on LAN HTTP
 
 The live Chrome tab uses http://192.168.86.16:19850.

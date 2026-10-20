@@ -2,9 +2,14 @@ from django.db.models import Prefetch
 from rest_framework import serializers
 
 from api.drf.params import QueryFlagField
+from api.jobs.recent_photos import RecentJobPhoto, RecentJobPhotos
 from api.jobs.upgrade_tasks import TaskList, TaskOverview
 from api.models import LongRunningJob, User
-from api.models.long_running_job import LongRunningJobQuerySet
+from api.models.long_running_job import (
+    RECENT_CAPTION_LIMIT,
+    RECENT_PHOTO_LIMIT,
+    LongRunningJobQuerySet,
+)
 from api.photos.library_files import MAX_REQUESTED
 from api.serializers.fields import loaded
 from api.serializers.simple import SimpleUserSerializer
@@ -266,4 +271,23 @@ class ScanFilesResponseSerializer(serializers.Serializer[None]):
         help_text="Paths left out: outside the requester's library, repeats, "
         "paths that do not exist, removed paths still on disk or naming no file "
         "of the requester's photos",
+    )
+
+
+class RecentJobPhotoSerializer(serializers.Serializer[RecentJobPhoto]):
+    photo_id = serializers.UUIDField()
+    image_hash = serializers.CharField()
+    caption = serializers.CharField(allow_blank=True, max_length=RECENT_CAPTION_LIMIT)
+    status = serializers.ChoiceField(choices=["success", "failed", "skipped"])
+    processed_at = serializers.DateTimeField()
+    truncated = serializers.BooleanField()
+
+
+class RecentJobPhotosSerializer(serializers.Serializer[RecentJobPhotos]):
+    finished = serializers.BooleanField()
+    limit = serializers.IntegerField(
+        min_value=RECENT_PHOTO_LIMIT, max_value=RECENT_PHOTO_LIMIT
+    )
+    results: serializers.ListSerializer[RecentJobPhoto] = serializers.ListSerializer(
+        child=RecentJobPhotoSerializer(), max_length=RECENT_PHOTO_LIMIT
     )
