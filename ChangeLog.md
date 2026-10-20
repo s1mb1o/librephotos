@@ -2,6 +2,12 @@
 
 ## 2026-11-01
 
+- Remounted PhotoLibrary read-only at `/data/PhotoLibrary` on docker-srv.
+- Migrated catalog paths and signed scan tasks without changing photo identities.
+- Preserved 7,256 photos and their metadata. Verified login, captions, previews,
+  original bytes, and continuation of the existing scan.
+- Updated the Compose mount and startup guard for subsequent deployments.
+
 - Added the docker-srv deployment at LAN port 19850.
 - Added a cached AMD64 build, immutable LAN image tags, and a deployment command.
 - Kept PostgreSQL, previews, models, logs, and caches outside the image.

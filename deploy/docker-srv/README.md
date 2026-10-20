@@ -26,7 +26,8 @@ under `librephotos-docker-srv-admin`, account `ashmelev`.
 - URL: `http://192.168.86.16:19850`.
 - Host directory: `/srv/librephotos`.
 - State: `/srv/librephotos/data/{postgres,protected_media,cache,logs}`.
-- Originals: the configured NAS folder, mounted read-only at `/data`.
+- Originals: the configured NAS folder, mounted read-only at `/data/PhotoLibrary`.
+- Application data root: `/data`. Admin scan directory: `/data/PhotoLibrary`.
 - Containers: `librephotos-app` and `librephotos-db`.
 - Initial application limit: 2 CPUs and 6 GiB RAM. One scan worker.
 - PostgreSQL limit: 1 CPU and 1 GiB RAM. No published database port.
@@ -38,7 +39,13 @@ Never run `docker compose down -v` or delete the state directories to rebuild.
 The original directory structure stays unchanged.
 The admin account uses semantic search with Top 100 enabled.
 Deployment refuses an unavailable library. Startup also checks its existing
-`Years` directory before starting the application.
+`/data/PhotoLibrary/Years` directory before starting the application.
+The activation helper checks `/mnt/librephotos/Years` on the host.
+
+The 2026-11-01 remount changed only the Docker target and catalog paths.
+The NAS directory and the Proxmox and CT 100 mounts retain their paths.
+The migration preserved photo identities and rewrote signed queued scan tasks.
+Keep the database scan directory consistent with the Docker target.
 
 ## Validation
 

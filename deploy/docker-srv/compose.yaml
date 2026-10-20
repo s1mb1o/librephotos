@@ -29,7 +29,7 @@ services:
     restart: unless-stopped
     stop_grace_period: 2m
     init: true
-    command: [/bin/bash, -c, "test -d /data/Years || { echo 'PhotoLibrary is unavailable'; exit 75; }; exec /entrypoint.sh"]
+    command: [/bin/bash, -c, "test -d /data/PhotoLibrary/Years || { echo 'PhotoLibrary is unavailable'; exit 75; }; exec /entrypoint.sh"]
     mem_limit: 6g
     cpus: 2.0
     ports:
@@ -67,7 +67,7 @@ services:
     volumes:
       - type: bind
         source: ${LP_PHOTO_ROOT:?Set the photo mount}
-        target: /data
+        target: /data/PhotoLibrary
         read_only: true
         bind: {create_host_path: false}
       - ${LP_DATA_ROOT:-/srv/librephotos/data}/protected_media:/protected_media

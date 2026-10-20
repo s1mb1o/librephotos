@@ -1,5 +1,42 @@
 # Research log
 
+## 2026-11-01 — PhotoLibrary mount migration
+
+The owner selected `/data/PhotoLibrary` as the container mount target.
+The host mount remains `/mnt/librephotos`. The NAS directory stays unchanged.
+`PHOTOS` and `DATA_ROOT` remain `/data`. The admin scan directory is now
+`/data/PhotoLibrary`. This leaves room for separate sibling library roots.
+
+A rescan can relink unchanged files by content hash. It can repeat file reads.
+A prefix migration preserves existing rows and avoids that relinking pass.
+The active scan also contains pickled User objects and signed path arguments.
+The migration therefore rewrote catalog paths and queued scan tasks together.
+It retained queue IDs, leases, job IDs, and progress. It refreshed derived
+search captions from the existing metadata. Historical job errors retain the
+paths recorded when those errors occurred.
+
+The app stopped before the backup and migration. PostgreSQL stayed running.
+Recovery files are in
+`/srv/librephotos/backups/remount-photolibrary-20261101T174331Z` on docker-srv.
+They include a verified database dump, a preview/model archive, the previous
+Compose file, and a private environment snapshot. Do not publish that directory.
+
+The transaction compared fingerprints for all 61 API tables, including their
+membership tables. It normalized only the intended path fields. It excluded
+only the two regenerated search fields. The comparison preserved all other
+values, including photo IDs, embeddings, captions, faces, and the password hash.
+It also verified 26,894 queued task payloads, 21,794 protected-media files,
+and SHA-256 samples of 12 originals. No inference or image rebuild was needed.
+
+After restart, health, login, photo details, thumbnails, and original downloads
+returned HTTP 200. The downloaded original matched its stored file SHA-256.
+The photo count increased from 7,256 to 7,285. The same scan job continued at
+8,476 of 35,274 groups. The database container and application image were retained.
+
+The first helper attempt failed on a Python import path before any catalog
+change. The rollback guard restarted the previous configuration. The corrected
+helper passed a read-only serialization check before the successful retry.
+
 ## 2026-11-01 — Docker-srv deployment
 
 The user selected docker-srv and requested frequent image rebuilds.

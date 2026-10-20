@@ -35,3 +35,22 @@ These checks are pending. They are not passing claims for the initial fork.
 - Replace the application image. Preserve the database, previews, models, and admin password.
 - Verify a PostgreSQL backup with `pg_restore --list`.
 - Start the PhotoLibrary scan after the deployment checks.
+
+## PhotoLibrary remount
+
+Verified on 2026-11-01:
+
+- The Docker bind maps `/mnt/librephotos` to `/data/PhotoLibrary` read-only.
+- `/data/PhotoLibrary/Years` exists. `/data/Years` does not exist.
+- The admin scan directory is `/data/PhotoLibrary`. `PHOTOS` remains `/data`.
+- All 61 API table fingerprints match after the permitted path normalization.
+- All 26,894 queued task payloads match after path normalization.
+- Protected-media manifests and 12 original SHA-256 samples match.
+- Existing login, caption, photo details, thumbnail, and original access work.
+- Health and authenticated media requests return HTTP 200.
+- The original scan resumes. The photo count increases after restart.
+- The database container and application image remain the same.
+
+Before another path migration, stop the app and back up PostgreSQL and
+`protected_media`. Update both catalog paths and signed queued scan tasks.
+Keep user captions and photo identities unchanged. Refresh derived search paths.
