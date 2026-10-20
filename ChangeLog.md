@@ -2,6 +2,12 @@
 
 ## 2026-11-02
 
+- Added face-grounded generated captions with numbered boxes and stable reference tokens.
+- Resolve confirmed labels and strict agreeing predictions to names inside LibrePhotos.
+- Update names after relabeling, renaming, rejection, confidence changes, and bulk prediction writes.
+- Regenerate changed geometry in the background. Reject stale responses and preserve concurrent manual captions.
+- Keep internal face evidence out of photo responses and shared search. Retry stale captions through Generate captions.
+
 - Saved image captioning as enabled on docker-srv. Verified the configured OpenAI API model `qwen3.5-9b-nvfp4` is advertised by the provider.
 - Verified that the admin feature is enabled and unlocked. Preserved running processing jobs without a restart.
 - Documented the misleading local-service tooltip in remote captioning mode.

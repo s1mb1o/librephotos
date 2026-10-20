@@ -8,8 +8,11 @@ Where current behavior looks like a bug it is still pinned, and flagged in a
 comment.
 """
 
+import tempfile
+from pathlib import Path
 from unittest.mock import PropertyMock, patch
 
+import PIL.Image
 from constance.test import override_config
 from django.test import TestCase, override_settings
 
@@ -108,7 +111,10 @@ class Im2txtGenerationTest(TestCase):
         self.assertTrue(kwargs["image_path"].endswith(".webp"))
         # Caption context is on by default; with nothing known about the
         # photo (no named face, no place) only the base instruction remains.
-        self.assertEqual(kwargs["prompt"], "Write a short, natural image caption.")
+        self.assertEqual(
+            kwargs["prompt"],
+            "Write a short, natural image caption. Do not guess personal names.",
+        )
         self.assertEqual(self.caption.captions_json["im2txt"], "a photo of a cat")
 
         self.caption.refresh_from_db()
@@ -188,27 +194,42 @@ class CaptionPromptTest(TestCase):
     """What the captioning sidecar is asked, given the user's caption settings."""
 
     def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.enterContext(override_settings(MEDIA_ROOT=directory.name))
+        self.image = Path(directory.name) / "identity-prompt.jpg"
+        with PIL.Image.new("RGB", (1024, 1024), "white") as image:
+            image.save(self.image)
         self.user = create_test_user()
         self.user.llm_settings = _llm_settings(
             enabled=True, add_person=True, add_location=True
         )
         self.user.save()
-        self.photo = create_test_photo(owner=self.user, search_location="Berlin")
+        self.photo = create_test_photo(
+            owner=self.user, search_location="Berlin", thumbnail_big=self.image.name
+        )
         self.caption = PhotoCaption.objects.create(photo=self.photo)
-        create_test_face(photo=self.photo, person=create_test_person(name="Anna"))
+        self.face = create_test_face(
+            photo=self.photo,
+            person=create_test_person(name="Anna", cluster_owner=self.user),
+            location_left=10,
+            location_top=10,
+            location_right=100,
+            location_bottom=100,
+        )
 
     @override_config(CAPTIONING_MODEL="lfm2_vl_450m")
     @patch("api.classification.captioning.generate_caption")
     def test_full_prompt_carries_person_and_place(self, mock_caption):
-        """Names and places reach the captioner directly."""
-        mock_caption.return_value = "Anna in Berlin"
+        """Face references and the place reach the model; names resolve locally."""
+        mock_caption.return_value = f"[[face:{self.face.pk}]] in Berlin"
 
         self.assertTrue(generate_photo_caption(self.caption, commit=False))
 
         prompt = mock_caption.call_args.kwargs["prompt"]
         self.assertTrue(prompt.startswith("Write a short, natural image caption."))
-        self.assertIn("The person in the photo is named Anna.", prompt)
-        self.assertIn("Use the name 'Anna' directly in the caption", prompt)
+        self.assertNotIn("Anna", prompt)
+        self.assertIn(f"[[face:{self.face.pk}]]", prompt)
         self.assertIn("This photo was taken at Berlin.", prompt)
         self.assertEqual(self.caption.captions_json["im2txt"], "Anna in Berlin")
 
@@ -260,7 +281,7 @@ class CaptionPromptTest(TestCase):
         self.assertTrue(generate_photo_caption(self.caption, commit=False))
         self.assertEqual(
             mock_caption.call_args.kwargs["prompt"],
-            "Write a short, natural image caption.",
+            "Write a short, natural image caption. Do not guess personal names.",
         )
 
     @override_config(CAPTIONING_MODEL="lfm2_vl_450m")
@@ -273,7 +294,7 @@ class CaptionPromptTest(TestCase):
         self.assertTrue(generate_photo_caption(self.caption, commit=False))
         self.assertEqual(
             mock_caption.call_args.kwargs["prompt"],
-            "Describe this image in a short, natural image caption.",
+            "Describe this image in a short, natural image caption. Do not guess personal names.",
         )
 
     @override_config(CAPTIONING_MODEL="lfm2_vl_450m")
@@ -281,14 +302,22 @@ class CaptionPromptTest(TestCase):
     def test_missing_search_instance_just_drops_the_place(self, mock_caption):
         """A photo that has not been scanned yet has no PhotoSearch row; the
         caption still happens, without a location."""
-        photo = create_test_photo(owner=self.user)
-        create_test_face(photo=photo, person=create_test_person(name="Anna"))
+        photo = create_test_photo(owner=self.user, thumbnail_big=self.image.name)
+        face = create_test_face(
+            photo=photo,
+            person=create_test_person(name="Anna", cluster_owner=self.user),
+            location_left=10,
+            location_top=10,
+            location_right=100,
+            location_bottom=100,
+        )
         caption = PhotoCaption.objects.create(photo=photo)
         mock_caption.return_value = "caption"
 
         self.assertTrue(generate_photo_caption(caption, commit=False))
         prompt = mock_caption.call_args.kwargs["prompt"]
-        self.assertIn("named Anna", prompt)
+        self.assertNotIn("Anna", prompt)
+        self.assertIn(f"[[face:{face.pk}]]", prompt)
         self.assertNotIn("This photo was taken at", prompt)
 
     @override_config(CAPTIONING_MODEL="lfm2_vl_450m")
@@ -298,7 +327,14 @@ class CaptionPromptTest(TestCase):
         from api.models import Face
 
         Face.objects.filter(photo=self.photo).delete()
-        create_test_face(photo=self.photo, person=None)
+        create_test_face(
+            photo=self.photo,
+            person=None,
+            location_left=10,
+            location_top=10,
+            location_right=100,
+            location_bottom=100,
+        )
         mock_caption.return_value = "caption"
 
         self.assertTrue(generate_photo_caption(self.caption, commit=False))
@@ -306,20 +342,28 @@ class CaptionPromptTest(TestCase):
         self.assertNotIn("named", prompt)
         self.assertIn("This photo was taken at Berlin.", prompt)
 
-        create_test_face(photo=self.photo, person=create_test_person(name="Bo"))
+        other = create_test_face(
+            photo=self.photo,
+            person=create_test_person(name="Bo", cluster_owner=self.user),
+            location_left=200,
+            location_top=10,
+            location_right=300,
+            location_bottom=100,
+        )
         self.assertTrue(generate_photo_caption(self.caption, commit=False))
-        self.assertIn("named Bo", mock_caption.call_args.kwargs["prompt"])
+        self.assertNotIn("Bo", mock_caption.call_args.kwargs["prompt"])
+        self.assertIn(f"[[face:{other.pk}]]", mock_caption.call_args.kwargs["prompt"])
 
     @override_config(CAPTIONING_MODEL="lfm2_vl_450m")
     @patch("api.classification.captioning.generate_caption")
-    def test_unresolvable_username_returns_false(self, mock_caption):
+    def test_username_change_keeps_the_stable_owner_lookup(self, mock_caption):
         from api.models import User
 
         User.objects.filter(pk=self.user.pk).update(username="renamed")
         mock_caption.return_value = "caption"
 
-        self.assertFalse(generate_photo_caption(self.caption, commit=False))
-        mock_caption.assert_not_called()
+        self.assertTrue(generate_photo_caption(self.caption, commit=False))
+        mock_caption.assert_called_once()
 
 
 @override_settings(FEATURE_IMAGE_CAPTIONING=True, FEATURE_SCENE_CLASSIFICATION=True)

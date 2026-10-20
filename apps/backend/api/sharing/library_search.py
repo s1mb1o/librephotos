@@ -53,7 +53,9 @@ def term_q(term: str, grant: LibraryGrant) -> Q:
     if grant.location:
         q |= Q(search_instance__search_location__icontains=term)
     if grant.captions:
-        q |= Q(caption_instance__captions_json__icontains=term)
+        q |= Q(caption_instance__captions_json__user_caption__icontains=term)
+        if grant.people and grant.location:
+            q |= Q(caption_instance__captions_json__im2txt__icontains=term)
         q |= Q(ocr__text__icontains=term)
     if grant.people:
         q |= _people_q(term)

@@ -12,6 +12,7 @@ from bulk_update.helper import bulk_update
 from django.core.paginator import Paginator
 from django.db.models import Q
 
+from api.classification.identity_updates import defer_caption_updates
 from api.dataviz.color_palettes import hex_palette
 from api.faces.birth_dates import (
     birth_dates_of,
@@ -540,6 +541,12 @@ def assign_face_predictions(
             )
 
 
+def persist_face_predictions(faces: list[Face]) -> None:
+    """Persist a prediction batch and refresh captions after its commit."""
+    bulk_update(faces, update_fields=FACE_PREDICTION_COLUMNS)
+    defer_caption_updates(face.photo_id for face in faces)
+
+
 def classify_face_page(
     classifiers: _Classifiers,
     page_encodings: list[npt.NDArray[float64]],
@@ -593,10 +600,10 @@ def classify_face_page(
             lrj.update_progress(current=idx + 1, target=target_count)
             commit_time = datetime.datetime.now() + datetime.timedelta(seconds=5)
         if len(face_stack) > 200:
-            bulk_update(face_stack, update_fields=FACE_PREDICTION_COLUMNS)
+            persist_face_predictions(face_stack)
             face_stack = []
 
-    bulk_update(face_stack, update_fields=FACE_PREDICTION_COLUMNS)
+    persist_face_predictions(face_stack)
 
 
 def fit_person_classifier(data_known: _FaceData) -> MLPClassifier | None:

@@ -18,6 +18,16 @@ if TYPE_CHECKING:
 
     from api.models.album_thing import AlbumThing
 
+CAPTION_IDENTITY_KEY = "captioning_identity"
+
+
+def display_captions(captions: Mapping[str, object]) -> dict[str, object]:
+    """Public caption data. Internal face evidence never leaves the database."""
+    return {
+        key: value for key, value in captions.items() if key != CAPTION_IDENTITY_KEY
+    }
+
+
 logger = logging.getLogger(__name__)
 
 

@@ -25,7 +25,7 @@ from api.metadata.library_write import WRITE_TYPES
 from api.metadata.rights import PhotoRightsData, rights_of
 from api.mime import original_mime_type
 from api.models import AlbumDate, Face, File, Person, Photo, User
-from api.models.photo_caption import PhotoCaption
+from api.models.photo_caption import PhotoCaption, display_captions
 from api.models.photo_metadata import PhotoMetadata
 from api.models.photo_ocr import PhotoOcr
 from api.models.photo_search import PhotoSearch
@@ -981,7 +981,7 @@ class PhotoSerializer(serializers.ModelSerializer):
     def get_captions_json(self, obj: Photo) -> dict:
         caption = _caption_instance(obj)
         if caption and caption.captions_json and len(caption.captions_json) > 0:
-            return caption.captions_json
+            return display_captions(caption.captions_json)
         else:
             # Tags live under the active tagging model's key when present.
             return {"im2txt": ""}
@@ -1411,7 +1411,7 @@ class PublicPhotoDetailSerializer(serializers.ModelSerializer):
     def get_captions_json(self, obj: Photo) -> dict:
         caption = _caption_instance(obj)
         if caption and caption.captions_json:
-            return caption.captions_json
+            return display_captions(caption.captions_json)
         return {"im2txt": ""}
 
     @extend_schema_field(PublicPhotoPersonSerializer(many=True))

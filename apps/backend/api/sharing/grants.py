@@ -31,6 +31,7 @@ from django.db.models import QuerySet
 from rest_framework.serializers import BaseSerializer
 
 from api.models import LibraryShare, User
+from api.models.photo_caption import display_captions
 from api.models.user import public_sharing_settings
 
 Switch = Literal[
@@ -314,6 +315,8 @@ GENERATED_CAPTION: Final = "im2txt"
 
 def shown_captions(captions: object, grant: LibraryGrant) -> object:
     """``captions_json`` as ``grant`` shows it, the captions switch aside."""
+    if isinstance(captions, Mapping):
+        captions = display_captions(captions)
     if grant.people and grant.location:
         return captions
     if isinstance(captions, Mapping) and captions.get(GENERATED_CAPTION):

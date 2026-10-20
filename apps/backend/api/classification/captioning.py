@@ -2,12 +2,25 @@
 
 from __future__ import annotations
 
+import hashlib
 import logging
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import requests
 from constance import config as site_config
+from django.db import transaction
+from django.utils import timezone
 
+from api.classification.identity_context import (
+    identity_context,
+    identity_metadata,
+    render_template,
+)
+from api.classification.identity_image import caption_image
+from api.models.photo import Photo
+from api.models.photo_caption import CAPTION_IDENTITY_KEY as IDENTITY_KEY
+from api.models.photo_caption import PhotoCaption
 from api.models.user import User
 from api.runtime import sidecars
 from api.runtime.features import feature_enabled
@@ -15,7 +28,6 @@ from api.runtime.http_timeouts import CAPTION
 from api.runtime.ml_models import captioning_model_selected
 
 if TYPE_CHECKING:
-    from api.models.photo_caption import PhotoCaption
     from api.models.remote_model import RemoteModelConfig
 
 logger = logging.getLogger(__name__)
@@ -98,8 +110,8 @@ def captioning_available() -> bool:
 def caption_photo(caption: PhotoCaption, commit: bool = True) -> str:
     """Caption the photo with the captioning sidecar and store it; the caption.
 
-    The prompt carries the recognised person and the place when the user's
-    caption settings allow it. Stored as ``captions_json["im2txt"]`` (the
+    The prompt carries face references and the place when the user's
+    caption settings allow them. Trusted names are resolved after inference. Stored as ``captions_json["im2txt"]`` (the
     first model's name); the user's own ``user_caption`` is never touched.
     Raises ``CaptionError`` when the photo has no readable big thumbnail or
     the sidecar answers without a caption; connection errors propagate.
@@ -110,31 +122,95 @@ def caption_photo(caption: PhotoCaption, commit: bool = True) -> str:
     if image_path is None:
         raise CaptionError(f"photo {image_hash} has no thumbnail to caption")
 
-    llm_settings = User.objects.get(username=caption.photo.owner).llm_settings
-    prompt = caption.caption_prompt(caption.caption_context(llm_settings))
-    logger.debug("Caption prompt: %s", prompt)
-
+    context = identity_context(caption.photo)
+    owner = caption.photo.owner
+    if owner is None:
+        raise CaptionError("The photo has no owner.")
+    llm_settings = User.objects.get(pk=owner.pk).llm_settings
+    # Names enter only through trusted face references, never the legacy first-person hint.
+    prompt = caption.caption_prompt(
+        caption.caption_context({**llm_settings, "add_person": False})
+    )
     remote = None
-    if site_config.CAPTIONING_MODEL == "openai_api":
+    selected_model = site_config.CAPTIONING_MODEL
+    if selected_model == "openai_api":
         from api.runtime.model_settings import remote_config
 
         remote = remote_config("captioning")
-    text = (
-        generate_caption(image_path=image_path, prompt=prompt, remote_config=remote)
-        if remote is not None
-        else generate_caption(image_path=image_path, prompt=prompt)
-    )
-    text = text.replace("<start>", "").replace("<end>", "").strip()
+    try:
+        with caption_image(image_path, context) as prepared:
+            grounded_prompt = prepared.prompt(prompt)
+            text = (
+                generate_caption(
+                    image_path=prepared.path,
+                    prompt=grounded_prompt,
+                    remote_config=remote,
+                )
+                if remote is not None
+                else generate_caption(image_path=prepared.path, prompt=grounded_prompt)
+            )
+            template = text.replace("<start>", "").replace("<end>", "").strip()
+            if (
+                prepared.digest is not None
+                and hashlib.sha256(Path(image_path).read_bytes()).hexdigest()
+                != prepared.digest
+            ):
+                raise CaptionError(
+                    "The thumbnail changed during caption generation. Try again."
+                )
+            metadata = identity_metadata(context, template, prepared.anchors)
+            text = render_template(
+                template, context, prepared.anchors, context.source_hash
+            )
+    except (OSError, ValueError) as error:
+        raise CaptionError("The caption thumbnail could not be prepared.") from error
 
-    if caption.captions_json is None:
-        caption.captions_json = {}
-    if remote is not None:
-        caption.captions_json["captioning"] = {
-            "provider": "openai_api",
-            "model": remote.model_name,
-            "source_hash": image_hash,
-        }
-    caption.store_generated_caption(caption.captions_json, text, commit)
+    if commit:
+        with transaction.atomic():
+            current = (
+                PhotoCaption.objects.select_for_update()
+                .select_related("photo")
+                .get(pk=caption.pk)
+            )
+            if (
+                current.photo.removed
+                or current.photo.in_trashcan
+                or identity_context(current.photo).key != context.key
+            ):
+                raise CaptionError(
+                    "The photo identity context changed during caption generation. Try again."
+                )
+            # Merge into the latest row after inference, preserving concurrent manual edits.
+            data = dict(current.captions_json or {})
+            data[IDENTITY_KEY] = metadata
+            if remote is not None:
+                data["captioning"] = {
+                    "provider": "openai_api",
+                    "model": remote.model_name,
+                    "source_hash": image_hash,
+                }
+            else:
+                data["captioning"] = {
+                    "provider": "local",
+                    "model": selected_model,
+                    "source_hash": image_hash,
+                }
+            current.photo = caption.photo
+            current.store_generated_caption(data, text, True)
+            Photo.objects.filter(pk=current.photo_id).update(
+                last_modified=timezone.now()
+            )
+            caption.captions_json = data
+    else:
+        data = dict(caption.captions_json or {})
+        data[IDENTITY_KEY] = metadata
+        if remote is not None:
+            data["captioning"] = {
+                "provider": "openai_api",
+                "model": remote.model_name,
+                "source_hash": image_hash,
+            }
+        caption.store_generated_caption(data, text, False)
 
     logger.info("generated a caption for photo %s", image_hash)
     logger.debug("caption for photo %s: %s", image_hash, text)

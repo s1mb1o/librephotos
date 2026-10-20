@@ -104,3 +104,16 @@ Keep user captions and photo identities unchanged. Refresh derived search paths.
 - [ ] Change settings during a build. Confirm that build uses one captured profile.
 - [ ] Change the checkpoint revision behind the same endpoint and model. Confirm text semantic search pauses until promotion and metadata search still works.
 - [ ] Sign in as a non-admin. Confirm their Library page reports their own pending rebuild and can start it.
+
+## Face-grounded captions
+
+- Generate an anonymous face-reference caption. Confirm a later trusted label inserts the correct name.
+- Test two people with different boxes. Keep their actions associated with their own references.
+- Reject weak, conflicting, nonfinite, unknown, rejected, cross-owner, and ambiguous identities.
+- Rename, relabel, undo, reject, and delete people. Remove names when confidence is lost.
+- Exercise bulk predictions and face-label writes. Confirm callbacks run after commit.
+- Change geometry. Confirm a fresh request is queued and the old name becomes anonymous.
+- Change a face or a manual caption during inference. Refuse stale identities and preserve manual edits.
+- Fail a provider request. Retry the stale caption through Generate captions.
+- Confirm internal face evidence is absent from photo responses and shared search.
+- Confirm photo bytes and thumbnail bytes stay unchanged.

@@ -346,6 +346,7 @@ def needs_caption() -> Q:
         Q(caption_instance__isnull=True)
         | Q(caption_instance__captions_json__isnull=True)
         | Q(caption_instance__captions_json__im2txt__isnull=True)
+        | Q(caption_instance__captions_json__captioning_identity__stale=True)
     )
 
 
