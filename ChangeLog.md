@@ -1,5 +1,13 @@
 # Change log
 
+## 2026-11-02 — Identity-aware captions deployed
+
+- Deployed image 20261102T070136Z-1680406af0f2 on docker-srv with API keys and MCP preserved.
+- Verified all 67 existing catalog and queue tables. Retained 32166 photos and the database container.
+- Paused Generate Captions at 764 of 32089 and resumed the same job. Verified forward progress and authenticated MCP access.
+- Recorded the private recovery checkpoint and live caption metadata. Real-model named output remains unverified.
+
+
 ## 2026-11-02 — Queue feeder correction
 
 - Replace pusher suspension with temporary pending-task leases during deployment. Keep feeder threads active.

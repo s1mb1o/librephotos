@@ -1,7 +1,7 @@
 # Face-grounded caption updates
 
 Date: 2026-11-02.
-Status: Implemented. Local checks passed. Not deployed.
+Status: Implemented and deployed on docker-srv on 2026-11-02. Real-model named output remains unverified.
 Issue: [GitHub #8](https://github.com/s1mb1o/librephotos/issues/8).
 
 ## Behavior

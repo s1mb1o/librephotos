@@ -21,7 +21,7 @@ credentials stay in `/srv/librephotos/.env`, mode `0600`. They never enter the
 image or the Git repository. The admin password is stored in macOS Keychain
 under `librephotos-docker-srv-admin`, account `ashmelev`.
 
-## Preserve an active scan
+## Preserve active jobs
 
 The activation helper pulls the replacement image before maintenance.
 It drains prefetched tasks before it stops the application.
@@ -35,12 +35,12 @@ The feeder thread and worker replacement continue during this drain.
 The helper releases the temporary leases on success or failure.
 A direct `SIGTERM` can deadlock this django-q2 version during worker recycling.
 Do not replace the container until the drain completes.
-The helper checks that completed scan groups plus queued groups equal the target.
+The helper checks that completed items plus queued job tasks equal each supported job target.
 
 After the application stops, the helper saves a private recovery checkpoint.
 It applies migrations in a separate container with no queue worker.
 It compares all pre-existing API and queue rows before releasing stale leases.
-It then starts the new image and verifies forward progress of the same scan.
+It then starts the new image and verifies forward progress of the same job.
 Read [the deployment validation](../../docs/validation/remote-ai-deployment.md).
 The isolated pause exercise is in [tests/README.md](tests/README.md).
 
@@ -129,3 +129,13 @@ It replaces only the MCP container. It does not restart the application.
 Revoke a token by removing its verifier from `tokens.json`.
 Replace that file atomically inside the mounted credentials directory.
 Restart MCP after changing the account-key mapping.
+
+
+## Identity-aware caption deployment
+
+Image 20261102T070136Z-1680406af0f2 includes identity-aware captions and API-key/MCP support.
+Use branch codex/deploy-identity-captions for subsequent builds of this deployment.
+The host helper uses a pending-task lease barrier. It does not suspend the feeder.
+The 2026-11-02 update preserved the caption job at 764 of 32089 and all 67 existing tables.
+See docs/validation/identity-caption-deployment.md for recovery and live checks.
+Real-model named output still needs validation.

@@ -137,3 +137,11 @@ Keep user captions and photo identities unchanged. Refresh derived search paths.
 - Preserve all existing captions, manual edits, API keys and queued payloads.
 - Resume the same job ID and start time. Confirm its counter advances.
 - Keep the MCP container running and verify an authenticated read after deployment.
+
+## Verified caption deployment on 2026-11-02
+
+- Used a lease barrier with full prefetch, 64 KiB messages, worker recycling and failure cleanup.
+- Preserved 67 original tables and 32166 photos at the frozen checkpoint.
+- Resumed the same caption job from 764 to 765 of 32089.
+- Preserved API-key and MCP access and the read-only original mount.
+- Observed new face-reference metadata. Keep real-model named output evaluation pending.

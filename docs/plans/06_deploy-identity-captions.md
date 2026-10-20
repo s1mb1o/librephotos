@@ -1,7 +1,7 @@
 # Deploy identity-aware captions
 
 Date: 2026-11-02.
-Status: Preflight passed. Activation is pending. The owner authorized deployment and a temporary job pause.
+Status: Deployed and verified on docker-srv. Real-model named output remains unverified.
 
 ## Requirements
 
@@ -69,3 +69,13 @@ A forced timeout preserved the old cluster and released deferred tasks.
 The exercise also queued a new task during the drain and observed worker recycling.
 The previously built application image remains valid. Only host-side deployment
 helpers, tests and documentation changed after that build.
+
+## Activation result
+
+Image 20261102T070136Z-1680406af0f2 is active.
+The helper revision is d1bdbd7d3.
+All 67 existing API and queue tables passed the frozen comparison.
+The same caption job resumed from 764 to 765 of 32089 and later reached 840.
+The catalog retains 32166 photos. The database and MCP containers are unchanged.
+Authenticated MCP search, job reads, readiness and the new caption metadata passed.
+See docs/validation/identity-caption-deployment.md for the recovery checkpoint.
