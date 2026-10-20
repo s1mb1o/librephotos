@@ -23,14 +23,14 @@ from pause_test_tasks import process_group
 call_command("migrate", interactive=False, verbosity=0)
 module = runpy.run_path("/tmp/scan_checkpoint.py")
 kind = sys.argv[1] if len(sys.argv) > 1 else "scan"
-if kind not in {"scan", "tags"}:
-    raise SystemExit("Use scan or tags")
+if kind not in {"scan", "tags", "captions"}:
+    raise SystemExit("Use scan, tags, or captions")
 user = User.objects.create_user(username="pause-test-" + kind, password="isolated-test")
-job_type = (
-    LongRunningJob.JOB_GENERATE_TAGS
-    if kind == "tags"
-    else LongRunningJob.JOB_SCAN_PHOTOS
-)
+job_type = {
+    "scan": LongRunningJob.JOB_SCAN_PHOTOS,
+    "tags": LongRunningJob.JOB_GENERATE_TAGS,
+    "captions": LongRunningJob.JOB_GENERATE_CAPTIONS,
+}[kind]
 job = LongRunningJob.create_job(user, job_type, start_now=True)
 job.update_progress(current=0, target=20)
 for _ in range(20):

@@ -129,3 +129,11 @@ Keep user captions and photo identities unchanged. Refresh derived search paths.
 - Fail a provider request. Retry the stale caption through Generate captions.
 - Confirm internal face evidence is absent from photo responses and shared search.
 - Confirm photo bytes and thumbnail bytes stay unchanged.
+
+## Caption job image replacement
+
+- Pause a Generate Captions job at a task boundary without cancellation.
+- Verify completed items plus queued job tasks equals the original target.
+- Preserve all existing captions, manual edits, API keys and queued payloads.
+- Resume the same job ID and start time. Confirm its counter advances.
+- Keep the MCP container running and verify an authenticated read after deployment.

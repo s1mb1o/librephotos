@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-11-02 — Identity-aware caption deployment preparation
+
+- Combined identity-aware captions with the deployed API-key and MCP code.
+- Extended the verified task-boundary drain to Generate Captions. Preserve its job ID, counters and queued photo tasks.
+
 ## 2026-11-02 — Persistent MCP HTTP deployment
 
 Deployed application and MCP images from revision `c7c165ac849c` on docker-srv. Preserved 32,166 photos and all 66 original catalog and queue tables. Verified live API keys, persistent-token revocation, semantic search, similarity, previews, people, jobs, and the API Keys browser interface.

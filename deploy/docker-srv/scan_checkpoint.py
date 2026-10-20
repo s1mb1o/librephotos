@@ -32,8 +32,12 @@ from django_q.models import OrmQ
 from django_q.signing import SignedPackage
 
 ROOT = Path(os.environ.get("LP_CHECKPOINT_DIR", "/deployment"))
-# Both jobs queue one durable task per item and acknowledge each completed item.
-DRAINABLE_JOBS = (LongRunningJob.JOB_SCAN_PHOTOS, LongRunningJob.JOB_GENERATE_TAGS)
+# These jobs queue one durable task per item and acknowledge each completed item.
+DRAINABLE_JOBS = (
+    LongRunningJob.JOB_SCAN_PHOTOS,
+    LongRunningJob.JOB_GENERATE_TAGS,
+    LongRunningJob.JOB_GENERATE_CAPTIONS,
+)
 
 
 def clusters() -> list[dict[str, int]]:
@@ -92,7 +96,7 @@ def check_scans(state: dict) -> None:
             continue
         if job["job_type"] not in DRAINABLE_JOBS:
             raise RuntimeError(
-                "A started job other than a photo scan or tag generation is active. Wait for it before deployment."
+                "A started job other than a photo scan, tag generation, or caption generation is active. Wait for it before deployment."
             )
         if job["progress_current"] + job["queued_tasks"] != job["progress_target"]:
             raise RuntimeError(
@@ -105,7 +109,7 @@ def quiesce() -> None:
     for job in before["jobs"]:
         if job["started_at"] and job["job_type"] not in DRAINABLE_JOBS:
             raise RuntimeError(
-                "A started job other than a photo scan or tag generation is active."
+                "A started job other than a photo scan, tag generation, or caption generation is active."
             )
     processes = before["clusters"]
     pids = {process["pid"] for process in processes}

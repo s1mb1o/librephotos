@@ -1,5 +1,13 @@
 # Research log
 
+## 2026-11-02 — Pause a caption job for deployment
+
+Generate Captions queues one generate_caption_job task per photo.
+Each task stores its caption before update_scan_counter acknowledges the item.
+The job can use the existing drain when workers finish their current tasks.
+The frozen invariant is completed items plus queued job tasks equals the target.
+Keep other started job types excluded. No job cancellation is required.
+
 ## 2026-11-02 — Persistent MCP HTTP deployment
 
 The owner selected persistent tokens for LAN HTTP. Keep MCP tokens separate from LibrePhotos API keys. Use SDK bearer authentication and auth-context middleware without advertising a nonexistent OAuth issuer. Bind the credentials directory so atomic verifier replacement revokes access on the next request.

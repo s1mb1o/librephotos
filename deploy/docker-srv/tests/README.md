@@ -20,6 +20,7 @@ for file in pause_test_settings.py pause_test_tasks.py test_pause_workflow.py; d
 done
 docker exec -w /code "$name" python /tmp/test_pause_workflow.py scan
 docker exec -w /code "$name" python /tmp/test_pause_workflow.py tags
+docker exec -w /code "$name" python /tmp/test_pause_workflow.py captions
 ```
 
 Expected result: `isolated_pause_resume_passed` is `true`.
