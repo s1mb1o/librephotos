@@ -6,6 +6,8 @@
 - Retain the latest 20 results per job. Merge concurrent worker updates and preserve progress, errors and cancellation.
 - Restrict the feed to the job owner and currently available owned photos. Keep snapshot data out of existing job serializers.
 - Poll through the final result response. Preserve recorded results after the job finishes.
+- Deployed revision `9b78ec35582a` to docker-srv. Preserved all 67 existing catalog and queue tables and resumed the same caption job from 5276 of 32089.
+- Verified 20 live results, previews, photo links and automatic updates. Preserved authenticated MCP search and job reads.
 
 
 ## 2026-11-02 — Identity-aware captions deployed

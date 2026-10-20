@@ -3,7 +3,7 @@
 Date: 2026-11-02.
 Feature branch: `codex/recent-job-photos`.
 Base revision: `464b8c6d9`.
-Deployment status: Pending.
+Deployment status: Complete. The authenticated job page shows live results.
 
 ## Behavior
 
@@ -64,3 +64,47 @@ It must resume the same caption job with its original start time and target.
 Keep the PostgreSQL and MCP containers and the read-only photo mount unchanged.
 Verify the authenticated page and observe new results from the existing job.
 Do not start an additional caption job for verification.
+
+## Live deployment
+
+Application revision: `9b78ec35582a`.
+Image: `registry.my.3simbio.ru/librephotos/app:20261102T110232Z-9b78ec35582a`.
+Image digest: `sha256:12f08316c316bb215afed1edaac7ec1a289b587d412a0497a865ecafbcd2348b`.
+Recovery checkpoint: `/srv/librephotos/backups/deploy-20261102T110237Z`.
+The private checkpoint contains the frozen PostgreSQL dump and environment snapshot.
+Keep that snapshot out of Git and published images.
+
+The temporary-lease drain finished all prefetched work.
+Generate Captions paused at 5276 of 32089 photos.
+Migration `api.0223_recent_job_photos` succeeded.
+All 67 pre-existing API and queue tables passed the field comparison.
+The catalog retained 32166 photos. The durable queue retained 27312 rows.
+The original job resumed at 5279 and later reached 5326 during verification.
+Its ID, start time and target stayed unchanged. It had no item errors.
+The PostgreSQL and MCP containers retained their identities.
+Originals stayed read-only at `/data/PhotoLibrary`.
+
+The owner feed returned HTTP 200 with 20 distinct results.
+All 20 observed results had successful captions.
+The response was ordered newest first and respected the caption length limit.
+The caption provider remained `openai_api`; captioning stayed enabled.
+
+The authenticated desktop page showed previews, status badges, times and captions.
+The list filled from 3 to 20 results and advanced without a reload.
+A preview opened its photo detail page. The browser returned to the job page.
+A private screenshot was retained outside the repository.
+No private captions, photo identities or screenshots are included in this report.
+Readiness returned HTTP 200. All nine existing read-only MCP tools remained listed.
+Authenticated MCP search returned 32165 available photos. The job read passed.
+No additional inference job was started for verification.
+
+The feed preserves model output. Some existing model responses contain malformed
+face references. This update does not alter caption prompts or identity rendering.
+The list makes those results visible for review.
+
+The first image upload stalled in the local Docker credential helper.
+It was stopped before any server activation.
+The registry returned HTTP 200 from `/v2/` without an authentication challenge.
+A temporary client configuration retained the Docker context and omitted the
+unused credential store. The retry completed through the normal deployment helper.
+The global Docker client configuration was not changed.

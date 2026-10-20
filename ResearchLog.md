@@ -20,6 +20,16 @@ Keep the backing field out of existing serializers, including global staff job l
 The new feed is owner-only. Its unknown view stays excluded by API-key default-deny policy.
 Completed results from before this update cannot be assigned to jobs reliably.
 
+The deployed feed filled to 20 results and advanced from the existing caption job.
+Some model output contains malformed face references. The feed records that output
+without changing it. Caption prompt and identity-rendering changes need separate work.
+
+The first local Docker upload stalled in docker-credential-desktop before activation.
+The LAN registry returned HTTP 200 from /v2/ without an authentication challenge.
+A temporary client configuration omitted the unused credential store and retained
+Docker contexts. The retry used the normal drain, backup, migrate and resume helper.
+The global Docker configuration was not changed.
+
 
 ## 2026-11-02 — Share-link clipboard failure on LAN HTTP
 

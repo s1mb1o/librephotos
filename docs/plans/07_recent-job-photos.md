@@ -1,7 +1,7 @@
 # Recent caption job results
 
 Date: 2026-11-02.
-Status: Implemented and locally validated. Deployment is pending.
+Status: Implemented, deployed to docker-srv and verified on the authenticated job page.
 
 ## User behavior
 
