@@ -1,6 +1,7 @@
 # Batch file lookup for LibrePhotos MCP
 
 Date: 2026-11-06.
+Status: Deployed and verified. See [validation](../validation/mcp-batch-lookup.md).
 
 ## Contract
 

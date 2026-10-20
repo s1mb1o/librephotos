@@ -123,6 +123,7 @@ The second file contains only SHA-256 MCP token verifiers and their subjects.
 The service runs as UID 10001. It reads the credentials directory read-only.
 It has no photo mount or direct PostgreSQL access. Write tools are disabled.
 
+For batch lookup, update the LibrePhotos application before the MCP adapter.
 After credentials exist, run `./deploy/docker-srv/deploy-mcp.sh` on the Mac.
 This command builds and pushes a unique AMD64 image through the LAN registry.
 It replaces only the MCP container. It does not restart the application.

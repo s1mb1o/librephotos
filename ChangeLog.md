@@ -4,6 +4,7 @@
 
 - Added `check_files_exist` for up to 100 MD5 digests. Return ordered matches and photo IDs with one owner-scoped catalog query.
 - Preserved the single-file tool. Added validation for limits, malformed input, and account boundaries.
+- Deployed both images from `22c44b2624bf`. The live folder check returned 93 identical results in one lookup.
 
 ## 2026-11-02 — Recent caption job results
 
