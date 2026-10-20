@@ -2,6 +2,10 @@
 
 ## 2026-11-02
 
+- Saved image captioning as enabled on docker-srv. Verified the configured OpenAI API model `qwen3.5-9b-nvfp4` is advertised by the provider.
+- Verified that the admin feature is enabled and unlocked. Preserved running processing jobs without a restart.
+- Documented the misleading local-service tooltip in remote captioning mode.
+
 - Extended the verified deployment drain to preserve per-photo tag generation after the initial scan.
 - Added Test beside remote model settings. Validate draft captioning and image/text embedding requests before saving.
 - Reuse saved tokens without exposing them. Keep provider selection, jobs, cached vectors, and indexes unchanged during tests.

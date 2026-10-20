@@ -1,5 +1,22 @@
 # Research log
 
+## 2026-11-02 — Captioning feature and local service status
+
+The owner requested image captioning enablement after a Disabled service tooltip.
+The container already had `FEATURE_IMAGE_CAPTIONING=true`.
+The saved `IMAGE_CAPTIONING_ENABLED` setting was also true.
+The caption provider was `openai_api` with `qwen3.5-9b-nvfp4`.
+The enable setting was saved explicitly. The admin API reports enabled and unlocked.
+`captioning_available()` returns true. The provider model list returns HTTP 200
+and includes the configured model. No generation or processing restart was required.
+
+The Services table reports local sidecar state.
+`local_captioning_selected()` disables the local sidecar in remote API mode.
+The current frontend wrongly infers an environment lock from any disabled service
+that has a `feature_flag`. The screenshot's environment-variable tooltip is incorrect.
+Do not switch back to a local model or restart processing to resolve this display.
+The enabled remote caption provider does not need the local port 8007 service.
+
 ## 2026-11-02 — Test draft model settings
 
 A model-list request does not verify image input or the embedding dimension.
