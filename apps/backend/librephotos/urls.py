@@ -428,6 +428,10 @@ urlpatterns = [
         name="media",
     ),
     path(
+        "api/integrations/files/exists/",
+        integration.IntegrationFileLookupView.as_view(),
+    ),
+    path(
         "api/integrations/search/",
         integration.IntegrationSearchView.as_view({"get": "list"}),
     ),

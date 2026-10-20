@@ -15,6 +15,7 @@ DEFAULT_PERMISSIONS = (READ, JOBS_READ)
 READ_VIEWS = frozenset(
     {
         "integration.IntegrationSearchView",
+        "integration.IntegrationFileLookupView",
         "integration.IntegrationPhotoView",
         "integration.IntegrationSimilarView",
         "integration.IntegrationAlbumView",

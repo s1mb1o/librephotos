@@ -157,3 +157,12 @@ Keep user captions and photo identities unchanged. Refresh derived search paths.
 - Hide another user's results, including on staff job pages.
 - Exclude trashed, removed, deleted and transferred photos.
 - Keep manual captions, originals, error reporting and job progress unchanged.
+
+## Batch MCP file lookup
+
+- Send mixed known and unknown digests to `check_files_exist`.
+- Compare each result with `check_file_exists`. Check order and repeated digests.
+- Reject invalid digests and batches with more than 100 digests.
+- Check that a shared or foreign photo cannot satisfy the caller's lookup.
+- Run the folder script on 93 distinct files. Expect one batch request.
+- Simulate a failure in a later batch. Retain earlier results and mark later files unchecked.

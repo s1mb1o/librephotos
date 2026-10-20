@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-11-06 — Batch MCP file lookup
+
+- Added `check_files_exist` for up to 100 MD5 digests. Return ordered matches and photo IDs with one owner-scoped catalog query.
+- Preserved the single-file tool. Added validation for limits, malformed input, and account boundaries.
+
 ## 2026-11-02 — Recent caption job results
 
 - Added a recent-results card to caption job pages with previews, caption snapshots, outcomes and processing times.

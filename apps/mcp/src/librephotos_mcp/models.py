@@ -8,6 +8,9 @@ from pydantic import BaseModel, ConfigDict, Field, JsonValue
 Limit = Annotated[int, Field(ge=1, le=100)]
 PageNumber = Annotated[int, Field(ge=1, le=100000)]
 ShortText = Annotated[str, Field(max_length=16384)]
+MAX_FILE_LOOKUP = 100
+MD5Digest = Annotated[str, Field(pattern=r"^[a-fA-F0-9]{32}$", min_length=32, max_length=32)]
+MD5Batch = Annotated[list[MD5Digest], Field(min_length=1, max_length=MAX_FILE_LOOKUP)]
 
 
 class PhotoSummary(BaseModel):
@@ -87,6 +90,16 @@ class JobStarted(BaseModel):
 class FileExists(BaseModel):
     exists: bool
     photo_id: UUID | None = None
+
+
+class FileMatch(BaseModel):
+    md5: MD5Digest
+    exists: bool
+    photo_id: UUID | None
+
+
+class FileMatches(BaseModel):
+    results: Annotated[list[FileMatch], Field(min_length=1, max_length=MAX_FILE_LOOKUP)]
 
 
 class OperationResult(BaseModel):

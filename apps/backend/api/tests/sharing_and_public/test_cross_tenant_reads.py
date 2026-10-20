@@ -32,7 +32,7 @@ from api.directory_watcher.file_handlers import (
     create_file_record,
     group_files_into_photo,
 )
-from api.models import LongRunningJob
+from api.models import File, LongRunningJob
 from api.models.album_user_share import AlbumUserShare
 from api.tests.utils import (
     create_test_album_auto,
@@ -55,6 +55,42 @@ from api.tests.utils import (
 THING_TYPE = "openclip_vitb32_tag"
 # A map view around v_photo2 (Porto)
 PORTO_VIEW = "south=41&west=-9&north=42&east=-8"
+
+
+class BatchFileLookupScopeTest(TestCase):
+    def test_a_foreign_photo_hash_is_hidden_even_when_the_photo_is_shared(self) -> None:
+        owner = create_test_user()
+        viewer = create_test_user()
+        foreign = create_test_photo(owner=owner, public=True)
+        foreign.shared_to.add(viewer)
+        # Both stored keys must be candidates before the owner filter applies.
+        historical = foreign.image_hash[:32]
+        foreign.image_hash = historical
+        foreign.save(update_fields=["image_hash"])
+        variant = "a" * 32
+        foreign.files.add(
+            File.objects.create(
+                hash=variant, path="/synthetic/foreign.jpg", type=File.IMAGE
+            )
+        )
+        digests = [historical, variant]
+        client = APIClient()
+        client.force_authenticate(viewer)
+        url = "/api/integrations/files/exists/"
+        response = client.get(url, {"md5": digests})
+        self.assertEqual(response.status_code, 200, response.content)
+        self.assertEqual(
+            response.json()["results"],
+            [{"md5": digest, "exists": False, "photo_id": None} for digest in digests],
+        )
+        client.force_authenticate(owner)
+        self.assertEqual(
+            client.get(url, {"md5": digests}).json()["results"],
+            [
+                {"md5": digest, "exists": True, "photo_id": str(foreign.pk)}
+                for digest in digests
+            ],
+        )
 
 
 class CrossTenantReadTest(TestCase):

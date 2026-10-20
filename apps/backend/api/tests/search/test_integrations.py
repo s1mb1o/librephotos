@@ -7,6 +7,8 @@ from django.utils import timezone
 from rest_framework.test import APIClient
 
 from api.accounts.api_keys import create_api_key
+from api.models import File
+from api.photos.content_lookup import MAX_FILE_LOOKUP
 from api.tests.utils import (
     create_test_album_user,
     create_test_job,
@@ -370,3 +372,80 @@ class IntegrationReadsTest(TestCase):
             self.client.get(f"/api/exists/{self.foreign.image_hash[:32]}/").json(),
             {"exists": False, "photo_id": None},
         )
+
+
+class IntegrationFileLookupTest(TestCase):
+    url = "/api/integrations/files/exists/"
+
+    def setUp(self) -> None:
+        self.owner = create_test_user()
+        self.own = create_test_photo(owner=self.owner)
+        self.client = APIClient()
+        _, secret = create_api_key(self.owner, "Lookup", ["photos:read"])
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {secret}")
+
+    def test_batch_matches_single_lookup_for_both_hash_sources(self) -> None:
+        historical = self.own.image_hash[:32]
+        variant = "a" * 32
+        variant_file = File.objects.create(
+            hash=variant + str(self.owner.pk),
+            path="/synthetic/variant.jpg",
+            type=File.IMAGE,
+        )
+        self.own.files.add(variant_file)
+        second = create_test_photo(owner=self.owner)
+        second.files.add(variant_file)
+        legacy = second.image_hash[:32]
+        second.image_hash = legacy
+        second.save(update_fields=["image_hash"])
+        missing = "b" * 32
+        digests = [variant.upper(), missing, historical, legacy, variant]
+        response = self.client.get(self.url, {"md5": digests})
+        self.assertEqual(response.status_code, 200, response.content)
+        expected = [
+            {
+                "md5": digest.lower(),
+                **self.client.get(f"/api/exists/{digest.lower()}/").json(),
+            }
+            for digest in digests
+        ]
+        self.assertEqual(response.json()["results"], expected)
+        self.assertEqual(expected[0]["photo_id"], str(min(self.own.pk, second.pk)))
+        self.assertEqual(
+            expected[1], {"md5": missing, "exists": False, "photo_id": None}
+        )
+        self.assertEqual(expected[2]["photo_id"], str(self.own.pk))
+        self.assertEqual(expected[3]["photo_id"], str(second.pk))
+
+    def test_catalog_query_count_stays_one_at_the_limit(self) -> None:
+        self.client.force_authenticate(self.owner)
+        for size in (2, MAX_FILE_LOOKUP):
+            digests = [
+                self.own.image_hash[:32],
+                *(f"{i:032x}" for i in range(size - 1)),
+            ]
+            with self.assertNumQueries(1):
+                response = self.client.get(self.url, {"md5": digests})
+            self.assertEqual(response.status_code, 200, response.content)
+            self.assertEqual(len(response.json()["results"]), size)
+
+    def test_invalid_digests_and_oversized_batches_are_rejected(self) -> None:
+        for values in (
+            [],
+            [""],
+            ["z" * 32],
+            ["a" * 64],
+            ["a" * 32 + " "],
+            ["a" * 32] * 101,
+        ):
+            with self.subTest(size=len(values), prefix=values[:1]):
+                self.assertEqual(
+                    self.client.get(self.url, {"md5": values}).status_code, 400
+                )
+
+    def test_lookup_requires_photo_read_permission(self) -> None:
+        data = {"md5": [self.own.image_hash[:32]]}
+        self.assertIn(APIClient().get(self.url, data).status_code, (401, 403))
+        _, secret = create_api_key(self.owner, "Jobs", ["jobs:read"])
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {secret}")
+        self.assertEqual(self.client.get(self.url, data).status_code, 403)

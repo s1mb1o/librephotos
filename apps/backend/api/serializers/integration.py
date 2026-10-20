@@ -1,12 +1,51 @@
 """Bounded REST representations for automation clients."""
 
 from typing import TypedDict
+from uuid import UUID
 
 from rest_framework import serializers
 
 from api.drf.request_user import request_user
 from api.models import AlbumUser, AlbumUserPhoto, LongRunningJob, Photo
+from api.photos.content_lookup import MAX_FILE_LOOKUP
 from api.serializers.photos import PhotoSerializer
+
+
+class IntegrationFileLookupQuery(serializers.Serializer[None]):
+    md5 = serializers.ListField(
+        child=serializers.RegexField(
+            r"^[a-fA-F0-9]{32}$", min_length=32, max_length=32, trim_whitespace=False
+        ),
+        allow_empty=False,
+        max_length=MAX_FILE_LOOKUP,
+        help_text="Repeat for each 32-character MD5 digest. The response keeps input order.",
+    )
+
+
+class IntegrationFileMatch(TypedDict):
+    md5: str
+    exists: bool
+    photo_id: UUID | None
+
+
+class IntegrationFileMatches(TypedDict):
+    results: list[IntegrationFileMatch]
+
+
+class IntegrationFileMatchSerializer(serializers.Serializer[IntegrationFileMatch]):
+    md5 = serializers.RegexField(r"^[a-f0-9]{32}$", min_length=32, max_length=32)
+    exists = serializers.BooleanField()
+    photo_id = serializers.UUIDField(allow_null=True)
+
+
+class IntegrationFileMatchesSerializer(serializers.Serializer[IntegrationFileMatches]):
+    results: serializers.ListSerializer[IntegrationFileMatch] = (
+        serializers.ListSerializer(
+            child=IntegrationFileMatchSerializer(),
+            allow_empty=False,
+            max_length=MAX_FILE_LOOKUP,
+        )
+    )
 
 
 class IntegrationSearchQuery(serializers.Serializer[None]):

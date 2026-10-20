@@ -19,9 +19,12 @@ from librephotos_mcp.models import (
     Album,
     AlbumPhotos,
     FileExists,
+    FileMatches,
     JobStarted,
     JobStatus,
     Limit,
+    MD5Batch,
+    MD5Digest,
     OperationResult,
     Page,
     PageNumber,
@@ -158,12 +161,24 @@ def create_server(config: Config) -> MCPServer:
             )
 
     @mcp.tool(annotations=READ)
-    async def check_file_exists(
-        md5: Annotated[str, Field(pattern=r"^[a-fA-F0-9]{32}$")],
-    ) -> FileExists:
+    async def check_file_exists(md5: MD5Digest) -> FileExists:
         """Check an MD5 content digest in the caller's library. SHA-256 is not supported."""
         async with client() as api:
             return await api.json(FileExists, f"api/exists/{md5.lower()}/")
+
+    @mcp.tool(annotations=READ)
+    async def check_files_exist(md5s: MD5Batch) -> FileMatches:
+        """Check 1 to 100 MD5 digests in the caller's library. Results follow input order."""
+        digests = [digest.lower() for digest in md5s]
+        async with client() as api:
+            result = await api.json(
+                FileMatches, "api/integrations/files/exists/", params={"md5": digests}
+            )
+        if [row.md5 for row in result.results] != digests or any(
+            row.exists != (row.photo_id is not None) for row in result.results
+        ):
+            raise LibrePhotosError("LibrePhotos returned an invalid batch lookup result.")
+        return result
 
     @mcp.tool(annotations=READ)
     async def get_job_status(job_id: UUID) -> JobStatus:

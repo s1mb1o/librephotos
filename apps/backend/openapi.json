@@ -5287,6 +5287,55 @@
         }
       }
     },
+    "/api/integrations/files/exists/": {
+      "get": {
+        "operationId": "api_integrations_files_exists_retrieve",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "md5",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 32,
+                "maxLength": 32,
+                "pattern": "^[a-fA-F0-9]{32}$"
+              },
+              "maxItems": 100
+            },
+            "description": "Repeat for each 32-character MD5 digest. The response keeps input order.",
+            "required": true
+          }
+        ],
+        "tags": [
+          "api"
+        ],
+        "security": [
+          {
+            "jwtAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          },
+          {
+            "basicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationFileMatches"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/integrations/jobs/{job_id}/": {
       "get": {
         "operationId": "api_integrations_jobs_retrieve",
@@ -21115,6 +21164,44 @@
         "required": [
           "id",
           "title"
+        ]
+      },
+      "IntegrationFileMatch": {
+        "type": "object",
+        "properties": {
+          "md5": {
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 32,
+            "pattern": "^[a-f0-9]{32}$"
+          },
+          "exists": {
+            "type": "boolean"
+          },
+          "photo_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "exists",
+          "md5",
+          "photo_id"
+        ]
+      },
+      "IntegrationFileMatches": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntegrationFileMatch"
+            }
+          }
+        },
+        "required": [
+          "results"
         ]
       },
       "IntegrationJob": {

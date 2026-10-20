@@ -112,7 +112,7 @@ class AdapterTest(unittest.IsolatedAsyncioTestCase):
         async with Client(self.server) as client:
             tools = await client.list_tools()
             names = {tool.name for tool in tools.tools}
-            self.assertEqual(len(names), 9)
+            self.assertEqual(len(names), 10)
             self.assertNotIn("start_scan", names)
             result = await client.call_tool(
                 "search_photos",
@@ -137,6 +137,9 @@ class AdapterTest(unittest.IsolatedAsyncioTestCase):
                 ("get_photo", {"photo_id": "../../etc/passwd"}),
                 ("search_photos", {"limit": 101}),
                 ("check_file_exists", {"md5": "a" * 64}),
+                ("check_files_exist", {"md5s": []}),
+                ("check_files_exist", {"md5s": [HASH] * 101}),
+                ("check_files_exist", {"md5s": [HASH, "invalid"]}),
             ]:
                 result = await client.call_tool(tool, args)
                 self.assertTrue(result.is_error)
@@ -185,6 +188,39 @@ class AdapterTest(unittest.IsolatedAsyncioTestCase):
             result = await client.call_tool("check_file_exists", {"md5": HASH.upper()})
             self.assertEqual(result.structured_content, {"exists": True, "photo_id": PHOTO})
         self.assertEqual(self.requests[-1].url.path, f"/api/exists/{HASH}/")
+
+    async def test_batch_lookup_uses_one_request_and_keeps_order(self) -> None:
+        missing = "b" * 32
+        matches = [
+            {"md5": digest, "exists": digest == HASH, "photo_id": PHOTO if digest == HASH else None}
+            for digest in (HASH, missing, HASH)
+        ]
+
+        def backend(request: httpx.Request) -> httpx.Response:
+            self.requests.append(request)
+            return httpx.Response(200, json={"results": matches})
+
+        self.backend = backend
+        async with Client(self.server) as client:
+            result = await client.call_tool(
+                "check_files_exist", {"md5s": [HASH.upper(), missing, HASH]}
+            )
+            self.assertFalse(result.is_error, result)
+            self.assertEqual(result.structured_content, {"results": matches})
+        self.assertEqual(len(self.requests), 1)
+        request = self.requests[0]
+        self.assertEqual(request.method, "GET")
+        self.assertEqual(request.url.path, "/api/integrations/files/exists/")
+        self.assertEqual(request.url.params.get_list("md5"), [HASH, missing, HASH])
+        self.assertEqual(request.headers["Authorization"], f"Api-Key {KEY}")
+
+    async def test_batch_lookup_refuses_an_incomplete_response(self) -> None:
+        self.backend = lambda request: httpx.Response(
+            200, json={"results": [{"md5": HASH, "exists": True, "photo_id": PHOTO}]}
+        )
+        async with Client(self.server) as client:
+            result = await client.call_tool("check_files_exist", {"md5s": [HASH, "b" * 32]})
+            self.assertTrue(result.is_error)
 
     async def test_writes_are_opt_in(self) -> None:
         server = create_server(Config("http://backend.test", KEY, enable_writes=True))
@@ -493,7 +529,7 @@ class StdioTest(unittest.IsolatedAsyncioTestCase):
                 },
             )
             async with Client(params) as client:
-                self.assertEqual(len((await client.list_tools()).tools), 9)
+                self.assertEqual(len((await client.list_tools()).tools), 10)
                 self.assertFalse((await client.call_tool("search_photos", {})).is_error)
         finally:
             await asyncio.to_thread(http.shutdown)

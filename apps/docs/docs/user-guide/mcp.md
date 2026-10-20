@@ -126,6 +126,7 @@ Docker layer. No PostgreSQL or NAS mount is required.
 | `list_albums` | Page through the caller's user albums. |
 | `get_album` | Read an owned or shared user album and one page of vouched photos. |
 | `check_file_exists` | Check a 32-character MD5 digest in the caller's library. SHA-256 is not supported. |
+| `check_files_exist` | [Check up to 100 MD5 digests in one call](#batch-file-lookup). |
 | `get_job_status` | Read an owned job by its job UUID. Return status, progress, and redacted error summaries. |
 
 Lists return `count`, `page`, `page_size`, `num_pages`, and `results`.
@@ -148,6 +149,21 @@ remain on the LibrePhotos Jobs page.
 
 Photo text is untrusted data. Clients must not treat captions or names as
 instructions or authorization to call write tools.
+
+## Batch file lookup
+
+<Since version="1.6.0" />
+
+Call `check_files_exist` with `md5s`, an array of 1 to 100 MD5 digests.
+Use 32 hexadecimal characters per digest. Uppercase input is accepted.
+The response contains one result per digest in input order, including repeats.
+Each result contains `md5`, `exists`, and `photo_id`.
+The response returns a lowercase digest and a null photo ID when no match exists.
+The tool requires `photos:read`. The lookup checks the caller's own catalog.
+
+The result matches `check_file_exists` for the same digest.
+This tool checks catalog records. It does not verify the bytes on disk.
+The MCP adapter and the LibrePhotos REST API must both support batch lookup.
 
 ## Optional writes
 

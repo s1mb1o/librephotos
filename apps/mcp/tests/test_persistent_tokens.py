@@ -110,7 +110,7 @@ class PersistentTokensTest(unittest.IsolatedAsyncioTestCase):
                         async with Client(
                             streamable_http_client("http://mcp.test/mcp", http_client=http)
                         ) as client:
-                            self.assertEqual(len((await client.list_tools()).tools), 9)
+                            self.assertEqual(len((await client.list_tools()).tools), 10)
                             result = await client.call_tool("search_photos", {})
                             self.assertFalse(result.is_error)
                 self.write_tokens({"b": "b"})

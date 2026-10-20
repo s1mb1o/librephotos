@@ -1,5 +1,14 @@
 # Research log
 
+## 2026-11-06 — Batch MCP file lookup
+
+The 93-file folder check spent about 7.3 seconds on serial MCP requests.
+Four concurrent requests reduced the complete check to 6.17 seconds.
+The new tool accepts at most 100 MD5 digests per request.
+It forwards one bounded REST request with the same `photos:read` permission.
+Two indexed branches in one SQL statement match historical photo hashes and linked file hashes.
+The lowest matching photo UUID preserves the single lookup's selection rule.
+
 ## 2026-11-02 — Recent processed photos on a job page
 
 The job page stores progress and errors, but has no per-photo completion history.

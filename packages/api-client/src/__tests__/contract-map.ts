@@ -294,6 +294,8 @@ export const CONTRACT_MAP: Readonly<Record<string, ContractEntry>> = {
   PhotoDownloadStart: { schema: S.PhotoDownloadStart, components: ["ZipDownloadStarted"] },
   PhotoDownloadStatus: { schema: S.PhotoDownloadStatus, components: ["ZipDownloadFinished", "ZipDownloadPending"] },
   UploadExistsResponse: { schema: S.UploadExistsResponse, components: ["UploadExists"] },
+  IntegrationFileMatch: { schema: S.IntegrationFileMatch, components: ["IntegrationFileMatch"] },
+  IntegrationFileMatches: { schema: S.IntegrationFileMatches, components: ["IntegrationFileMatches"] },
   UploadSealResponse: { schema: S.UploadSealResponse, components: ["UploadSealResponse"] },
   UploadStatus: { schema: S.UploadStatus, components: ["UploadStatus"] },
   UploadFollowups: { schema: S.UploadFollowups, components: ["UploadFollowups"] },

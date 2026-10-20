@@ -18,6 +18,7 @@ from api.drf.pagination import IntegrationPagination, PaginatedViewMixin
 from api.drf.params import parse_query
 from api.drf.request_user import request_user
 from api.models import AlbumUser, AlbumUserPhoto, Face, LongRunningJob, Photo
+from api.photos.content_lookup import find_photo_ids
 from api.runtime.remote_inference import RemoteInferenceError
 from api.search.filters import SemanticSearchFilter
 from api.search.metadata_filter import MetadataFilterQuery
@@ -31,6 +32,9 @@ from api.search.similarity import (
 )
 from api.serializers.integration import (
     IntegrationAlbumPageSerializer,
+    IntegrationFileLookupQuery,
+    IntegrationFileMatch,
+    IntegrationFileMatchesSerializer,
     IntegrationJobSerializer,
     IntegrationPhotoPageSerializer,
     IntegrationPhotoSerializer,
@@ -41,6 +45,25 @@ from api.sharing.grants import SUMMARY_FIELDS, redact, viewer_grant
 from api.views.custom_api_view import ListViewSet
 from api.views.photos import PhotoViewSet
 from api.views.search import SearchListViewSet
+
+
+class IntegrationFileLookupView(APIView):
+    permission_classes = (IsAuthenticated,)
+    pagination_class = None
+
+    @extend_schema(
+        parameters=[IntegrationFileLookupQuery],
+        responses=IntegrationFileMatchesSerializer,
+    )
+    def get(self, request: Request) -> Response:
+        values = parse_query(request, IntegrationFileLookupQuery)
+        md5s: list[str] = [digest.lower() for digest in values["md5"]]
+        found = find_photo_ids(request_user(request), md5s)
+        results: list[IntegrationFileMatch] = [
+            {"md5": digest, "exists": digest in found, "photo_id": found.get(digest)}
+            for digest in md5s
+        ]
+        return Response(IntegrationFileMatchesSerializer({"results": results}).data)
 
 
 class IntegrationSearchFilter(SemanticSearchFilter):

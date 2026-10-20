@@ -44,6 +44,19 @@ export const UploadExistsResponse = z.object({
 });
 export type UploadExistsResponse = z.infer<typeof UploadExistsResponse>;
 
+/** One result per requested digest from the integration batch lookup. */
+export const IntegrationFileMatch = z.object({
+  md5: z.string().length(32).regex(/^[a-f0-9]{32}$/),
+  exists: z.boolean(),
+  photo_id: z.string().nullable(),
+});
+export type IntegrationFileMatch = z.infer<typeof IntegrationFileMatch>;
+
+export const IntegrationFileMatches = z.object({
+  results: z.array(IntegrationFileMatch).min(1).max(100),
+});
+export type IntegrationFileMatches = z.infer<typeof IntegrationFileMatches>;
+
 /** `POST /upload/seal/`: the import jobs the call sealed (another user's or a finished one is left out). */
 export const UploadSealResponse = z.object({
   sealed_job_ids: z.array(z.string()),
