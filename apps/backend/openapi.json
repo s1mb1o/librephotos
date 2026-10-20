@@ -13407,6 +13407,9 @@
             "jwtAuth": []
           },
           {
+            "apiKeyAuth": []
+          },
+          {
             "basicAuth": []
           }
         ],
