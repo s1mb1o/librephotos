@@ -13,7 +13,8 @@ photo quality assessment, and directory organization.
 - Development branch: `codex/nas-photo-library`.
 - Reviewed upstream release: `1.5.1`.
 - Base commit: `2097ce7b44a318039c68997816bc91d85da3ea31`.
-- Canonical Mac checkout: `/Volumes/projects/librephotos`.
+- Mac development checkout: `/Users/ashmelev/Productivity/librephotos`.
+- Retained NAS checkout: `/Volumes/projects/librephotos`.
 - The same project share is mounted at `/mnt/projects` on GX10.
 
 The fork preserves the available upstream branches, tags, and full history.
@@ -62,3 +63,11 @@ Record the producing model and image identity for derived results.
 GitHub Actions are disabled for this initial fork.
 The inherited workflow files remain available for later review.
 No application was deployed during fork creation.
+
+## Local deployment
+
+LibrePhotos runs on `docker-srv` at `http://192.168.86.16:19850`.
+Use `deploy/docker-srv/deploy.sh` on the Mac to build and deploy changes.
+Read `deploy/docker-srv/README.md` for state, credentials, and rollback.
+The deployment uses read-only access to `media/personal/PhotoLibrary`.
+The NAS source checkout is retained. The deployment builds from the Mac checkout.

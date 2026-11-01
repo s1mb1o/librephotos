@@ -1,0 +1,86 @@
+name: librephotos
+services:
+  db:
+    image: ${LP_DB_IMAGE:?Set LP_DB_IMAGE in the server .env}
+    container_name: librephotos-db
+    pull_policy: never
+    restart: unless-stopped
+    shm_size: 256mb
+    mem_limit: 1g
+    cpus: 1.0
+    environment:
+      POSTGRES_USER: librephotos
+      POSTGRES_DB: librephotos
+      POSTGRES_PASSWORD: ${LP_DB_PASSWORD:?Set LP_DB_PASSWORD}
+    volumes:
+      - ${LP_DATA_ROOT:-/srv/librephotos/data}/postgres:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U librephotos -d librephotos"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    logging:
+      driver: json-file
+      options: {max-size: 20m, max-file: "3"}
+  app:
+    image: ${LP_IMAGE:?Set LP_IMAGE in the server .env}
+    container_name: librephotos-app
+    pull_policy: never
+    restart: unless-stopped
+    stop_grace_period: 2m
+    init: true
+    command: [/bin/bash, -c, "test -d /data/Years || { echo 'PhotoLibrary is unavailable'; exit 75; }; exec /entrypoint.sh"]
+    mem_limit: 6g
+    cpus: 2.0
+    ports:
+      - "${LP_BIND_IP:-192.168.86.16}:${LP_PORT:-19850}:8001"
+    environment:
+      SECRET_KEY: ${LP_SECRET_KEY:?Set LP_SECRET_KEY}
+      DB_BACKEND: postgresql
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: librephotos
+      DB_USER: librephotos
+      DB_PASS: ${LP_DB_PASSWORD}
+      SERVE_FRONTEND: "true"
+      WEB_CONCURRENCY: "1"
+      WORKER_CONCURRENCY: "1"
+      ONNX_PROVIDERS: CPUExecutionProvider
+      ONNX_INTRA_OP_THREADS: "1"
+      BASE_LOGS: /logs
+      PHOTOS: /data
+      ALLOW_UPLOAD: "false"
+      NEXTCLOUD_ENABLED: "false"
+      MAP_API_PROVIDER: exiftool
+      CSRF_TRUSTED_ORIGINS: "http://192.168.86.16:19850"
+      FRONTEND_BASE_URL: "http://192.168.86.16:19850"
+      FEATURE_FACE_DETECTION: "true"
+      FEATURE_FACE_CLUSTER: "true"
+      FEATURE_SCENE_CLASSIFICATION: "true"
+      FEATURE_IMAGE_CAPTIONING: "true"
+      FEATURE_VIDEO: "true"
+      FEATURE_VIDEO_PREVIEWS: "false"
+      FEATURE_FACE_DETECTION_IN_VIDEOS: "false"
+      FEATURE_PROCESS_EMBEDDED_MEDIA: "true"
+      UPDATE_CHECK: "false"
+      LOG_LEVEL: INFO
+    volumes:
+      - type: bind
+        source: ${LP_PHOTO_ROOT:?Set the photo mount}
+        target: /data
+        read_only: true
+        bind: {create_host_path: false}
+      - ${LP_DATA_ROOT:-/srv/librephotos/data}/protected_media:/protected_media
+      - ${LP_DATA_ROOT:-/srv/librephotos/data}/cache:/root/.cache
+      - ${LP_DATA_ROOT:-/srv/librephotos/data}/logs:/logs
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8001/api/healthz/ready', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+      start_period: 10m
+    logging:
+      driver: json-file
+      options: {max-size: 20m, max-file: "3"}

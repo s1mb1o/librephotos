@@ -2,6 +2,12 @@
 
 ## 2026-11-01
 
+- Added the docker-srv deployment at LAN port 19850.
+- Added a cached AMD64 build, immutable LAN image tags, and a deployment command.
+- Kept PostgreSQL, previews, models, logs, and caches outside the image.
+- Added a database backup before replacement and preserved existing admin passwords.
+- Mounted only PhotoLibrary read-only inside the application.
+
 - Created a native GitHub fork from the official LibrePhotos repository.
 - Removed the GitHub publishing prohibition at the owner's request.
 - Based `codex/nas-photo-library` on upstream release `1.5.1`.

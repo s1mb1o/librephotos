@@ -24,3 +24,14 @@ These checks are pending. They are not passing claims for the initial fork.
 - Semantic search preserves relevance order with filters and shared libraries.
 - Quality scoring records model provenance and preserves manual ratings.
 - Similar-photo review requires an explicit decision before original deletion.
+
+## Docker-srv deployment
+
+- Open the LAN URL and verify that the login page renders.
+- Verify health, authenticated API access, and one-photo indexing.
+- Verify that originals are mounted read-only in Proxmox, CT 100, and Docker.
+- Verify that the required models are present.
+- Rebuild with a changed revision and confirm cached dependency and frontend layers.
+- Replace the application image. Preserve the database, previews, models, and admin password.
+- Verify a PostgreSQL backup with `pg_restore --list`.
+- Start the PhotoLibrary scan after the deployment checks.
