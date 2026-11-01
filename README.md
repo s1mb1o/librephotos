@@ -1,3 +1,5 @@
+> Personal NAS photo-library fork. Read [FORK.md](FORK.md) for the base release, Git workflow, known findings, and extension priorities.
+
 [![Discord](https://img.shields.io/badge/Discord-LibrePhotos-5865F2?style=plastic&logo=discord&logoColor=white)][discord] 
 [![Read the docs](https://img.shields.io/static/v1?label=Read&message=the%20docs&color=blue&style=plastic)](https://docs.librephotos.com/) [![GitHub contributors](https://img.shields.io/github/contributors/librephotos/librephotos?style=plastic)](https://github.com/LibrePhotos/librephotos/graphs/contributors) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=plastic)](LICENSE)
 

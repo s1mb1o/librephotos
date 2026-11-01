@@ -1,5 +1,13 @@
 # LibrePhotos
 
+## Personal fork
+
+Read `FORK.md` before work on this fork.
+Agents MAY commit and push to GitHub or GitLab when the user authorizes the task.
+Check the actual push URL before each push.
+Use temporary fixtures for tests that change files.
+Record fork changes in `ChangeLog.md` and findings in `ResearchLog.md`.
+
 A self-hosted photo manager. This is a monorepo; each app has its own stack and its own
 `AGENTS.md`. Read the one for every app you change.
 
