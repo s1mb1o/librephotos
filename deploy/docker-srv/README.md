@@ -106,3 +106,24 @@ The database stores the selected models. OCR remains disabled by default.
 A scan creates thumbnails, search embeddings, tags, and face data. Caption
 generation is a separate Library job. The deployment verifies it on one photo.
 After the initial scan, use Generate captions to caption the complete library.
+
+## MCP HTTP service
+
+The optional MCP service uses `http://192.168.86.16:19851/mcp` on the LAN.
+It requires a persistent bearer token. OAuth is not required in this deployment.
+The client token is referenced by macOS Keychain item `librephotos-mcp-docker-srv`,
+account `ashmelev`. Do not place the token in Git or a URL.
+
+Runtime files are under `/srv/librephotos/mcp`.
+The `credentials` directory contains `principals.json` and `tokens.json`.
+The first file contains the scoped LibrePhotos account key.
+The second file contains only SHA-256 MCP token verifiers and their subjects.
+The service runs as UID 10001. It reads the credentials directory read-only.
+It has no photo mount or direct PostgreSQL access. Write tools are disabled.
+
+After credentials exist, run `./deploy/docker-srv/deploy-mcp.sh` on the Mac.
+This command builds and pushes a unique AMD64 image through the LAN registry.
+It replaces only the MCP container. It does not restart the application.
+Revoke a token by removing its verifier from `tokens.json`.
+Replace that file atomically inside the mounted credentials directory.
+Restart MCP after changing the account-key mapping.

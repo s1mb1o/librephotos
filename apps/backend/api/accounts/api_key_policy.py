@@ -14,6 +14,10 @@ DEFAULT_PERMISSIONS = (READ, JOBS_READ)
 # endpoint from silently inheriting access from a read-only key.
 READ_VIEWS = frozenset(
     {
+        "integration.IntegrationSearchView",
+        "integration.IntegrationPhotoView",
+        "integration.IntegrationSimilarView",
+        "integration.IntegrationAlbumView",
         "photos.PhotoViewSet",
         "photos.RecentlyAddedPhotoListViewSet",
         "photos.NoTimestampPhotoViewSet",
@@ -55,7 +59,7 @@ def required_permission(request: HttpRequest) -> str | None:
     )
     method = request.method or ""
     if method in ("GET", "HEAD", "OPTIONS"):
-        if identity == "jobs.LongRunningJobViewSet":
+        if identity in {"jobs.LongRunningJobViewSet", "integration.IntegrationJobView"}:
             return JOBS_READ
         if identity in READ_VIEWS:
             return READ

@@ -5245,6 +5245,430 @@
         }
       }
     },
+    "/api/integrations/albums/{album_id}/photos/": {
+      "get": {
+        "operationId": "api_integrations_albums_photos_retrieve",
+        "description": "``paginate_queryset``/``get_paginated_response`` for a view that is\nnot a ``GenericAPIView``: list it first, before ``APIView`` or\n``viewsets.ViewSet``.\n\nThe same calls a generic view makes, with the view's ``pagination_class``\n(``DefaultPagination`` unless it names a preset).",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "album_id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "tags": [
+          "api"
+        ],
+        "security": [
+          {
+            "jwtAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          },
+          {
+            "basicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationAlbumPage"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/integrations/jobs/{job_id}/": {
+      "get": {
+        "operationId": "api_integrations_jobs_retrieve",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
+          }
+        ],
+        "tags": [
+          "api"
+        ],
+        "security": [
+          {
+            "jwtAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          },
+          {
+            "basicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationJob"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/integrations/photos/{photo_id}/": {
+      "get": {
+        "operationId": "api_integrations_photos_retrieve",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "photo_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
+          }
+        ],
+        "tags": [
+          "api"
+        ],
+        "security": [
+          {
+            "jwtAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          },
+          {
+            "basicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationPhoto"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/integrations/photos/{photo_id}/similar/": {
+      "get": {
+        "operationId": "api_integrations_photos_similar_retrieve",
+        "description": "``paginate_queryset``/``get_paginated_response`` for a view that is\nnot a ``GenericAPIView``: list it first, before ``APIView`` or\n``viewsets.ViewSet``.\n\nThe same calls a generic view makes, with the view's ``pagination_class``\n(``DefaultPagination`` unless it names a preset).",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "photo_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
+          }
+        ],
+        "tags": [
+          "api"
+        ],
+        "security": [
+          {
+            "jwtAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          },
+          {
+            "basicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationPhotoPage"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/integrations/search/": {
+      "get": {
+        "operationId": "api_integrations_search_list",
+        "description": "Flat pages without materializing or serializing a complete library.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "album_id",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "aperture_max",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "minimum": 0
+            },
+            "description": "Highest f-number"
+          },
+          {
+            "in": "query",
+            "name": "aperture_min",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "minimum": 0
+            },
+            "description": "Lowest f-number"
+          },
+          {
+            "in": "query",
+            "name": "camera",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "description": "Camera model, exact match ignoring case (values: metadata-values?field=camera)"
+          },
+          {
+            "in": "query",
+            "name": "extension",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10
+            },
+            "description": "The main file's extension, with or without the dot"
+          },
+          {
+            "in": "query",
+            "name": "file_type",
+            "schema": {
+              "enum": [
+                "image",
+                "raw",
+                "video"
+              ],
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "image or video: the main file's type; raw: has a RAW file\n\n* `image` - image\n* `raw` - raw\n* `video` - video"
+          },
+          {
+            "in": "query",
+            "name": "focal35_max",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Longest 35 mm equivalent focal length in mm"
+          },
+          {
+            "in": "query",
+            "name": "focal35_min",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Shortest 35 mm equivalent focal length in mm"
+          },
+          {
+            "in": "query",
+            "name": "focal_max",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "minimum": 0
+            },
+            "description": "Longest focal length in mm"
+          },
+          {
+            "in": "query",
+            "name": "focal_min",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "minimum": 0
+            },
+            "description": "Shortest focal length in mm"
+          },
+          {
+            "in": "query",
+            "name": "has_location",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "true: only photos with GPS coordinates; false: only photos without"
+          },
+          {
+            "in": "query",
+            "name": "iso_max",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Highest ISO speed"
+          },
+          {
+            "in": "query",
+            "name": "iso_min",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Lowest ISO speed"
+          },
+          {
+            "in": "query",
+            "name": "lens",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "description": "Lens model, exact match ignoring case (values: metadata-values?field=lens)"
+          },
+          {
+            "in": "query",
+            "name": "make",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "description": "Camera maker, exact match ignoring case (values: metadata-values?field=make)"
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "A page number within the paginated result set.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_size",
+            "required": false,
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "person",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxItems": 20
+            },
+            "description": "Repeat for several people: only photos showing all of them"
+          },
+          {
+            "in": "query",
+            "name": "rating_min",
+            "schema": {
+              "type": "integer",
+              "maximum": 5,
+              "minimum": 1
+            },
+            "description": "At least this many stars (1-5)"
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          {
+            "in": "query",
+            "name": "semantic",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "taken_after",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Taken on or after this day (YYYY-MM-DD)"
+          },
+          {
+            "in": "query",
+            "name": "taken_before",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Taken on or before this day (YYYY-MM-DD)"
+          }
+        ],
+        "tags": [
+          "api"
+        ],
+        "security": [
+          {
+            "jwtAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          },
+          {
+            "basicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedPhotoSummaryList"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/jobs/": {
       "get": {
         "operationId": "api_jobs_list",
@@ -20537,6 +20961,291 @@
         },
         "required": [
           "version"
+        ]
+      },
+      "IntegrationAlbumPage": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "next": {
+            "type": "string",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "num_pages": {
+            "type": "integer"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhotoSummary"
+            }
+          },
+          "album": {
+            "$ref": "#/components/schemas/IntegrationAlbumReference"
+          }
+        },
+        "required": [
+          "album",
+          "count",
+          "next",
+          "num_pages",
+          "page",
+          "page_size",
+          "previous",
+          "results"
+        ]
+      },
+      "IntegrationAlbumReference": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ]
+      },
+      "IntegrationJob": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "finished": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "failed": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "cancelled": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "progress_current": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "progress_target": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "progress_step": {
+            "type": "string",
+            "readOnly": true,
+            "nullable": true
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "nullable": true
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "nullable": true
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "error_count": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "error_count",
+              "errors"
+            ],
+            "readOnly": true
+          }
+        },
+        "required": [
+          "cancelled",
+          "failed",
+          "finished",
+          "finished_at",
+          "job_id",
+          "progress_current",
+          "progress_step",
+          "progress_target",
+          "result",
+          "started_at"
+        ]
+      },
+      "IntegrationPerson": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "readOnly": true
+          },
+          "face_id": {
+            "type": "integer",
+            "readOnly": true,
+            "nullable": true
+          }
+        },
+        "required": [
+          "face_id",
+          "name"
+        ]
+      },
+      "IntegrationPhoto": {
+        "type": "object",
+        "description": "Compose the existing sharing-aware serializer with an explicit field allowlist.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "image_hash": {
+            "type": "string",
+            "readOnly": true
+          },
+          "exif_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true,
+            "nullable": true
+          },
+          "caption": {
+            "type": "string",
+            "readOnly": true,
+            "nullable": true
+          },
+          "people": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntegrationPerson"
+            },
+            "readOnly": true,
+            "nullable": true
+          },
+          "rating": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "width": {
+            "type": "integer",
+            "readOnly": true,
+            "nullable": true
+          },
+          "height": {
+            "type": "integer",
+            "readOnly": true,
+            "nullable": true
+          },
+          "video": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "square_thumbnail_url": {
+            "type": "string",
+            "readOnly": true
+          },
+          "album_refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "title": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "title"
+              ]
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "required": [
+          "album_refs",
+          "caption",
+          "exif_timestamp",
+          "height",
+          "id",
+          "image_hash",
+          "people",
+          "rating",
+          "square_thumbnail_url",
+          "video",
+          "width"
+        ]
+      },
+      "IntegrationPhotoPage": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "next": {
+            "type": "string",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "num_pages": {
+            "type": "integer"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhotoSummary"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "num_pages",
+          "page",
+          "page_size",
+          "previous",
+          "results"
         ]
       },
       "JobStartedResponse": {

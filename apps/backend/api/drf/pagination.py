@@ -216,3 +216,10 @@ class PaginatedViewMixin(APIView):
 
     def get_paginated_response(self, data: object) -> Response:
         return self.paginator.get_paginated_response(data)
+
+
+class IntegrationPagination(DefaultPagination):
+    """Small pages for automation clients; use the standard page envelope."""
+
+    page_size = 25
+    max_page_size = 100

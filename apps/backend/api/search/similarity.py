@@ -49,13 +49,33 @@ def search_similar_embedding(
     threshold: float | None = None,
     profile: EmbeddingProfile | None = None,
 ) -> list[str]:
-    """Hashes of the user's photos closest to ``emb``, a query embedding;
-    ``threshold`` defaults to the search cut."""
-    if isinstance(user, int):
-        user_id = user
-    else:
-        user_id = user.id
+    """Return matches, retaining metadata-search fallback for existing clients."""
+    return _embedding_search(
+        _embedding_payload(user, emb, result_count, threshold, profile)
+    )
 
+
+def search_similar_embedding_strict(
+    user: User | int,
+    emb: Sequence[float],
+    result_count: int,
+    profile: EmbeddingProfile,
+) -> list[str]:
+    """Require an available index for an explicitly semantic automation request."""
+    return _embedding_search(
+        _embedding_payload(user, emb, min(1000, result_count), None, profile),
+        strict=True,
+    )
+
+
+def _embedding_payload(
+    user: User | int,
+    emb: Sequence[float],
+    result_count: int,
+    threshold: float | None,
+    profile: EmbeddingProfile | None,
+) -> dict[str, object]:
+    user_id = user if isinstance(user, int) else user.id
     profile = profile or active_profile(user_id)
     if threshold is None:
         threshold = (
@@ -63,34 +83,42 @@ def search_similar_embedding(
             if profile.provider == OPENCLIP
             else remote_config("embeddings").search_threshold
         )
-
-    image_embedding = np.array(emb, dtype=np.float32)
-
-    post_data = {
+    return {
         "user_id": user_id,
-        "image_embedding": image_embedding.tolist(),
+        "image_embedding": np.array(emb, dtype=np.float32).tolist(),
         "n": result_count,
         "threshold": threshold,
         **profile.index_parameters,
     }
+
+
+def _embedding_search(post_data: dict[str, object], strict: bool = False) -> list[str]:
     try:
         res = sidecars.post(
             "image_similarity", "/search/", json=post_data, timeout=SIMILARITY
         )
-    # Not only an error reply: a stopped, restarting or busy sidecar raises a
-    # ConnectionError or a timeout, which used to fail the whole search.
+        if strict:
+            res.raise_for_status()
     except requests.RequestException as error:
         logger.error(
             "error retrieving similar embeddings for user %s: %s",
-            user_id,
+            post_data["user_id"],
             sidecars.error_detail(error),
         )
+        if strict:
+            raise SimilarityIndexError("Similarity service is unavailable.") from None
         return []
+    if strict:
+        return strict_similarity_reply(res.json())
     return res.json()["result"]
 
 
 def search_similar_image(
-    user: User | int, photo: Photo, threshold: float | None = None
+    user: User | int,
+    photo: Photo,
+    threshold: float | None = None,
+    result_count: int | None = None,
+    strict: bool = False,
 ) -> SimilarPhotosReply | list[str]:
     """The user's photos similar to ``photo``.
 
@@ -129,10 +157,14 @@ def search_similar_image(
         "threshold": threshold,
         **profile.index_parameters,
     }
+    if result_count is not None:
+        post_data["n"] = min(1000, max(1, result_count))
     try:
         res = sidecars.post(
             "image_similarity", "/search/", json=post_data, timeout=SIMILARITY
         )
+        if strict:
+            res.raise_for_status()
     # As above: an unreachable sidecar must not fail the photo detail request.
     except requests.RequestException as error:
         logger.error(
@@ -141,8 +173,23 @@ def search_similar_image(
             user_id,
             sidecars.error_detail(error),
         )
+        if strict:
+            raise SimilarityIndexError("Similarity service is unavailable.") from None
         return []
+    if strict:
+        return {"status": True, "result": strict_similarity_reply(res.json())}
     return res.json()
+
+
+def strict_similarity_reply(payload: object) -> list[str]:
+    if not isinstance(payload, dict) or payload.get("status") is False:
+        raise SimilarityIndexError("Invalid similarity response.")
+    result = payload.get("result")
+    if not isinstance(result, list) or any(
+        not isinstance(value, str) for value in result
+    ):
+        raise SimilarityIndexError("Invalid similarity response.")
+    return [value for value in result[:1000] if isinstance(value, str)]
 
 
 class SimilarityIndexError(RuntimeError):

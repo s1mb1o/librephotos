@@ -1,5 +1,35 @@
 # Research log
 
+## 2026-11-02 — Persistent MCP HTTP deployment
+
+The owner selected persistent tokens for LAN HTTP. Keep MCP tokens separate from LibrePhotos API keys. Use SDK bearer authentication and auth-context middleware without advertising a nonexistent OAuth issuer. Bind the credentials directory so atomic verifier replacement revokes access on the next request.
+
+## 2026-11-02 — MCP integration
+
+Use the official MCP SDK 2.3.0. Shared HTTP is an OAuth resource server. Validate issuer, audience, expiry, signature, subject, and scope. Resolve the authenticated subject to its LibrePhotos key. Do not forward MCP bearer tokens. SQL paging must precede photo serialization. Cap semantic candidates and related detail collections. Preserve the existing sharing redaction and album grants.
+
+Photo summaries report `type`, not the detail serializer's `video` flag.
+Video square thumbnails can be clips. Use a generated still for MCP image content.
+
+The legacy `search_captions` field contains file paths and camera and person metadata.
+It is an internal search index. Do not return it as an image caption.
+The MCP detail response uses the sharing-redacted `captions_json` value.
+It exposes only the selected user or generated caption.
+
+Legacy file hashes append the owner identifier to the MD5 digest.
+Actual authenticated REST fixtures exposed this format during adapter tests.
+Keep the stored identifier intact. Resolve a bare MD5 with the caller's owner suffix.
+Apply the owner filter before either lookup.
+
+Options considered for job errors: return sanitized fragments, or return a count.
+Return a count and a generic message in MCP results.
+Filesystem paths can contain spaces or use UNC syntax. Pattern replacement can miss them.
+Keep the bounded owner-only REST errors available for direct investigation.
+
+Options considered for shared HTTP: implement an authorization server, or use an external issuer.
+Use an external issuer with the official SDK resource-server middleware.
+This avoids a second credential and consent system. It requires an existing OAuth provider.
+
 ## 2026-11-02 — API-key authentication
 
 OpenAPI header names use their standard HTTP spelling. The JSON naming guard must exclude header parameters and header security schemes. Keep property and query parameter checks active.

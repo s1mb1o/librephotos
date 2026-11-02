@@ -165,6 +165,9 @@ class SemanticSearchFilter(filters.SearchFilter):
         places = UserPlace.objects.owned_by(request_user(request))
         return {pid: fold(name) for pid, name in places.values_list("id", "name")}
 
+    def semantic_topk(self, request: Request) -> int:
+        return request_user(request).semantic_search_topk
+
     def _semantic_matches(self, request: Request) -> list[str]:
         """Hashes of the requester's photos closest to the query, by the
         semantic search model (api.search.semantic), at its threshold."""
@@ -184,7 +187,7 @@ class SemanticSearchFilter(filters.SearchFilter):
         logger.info("finished calculating query embedding - took %.2f seconds", elapsed)
         start = datetime.datetime.now()
         image_hashes = search_similar_embedding(
-            user.id, emb, user.semantic_search_topk, profile=profile
+            user.id, emb, self.semantic_topk(request), profile=profile
         )
         elapsed = (datetime.datetime.now() - start).total_seconds()
         logger.info("search similar embedding - took %.2f seconds", elapsed)
@@ -232,7 +235,7 @@ class SemanticSearchFilter(filters.SearchFilter):
         ]
 
         image_hashes = None
-        if request_user(request).semantic_search_topk > 0:
+        if self.semantic_topk(request) > 0:
             try:
                 image_hashes = self._semantic_matches(request)
             except (

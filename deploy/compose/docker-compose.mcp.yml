@@ -1,0 +1,37 @@
+services:
+  mcp:
+    image: librephotos-mcp:0.1.0
+    build:
+      context: ../..
+      dockerfile: deploy/docker/mcp/Dockerfile
+    environment:
+      LIBREPHOTOS_URL: ${LIBREPHOTOS_URL:-http://librephotos-app:3000}
+      LIBREPHOTOS_MCP_ISSUER: ${LIBREPHOTOS_MCP_ISSUER:?Set the OAuth issuer URL}
+      LIBREPHOTOS_MCP_JWKS_URL: ${LIBREPHOTOS_MCP_JWKS_URL:?Set the issuer JWKS URL}
+      LIBREPHOTOS_MCP_RESOURCE_URL: ${LIBREPHOTOS_MCP_RESOURCE_URL:?Set the public HTTPS MCP URL}
+      LIBREPHOTOS_MCP_PRINCIPALS_FILE: /run/credentials/principals.json
+      LIBREPHOTOS_MCP_ENABLE_WRITES: ${LIBREPHOTOS_MCP_ENABLE_WRITES:-false}
+    volumes:
+      - type: bind
+        source: ${LIBREPHOTOS_MCP_PRINCIPALS_PATH:?Set the protected credentials file path}
+        target: /run/credentials/principals.json
+        read_only: true
+    expose:
+      - "8000"
+    networks:
+      - librephotos
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    cpus: 1
+    restart: unless-stopped
+
+networks:
+  librephotos:
+    external: true
+    name: ${LIBREPHOTOS_NETWORK:-librephotos_default}

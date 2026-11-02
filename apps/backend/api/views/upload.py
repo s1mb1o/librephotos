@@ -286,12 +286,14 @@ class UploadPhotoExists(viewsets.ViewSet):
     def retrieve(self, request: Request, pk: str) -> Response:
         # Only the requester's own library counts: answering for other users'
         # hashes would tell anyone which files someone else has uploaded.
-        photo_id = (
-            Photo.objects.owned_by(request_user(request))
-            .holding_content(pk)
-            .values_list("id", flat=True)
-            .first()
-        )
+        user = request_user(request)
+        photos = Photo.objects.owned_by(user)
+        matches = photos.holding_content(pk)
+        # Files use MD5 plus their owner's id. Keep legacy full identifiers,
+        # and let integrations supply the content digest without knowing a user id.
+        if re.fullmatch(r"[a-fA-F0-9]{32}", pk):
+            matches = matches | photos.holding_content(pk.lower() + str(user.id))
+        photo_id = matches.values_list("id", flat=True).first()
         # The id lets a client file a file it already has into an album (#612).
         return Response({"exists": photo_id is not None, "photo_id": photo_id})
 
