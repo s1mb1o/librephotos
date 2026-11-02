@@ -1,5 +1,5 @@
 import type { User } from "@librephotos/api-client";
-import { Card, Container, Space, Stack, Title } from "@mantine/core";
+import { Card, Container, Grid, Space, Stack, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBook as Book } from "@tabler/icons-react";
 import React, { useEffect, useState } from "react";
@@ -21,6 +21,7 @@ import { CountStats } from "../CountStats";
 import { LibraryFoldersCard } from "../libraryfolders/LibraryFoldersCard";
 import { ModalUserEdit } from "../modals/ModalUserEdit";
 import { PageHeader } from "../PageHeader";
+import { EmbeddingIndexStatus } from "./AIModelSettings";
 import { JobQueueBusyNotice } from "./JobQueueBusyNotice";
 import { LibraryActions } from "./LibraryActions";
 import { MissingPhotosBadge } from "./MissingPhotosBadge";
@@ -142,6 +143,13 @@ export function Library() {
 
       <Stack>
         <CountStats />
+        {siteSettings?.embedding_status?.reindex_required && (
+          <Card>
+            <Grid>
+              <EmbeddingIndexStatus settings={siteSettings} />
+            </Grid>
+          </Card>
+        )}
         <LibraryFoldersCard user={userSelfDetails} isAdmin={isAdmin} />
         <ProcessingStatusCard busyReason={busyReason} uploadOnly={!hasScanDirectory} />
         <Card shadow="md">

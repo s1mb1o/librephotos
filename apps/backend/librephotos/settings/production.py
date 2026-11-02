@@ -328,6 +328,7 @@ CONSTANCE_ADDITIONAL_FIELDS = {
             "choices": (
                 ("none", "None"),
                 ("lfm2_vl_450m", "LFM2.5-VL (default)"),
+                ("openai_api", "OpenAI API"),
             ),
         },
     ],
@@ -519,6 +520,11 @@ CONSTANCE_CONFIG = {
         "Captioning model",
         "captioning_model",
     ),
+    "EMBEDDING_MODEL": (
+        "openclip_vitb32",
+        "Embedding provider: openclip_vitb32 or siglip2_naflex",
+        str,
+    ),
     "OCR_MODEL": (
         "None",
         "OCR model. OCR extracts ALL readable text from photos into the database"
@@ -674,6 +680,7 @@ SPECTACULAR_SETTINGS = {
     # Enum components are named after their field; a name that says whose
     # status this is keeps it stable when another "status" choice appears.
     "ENUM_NAME_OVERRIDES": {
+        "RemoteModelKindEnum": "api.serializers.site_settings.REMOTE_MODEL_KINDS",
         "HealthStatusEnum": "api.serializers.health.HEALTH_STATES",
         # A stack's type, and the narrower set the stack list returns.
         "StackTypeEnum": "api.serializers.stack.STACK_TYPES",

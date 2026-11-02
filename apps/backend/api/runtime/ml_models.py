@@ -246,6 +246,10 @@ def captioning_model_selected(value: object | None = None) -> bool:
     return not _is_model_not_selected(value)
 
 
+def local_captioning_selected() -> bool:
+    return captioning_model_selected() and site_config.CAPTIONING_MODEL != "openai_api"
+
+
 def _is_model_selected(model: MlModel) -> bool:
     """Whether the deployment needs the model on disk (#2218).
 
@@ -256,10 +260,12 @@ def _is_model_selected(model: MlModel) -> bool:
     """
     model_type = model["type"]
     if model_type == MlTypes.CAPTIONING:
-        return feature_enabled("IMAGE_CAPTIONING") and captioning_model_selected()
+        return feature_enabled("IMAGE_CAPTIONING") and local_captioning_selected()
     if model_type == MlTypes.CLIP:
         # Tags, semantic search and similar photos: always needed.
-        return True
+        from api.search.profiles import local_semantics_required
+
+        return local_semantics_required()
     if model_type == MlTypes.FACE_RECOGNITION:
         return (
             feature_enabled("FACE_DETECTION")
@@ -604,6 +610,8 @@ def captioning_model_exists() -> bool:
     A caption request that reaches the sidecar without them fails inside
     ONNX Runtime; the caller checks here first and starts the download.
     """
+    if site_config.CAPTIONING_MODEL == "openai_api":
+        return True
     model_folder = _models_folder()
     return all(
         _model_target_exists(model_folder, model)
@@ -633,7 +641,14 @@ def feature_model_ready(
     model_type = FEATURE_MODEL_TYPES.get(feature)
     if model_type is None:
         return None
-    if model_type == MlTypes.CAPTIONING and _is_model_not_selected(captioning_model):
+    if model_type == MlTypes.CLIP:
+        from api.search.profiles import local_semantics_required
+
+        if not local_semantics_required():
+            return None
+    if model_type == MlTypes.CAPTIONING and (
+        _is_model_not_selected(captioning_model) or captioning_model == "openai_api"
+    ):
         return None
     model_folder = _models_folder()
     return all(

@@ -1,4 +1,4 @@
-"""Captioning a photo with the image captioning sidecar."""
+"""Caption a photo with the selected local or remote provider."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 import requests
+from constance import config as site_config
 
 from api.models.user import User
 from api.runtime import sidecars
@@ -15,6 +16,7 @@ from api.runtime.ml_models import captioning_model_selected
 
 if TYPE_CHECKING:
     from api.models.photo_caption import PhotoCaption
+    from api.models.remote_model import RemoteModelConfig
 
 logger = logging.getLogger(__name__)
 
@@ -23,18 +25,27 @@ class CaptionError(RuntimeError):
     """The captioning sidecar answered, but not with a caption."""
 
 
-def generate_caption(image_path: str, prompt: str | None = None) -> str:
-    """A caption for the photo from the image captioning sidecar.
+def generate_caption(
+    image_path: str,
+    prompt: str | None = None,
+    *,
+    remote_config: RemoteModelConfig | None = None,
+) -> str:
+    """A caption from the selected local or OpenAI-compatible provider.
 
-    ``prompt`` steers the vision-language model; ``None`` asks for its plain
-    one-sentence caption. Which model runs is the sidecar's business: there is
-    one, and it is always available.
-
-    Raises ``CaptionError`` carrying the sidecar's own error message when it
-    could not caption the photo, so the reason (a missing model file, an
-    ONNX Runtime failure) ends up in the backend log instead of a bare
-    ``KeyError: 'caption'``. Connection and timeout errors propagate as-is.
+    ``prompt`` steers the vision-language model. ``None`` requests a short
+    caption. Remote failures become sanitized ``CaptionError`` messages.
+    Local sidecar errors retain the existing error details and timeouts.
     """
+    if remote_config is not None or site_config.CAPTIONING_MODEL == "openai_api":
+        from api.classification.openai_captioning import generate_remote_caption
+        from api.runtime.remote_inference import RemoteInferenceError
+
+        try:
+            return generate_remote_caption(image_path, prompt, remote_config)
+        except RemoteInferenceError as error:
+            raise CaptionError(str(error)) from None
+
     json_data = {"image_path": image_path}
     if prompt is not None:
         json_data["prompt"] = prompt
@@ -103,11 +114,26 @@ def caption_photo(caption: PhotoCaption, commit: bool = True) -> str:
     prompt = caption.caption_prompt(caption.caption_context(llm_settings))
     logger.debug("Caption prompt: %s", prompt)
 
-    text = generate_caption(image_path=image_path, prompt=prompt)
+    remote = None
+    if site_config.CAPTIONING_MODEL == "openai_api":
+        from api.runtime.model_settings import remote_config
+
+        remote = remote_config("captioning")
+    text = (
+        generate_caption(image_path=image_path, prompt=prompt, remote_config=remote)
+        if remote is not None
+        else generate_caption(image_path=image_path, prompt=prompt)
+    )
     text = text.replace("<start>", "").replace("<end>", "").strip()
 
     if caption.captions_json is None:
         caption.captions_json = {}
+    if remote is not None:
+        caption.captions_json["captioning"] = {
+            "provider": "openai_api",
+            "model": remote.model_name,
+            "source_hash": image_hash,
+        }
     caption.store_generated_caption(caption.captions_json, text, commit)
 
     logger.info("generated a caption for photo %s", image_hash)

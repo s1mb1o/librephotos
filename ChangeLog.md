@@ -1,6 +1,28 @@
 # Change log
 
+## 2026-11-02
+
+- Saved image captioning as enabled on docker-srv. Verified the configured OpenAI API model `qwen3.5-9b-nvfp4` is advertised by the provider.
+- Verified that the admin feature is enabled and unlocked. Preserved running processing jobs without a restart.
+- Documented the misleading local-service tooltip in remote captioning mode.
+
+- Extended the verified deployment drain to preserve per-photo tag generation after the initial scan.
+- Added Test beside remote model settings. Validate draft captioning and image/text embedding requests before saving.
+- Reuse saved tokens without exposing them. Keep provider selection, jobs, cached vectors, and indexes unchanged during tests.
+
+- Deployed the remote AI image to docker-srv. Preserved the active scan and all 62 pre-existing catalog and queue tables.
+- Added a frozen checkpoint, offline migration verification, and scan advancement checks to the deployment helper.
+- Added a queue drain that permits worker recycling. Verified pause and resume in an isolated container.
+- Recorded the image digest, private recovery location, HTTP checks, and deployment procedure.
+
 ## 2026-11-01
+
+- Added OpenAI-compatible captioning with URL, encrypted access token, and model settings in Admin Area.
+- Added remote SigLIP2 NaFlex for text search, similar photos, and generated Things.
+- Added separate embedding profiles, cached vectors, persistent similarity indexes, and an explicit index build action.
+- Added model-change warnings and a rebuild action for each user. Kept the active index during replacement.
+- Paused text semantic search when a changed checkpoint uses the same model handle. Preserved manual metadata and local provider defaults.
+- Added provider validation, failure and cancellation tests, API schemas, and setup documentation.
 
 - Remounted PhotoLibrary read-only at `/data/PhotoLibrary` on docker-srv.
 - Migrated catalog paths and signed scan tasks without changing photo identities.

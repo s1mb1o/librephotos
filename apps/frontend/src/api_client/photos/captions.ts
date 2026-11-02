@@ -22,7 +22,8 @@ export function generatedCaptionOf(captions: Captions): string | undefined {
 
 /** The tags `taggingModel` stored for the photo; undefined when it stored none. */
 export function autoTagsOf(captions: Captions, taggingModel: string): string[] | undefined {
-  const entry = captions?.[taggingModel];
+  const source = captions?.tagging_model;
+  const entry = captions?.[typeof source === "string" ? source : taggingModel];
   if (typeof entry !== "object" || entry === null || !("tags" in entry)) return undefined;
   const tags: unknown = entry.tags;
   return Array.isArray(tags) && tags.every((tag): tag is string => typeof tag === "string") ? tags : undefined;

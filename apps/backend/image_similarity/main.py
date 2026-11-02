@@ -32,6 +32,25 @@ log = logger("image_similarity")
 
 app = create_app("image_similarity")
 index = RetrievalIndex(store_dir=INDEX_ROOT)
+spaces: dict[str, RetrievalIndex] = {}
+
+
+def _profile_index(space: object, dimension: object) -> RetrievalIndex:
+    if space is None:
+        return index
+    if (
+        not isinstance(space, str)
+        or len(space) != 64
+        or any(char not in "0123456789abcdef" for char in space)
+    ):
+        raise ValueError("space must be a SHA-256 profile identifier")
+    if isinstance(dimension, bool) or dimension != 1152:
+        raise ValueError("SigLIP2 indices require dimension 1152")
+    if space not in spaces:
+        spaces[space] = RetrievalIndex(
+            store_dir=os.path.join(INDEX_ROOT, "spaces", space), dimension=1152
+        )
+    return spaces[space]
 
 
 def _user_id(value: object) -> int:
@@ -48,37 +67,52 @@ def _failed(message: str, status: int = 400) -> tuple[dict[str, object], int]:
 
 @app.route("/build/", methods=["POST"])
 def build_index() -> ResponseReturnValue:
-    user_id, image_hashes, image_embeddings, begin, commit = json_fields(
-        "user_id", "image_hashes", "image_embeddings", begin=False, commit=False
+    user_id, image_hashes, image_embeddings, begin, commit, space, dimension = (
+        json_fields(
+            "user_id",
+            "image_hashes",
+            "image_embeddings",
+            begin=False,
+            commit=False,
+            space=None,
+            dimension=None,
+        )
     )
     try:
         user_id = _user_id(user_id)
+        target = _profile_index(space, dimension)
     except ValueError as e:
         return _failed(str(e))
 
-    if not (begin or commit or index.rebuilding(user_id)):
-        index.build_index_for_user(user_id, image_hashes, image_embeddings)
-        live = index.indices.get(user_id)
+    if not (begin or commit or target.rebuilding(user_id)):
+        target.build_index_for_user(user_id, image_hashes, image_embeddings)
+        live = target.indices.get(user_id)
         return {"status": True, "index_size": 0 if live is None else live.ntotal}
 
     try:
         if begin:
-            index.begin_rebuild(user_id)
-        index.add_to_rebuild(user_id, image_hashes, image_embeddings)
+            target.begin_rebuild(user_id)
+        target.add_to_rebuild(user_id, image_hashes, image_embeddings)
         if not commit:
-            return {"status": True, "index_size": index.staged_size(user_id)}
-        return {"status": True, "index_size": index.commit_rebuild(user_id)}
+            return {"status": True, "index_size": target.staged_size(user_id)}
+        return {"status": True, "index_size": target.commit_rebuild(user_id)}
     except IndexBuildError as e:
         # A rebuild missing a page must not replace the index.
-        index.abandon_rebuild(user_id)
+        target.abandon_rebuild(user_id)
         return _failed(f"rebuild for user {user_id} abandoned: {e}")
 
 
 @app.route("/build/", methods=["DELETE"])
 def delete_index() -> ResponseReturnValue:
-    (user_id,) = json_fields("user_id")
+    user_id, space, dimension = json_fields("user_id", space=None, dimension=None)
     try:
-        index.remove_user(_user_id(user_id))
+        user_id = _user_id(user_id)
+        _profile_index(space, dimension).remove_user(user_id)
+        if space is None:
+            root = os.path.join(INDEX_ROOT, "spaces")
+            for key in os.listdir(root) if os.path.isdir(root) else []:
+                if len(key) == 64 and all(char in "0123456789abcdef" for char in key):
+                    _profile_index(key, 1152).remove_user(user_id)
     except ValueError as e:
         return _failed(str(e))
     return {"status": True}
@@ -86,17 +120,18 @@ def delete_index() -> ResponseReturnValue:
 
 @app.route("/search/", methods=["POST"])
 def search_index() -> ResponseReturnValue:
-    user_id, image_embedding, n, threshold = json_fields(
-        "user_id", "image_embedding", n=100, threshold=27.0
+    user_id, image_embedding, n, threshold, space, dimension = json_fields(
+        "user_id", "image_embedding", n=100, threshold=27.0, space=None, dimension=None
     )
     try:
         user_id = _user_id(user_id)
         n = int(n)
         threshold = float(threshold)
+        target = _profile_index(space, dimension)
     except (TypeError, ValueError) as e:
         return _failed(str(e))
     try:
-        result = index.search_similar(user_id, image_embedding, n, threshold)
+        result = target.search_similar(user_id, image_embedding, n, threshold)
     except Exception as e:
         log.error("search for user %s failed: %s", user_id, e)
         return {"status": False, "result": [], "error": str(e)}, 500

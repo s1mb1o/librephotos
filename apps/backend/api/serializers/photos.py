@@ -968,7 +968,8 @@ class PhotoSerializer(serializers.ModelSerializer):
                 .distinct()
             )
             matches: list[dict[str, str]] = []
-            for photo in photos:
+            positions = {value: position for position, value in enumerate(arr)}
+            for photo in sorted(photos, key=lambda match: positions[match.image_hash]):
                 type = "image"
                 if photo.video:
                     type = "video"

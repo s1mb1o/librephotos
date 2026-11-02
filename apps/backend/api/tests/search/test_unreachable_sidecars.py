@@ -8,7 +8,7 @@ CLIP embeddings, and every semantic search, answer 500.
 from unittest.mock import patch
 
 import requests
-from django.test import SimpleTestCase, TestCase
+from django.test import TestCase
 from django.utils import timezone
 from rest_framework.test import APIClient
 
@@ -26,7 +26,7 @@ class _Photo:
         return [0.1] * 512
 
 
-class SimilaritySearchFailureTest(SimpleTestCase):
+class SimilaritySearchFailureTest(TestCase):
     def test_an_unreachable_sidecar_is_no_result(self):
         for failure in FAILURES:
             with (

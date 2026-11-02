@@ -526,6 +526,7 @@ urlpatterns = [
     re_path(r"^api/healthz/ready/?$", health.HealthzReadyView.as_view()),
     re_path(r"^api/healthz/?$", health.HealthzView.as_view()),
     re_path(r"^api/django-admin/", admin.site.urls),
+    path("api/sitesettings/test-model/", site_settings.RemoteModelTestView.as_view()),
     re_path(r"^api/sitesettings/?$", site_settings.SiteSettingsView.as_view()),
     path(
         "api/sitesettings/trash-retention-preview/",

@@ -12,4 +12,5 @@ docker build --platform linux/amd64 --progress=plain \
 docker push "$image"
 scp "$repo/deploy/docker-srv/compose.yaml" "$remote:/srv/librephotos/compose.yaml"
 scp "$repo/deploy/docker-srv/activate.py" "$remote:/srv/librephotos/bin/activate.py"
+scp "$repo/deploy/docker-srv/scan_checkpoint.py" "$remote:/srv/librephotos/bin/scan_checkpoint.py"
 ssh "$remote" python3 /srv/librephotos/bin/activate.py "$image"

@@ -31,4 +31,9 @@ describe("caption readers", () => {
     expect(generatedCaptionOf(odd)).toBeUndefined();
     expect(autoTagsOf(odd, "openclip_vitb32")).toBeUndefined();
   });
+
+  it("reads a shared photo's own model even when the viewer uses another model", () => {
+    const remote = { ...captions, tagging_model: "siglip2_naflex", siglip2_naflex: { tags: ["dog"] } };
+    expect(autoTagsOf(remote, "openclip_vitb32")).toEqual(["dog"]);
+  });
 });

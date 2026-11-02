@@ -37,6 +37,48 @@ export const SiteModelDownload = z.object({
 });
 export type SiteModelDownload = z.infer<typeof SiteModelDownload>;
 
+/** Admin-only remote configuration. A saved token is never returned. */
+export const RemoteModelSettings = z.object({
+  url: z.string(),
+  model_name: z.string(),
+  has_token: z.boolean(),
+  disable_thinking: z.boolean(),
+  revision: z.string(),
+  max_num_patches: z.number(),
+  search_threshold: z.number(),
+  similar_threshold: z.number(),
+  tag_threshold: z.number(),
+});
+export type RemoteModelSettings = z.infer<typeof RemoteModelSettings>;
+export type RemoteModelSettingsUpdate = Partial<
+  Omit<RemoteModelSettings, "has_token"> & {
+    token: string;
+    clear_token: boolean;
+  }
+>;
+
+export type RemoteModelTestRequest = {
+  kind: "captioning" | "embeddings";
+  settings: RemoteModelSettingsUpdate;
+};
+
+/** Result of testing draft settings without saving them. */
+export const RemoteModelTest = z.object({
+  kind: z.enum(["captioning", "embeddings"]),
+  dimension: z.number().nullable(),
+});
+export type RemoteModelTest = z.infer<typeof RemoteModelTest>;
+
+/** The active index can differ from the selected model while its replacement builds. */
+export const EmbeddingStatus = z.object({
+  selected_model: z.string(),
+  active_model: z.string(),
+  reindex_required: z.boolean(),
+  text_search_paused: z.boolean().optional(),
+  job: SiteModelDownload.nullable(),
+});
+export type EmbeddingStatus = z.infer<typeof EmbeddingStatus>;
+
 /** The automatic library scan's last run, by username, and its next run (#235). Staff only. */
 export const SiteAutoScanStatus = z.object({
   // When it last ran; null before the first run.
@@ -74,6 +116,10 @@ export const SiteSettings = z.object({
   // "" for the provider's default. Older backends lack it and always use that default.
   geocode_language: z.string().optional(),
   captioning_model: z.string(),
+  embedding_model: z.string().optional(),
+  captioning_api: RemoteModelSettings.optional(),
+  embedding_api: RemoteModelSettings.optional(),
+  embedding_status: EmbeddingStatus.optional(),
   // Whether captions can be generated: the image captioning switch is on and a model is picked.
   // Sent to everyone (#2211); older backends lack it and have no caption job either.
   captioning_available: z.boolean().optional(),
@@ -148,8 +194,15 @@ export type SiteSettingsUpdate = Partial<
     | "auto_scan_status"
     | "sso_providers"
     | "public_url_configured"
+    | "captioning_api"
+    | "embedding_api"
+    | "embedding_status"
   > & {
     [K in SiteFeatureName as `${K}_enabled`]: boolean;
+  } & {
+    captioning_api: RemoteModelSettingsUpdate;
+    embedding_api: RemoteModelSettingsUpdate;
+    rebuild_embeddings: boolean;
   }
 >;
 

@@ -848,6 +848,12 @@ export async function updateSiteSettings(client: ApiClient, settings: S.SiteSett
   return parseResponse(S.SiteSettings, res, "update site settings");
 }
 
+/** Admin: run synthetic inference with unsaved settings. No catalog or index changes. */
+export async function testRemoteModel(client: ApiClient, input: S.RemoteModelTestRequest): Promise<S.RemoteModelTest> {
+  const res = await client.post<unknown>("/sitesettings/test-model/", input);
+  return parseResponse(S.RemoteModelTest, res, "test model settings");
+}
+
 /** Admin: how many photos, of how many users, a trash retention of `days` deletes at the next cleanup. */
 export async function fetchTrashRetentionPreview(client: ApiClient, days: number): Promise<S.TrashRetentionPreview> {
   const res = await client.get<unknown>(`/sitesettings/trash-retention-preview/${buildQuery({ days })}`);

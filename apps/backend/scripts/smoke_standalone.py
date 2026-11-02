@@ -84,7 +84,7 @@ LOG_TAIL_LINES = 200
 # Sidecars that need neither a feature switch nor a model choice in the site
 # settings (api.runtime.supervisor), so every build must start them. Checking
 # only what /api/services says is enabled would pass a build that runs none.
-ALWAYS_ON_SERVICES = ("exif", "image_similarity", "tags", "thumbnail")
+ALWAYS_ON_SERVICES = ("exif", "image_similarity", "thumbnail")
 # The processes besides the root and the sidecars, by role (PROCESS_NAMES).
 CORE_ROLES = ("jobs", "worker")
 

@@ -1,8 +1,10 @@
 """The body and the answer of /api/sitesettings."""
 
+import math
 import re
 from collections.abc import Mapping
 
+from constance import config as site_config
 from rest_framework import serializers
 
 from api.directory_watcher.scan_schedule import (
@@ -24,7 +26,74 @@ from api.runtime.features import (
     feature_locked,
     site_setting_key,
 )
+from api.runtime.model_settings import public_remote_config
+from api.runtime.remote_inference import validate_base_url
 from api.updates.check import update_check_locked
+
+
+class RemoteModelSettingsRequest(serializers.Serializer[None]):
+    """Partial provider settings. Blank tokens keep the stored credential."""
+
+    url = serializers.CharField(required=False, allow_blank=True, max_length=2048)
+    model_name = serializers.CharField(required=False, allow_blank=True, max_length=255)
+    token = serializers.CharField(required=False, allow_blank=True, write_only=True)
+    clear_token = JsonBooleanField(required=False, write_only=True)
+    disable_thinking = JsonBooleanField(required=False)
+    revision = serializers.CharField(required=False, allow_blank=True, max_length=255)
+    max_num_patches = JsonIntegerField(required=False, min_value=1, max_value=4096)
+    search_threshold = serializers.FloatField(required=False, min_value=-1, max_value=1)
+    similar_threshold = serializers.FloatField(
+        required=False, min_value=-1, max_value=1
+    )
+    tag_threshold = serializers.FloatField(required=False, min_value=-1, max_value=1)
+
+    def validate_url(self, value: str) -> str:
+        if not value:
+            return value
+        try:
+            return validate_base_url(value)
+        except ValueError as error:
+            raise serializers.ValidationError(str(error)) from None
+
+    def validate(self, attrs: Mapping[str, object]) -> Mapping[str, object]:
+        for key in ("search_threshold", "similar_threshold", "tag_threshold"):
+            value = attrs.get(key)
+            if isinstance(value, float) and not math.isfinite(value):
+                raise serializers.ValidationError(
+                    {key: "Use a finite cosine threshold between -1 and 1."}
+                )
+        return attrs
+
+
+REMOTE_MODEL_KINDS = ("captioning", "embeddings")
+
+
+class RemoteModelTestRequest(serializers.Serializer[None]):
+    """Draft connection settings. Omitted fields retain their saved values."""
+
+    kind = serializers.ChoiceField(choices=REMOTE_MODEL_KINDS)
+    settings = RemoteModelSettingsRequest()
+
+
+class RemoteModelTestSerializer(serializers.Serializer[None]):
+    """A validated inference result. No credentials or provider response text."""
+
+    kind = serializers.ChoiceField(choices=REMOTE_MODEL_KINDS)
+    dimension = serializers.IntegerField(allow_null=True)
+
+
+class RemoteModelSettingsSerializer(serializers.Serializer[None]):
+    """Admin-only provider configuration. Never contains the stored token."""
+
+    url = serializers.CharField()
+    model_name = serializers.CharField()
+    has_token = serializers.BooleanField()
+    disable_thinking = serializers.BooleanField()
+    revision = serializers.CharField()
+    max_num_patches = serializers.IntegerField()
+    search_threshold = serializers.FloatField()
+    similar_threshold = serializers.FloatField()
+    tag_threshold = serializers.FloatField()
 
 
 def feature_field(feature: Feature) -> str:
@@ -77,6 +146,12 @@ class SiteSettingsRequest(serializers.Serializer[None]):
         " default.",
     )
     captioning_model = JsonStringField(required=False)
+    captioning_api = RemoteModelSettingsRequest(required=False)
+    embedding_model = serializers.ChoiceField(
+        choices=("openclip_vitb32", "siglip2_naflex"), required=False
+    )
+    embedding_api = RemoteModelSettingsRequest(required=False)
+    rebuild_embeddings = JsonBooleanField(required=False)
     ocr_model = JsonStringField(required=False)
     face_recognition_model = JsonStringField(required=False)
     nextcloud_enabled = JsonBooleanField(required=False)
@@ -211,6 +286,23 @@ class SiteSettingsRequest(serializers.Serializer[None]):
             raise serializers.ValidationError(
                 f"Give at least one of: {', '.join(self.fields)}."
             )
+        for field, provider, nested, kind in (
+            ("captioning_model", "openai_api", "captioning_api", "captioning"),
+            ("embedding_model", "siglip2_naflex", "embedding_api", "embeddings"),
+        ):
+            if (field in attrs or nested in attrs) and attrs.get(
+                field, getattr(site_config, field.upper())
+            ) == provider:
+                config = public_remote_config(kind)
+                update = attrs.get(nested)
+                if isinstance(update, dict):
+                    config.update(update)
+                if not config["url"] or not config["model_name"]:
+                    raise serializers.ValidationError(
+                        {
+                            nested: "Enter an API URL and model name before selecting this provider."
+                        }
+                    )
         locked = {
             feature_field(feature): (
                 f"{env_flag_name(feature)} is turned off in the server environment."
@@ -261,6 +353,16 @@ class SiteModelDownloadSerializer(serializers.Serializer[None]):
     status = serializers.CharField(help_text="running, finished, failed or cancelled")
     progress_current = serializers.IntegerField()
     progress_target = serializers.IntegerField()
+
+
+class EmbeddingStatusSerializer(serializers.Serializer[None]):
+    """The authenticated user's active index and pending provider selection."""
+
+    selected_model = serializers.CharField()
+    active_model = serializers.CharField()
+    reindex_required = serializers.BooleanField()
+    text_search_paused = serializers.BooleanField()
+    job = SiteModelDownloadSerializer(allow_null=True)
 
 
 class SiteAutoScanStatusSerializer(serializers.Serializer[None]):
@@ -322,6 +424,10 @@ class SiteSettingsSerializer(serializers.Serializer[None]):
         " provider's default."
     )
     captioning_model = serializers.CharField()
+    embedding_model = serializers.CharField()
+    captioning_api = RemoteModelSettingsSerializer(required=False)
+    embedding_api = RemoteModelSettingsSerializer(required=False)
+    embedding_status = EmbeddingStatusSerializer(required=False)
     captioning_available = serializers.BooleanField(
         help_text="Captions can be generated: the image captioning switch is on"
         " and a captioning model is picked. Sent to everyone."

@@ -16,6 +16,7 @@ from api.models.long_running_job import LongRunningJob
 from api.models.photo import Photo
 from api.models.photo_caption import PhotoCaption
 from api.search import embedding_jobs
+from api.search.profiles import EmbeddingProfile
 from api.search.similarity import SimilarityIndexError
 from api.tests.utils import create_test_photos, create_test_user
 
@@ -86,7 +87,7 @@ class BatchCalculateClipEmbeddingTestCase(TestCase):
         self.assertEqual(len(called_imgs), 3)
         self.assertTrue(all(isinstance(p, str) for p in called_imgs))
 
-        m_index.assert_called_once_with(self.user)
+        m_index.assert_called_once_with(self.user, profile=EmbeddingProfile())
 
         job = self.latest_job()
         self.assertEqual(job.job_type, LongRunningJob.JOB_CALCULATE_CLIP_EMBEDDINGS)
@@ -94,6 +95,25 @@ class BatchCalculateClipEmbeddingTestCase(TestCase):
         self.assertFalse(job.failed)
         self.assertEqual(job.progress_target, 3)
         self.assertEqual(job.progress_current, 3)
+
+    def test_local_job_keeps_its_profile_when_selection_changes_mid_run(self):
+        from constance import config
+        from constance.test import override_config
+
+        from api.search.semantic import SIGLIP2
+
+        create_test_photos(number_of_photos=2, owner=self.user)
+
+        def switch_model(imgs, with_tags=False):
+            from api.search.profiles import local_semantics_required
+
+            config.EMBEDDING_MODEL = SIGLIP2
+            self.assertTrue(local_semantics_required())
+            return fake_embeddings(imgs, with_tags)
+
+        with override_config(EMBEDDING_MODEL="openclip_vitb32"):
+            _, index = self.run_job(embeddings_side_effect=switch_model)
+        index.assert_called_once_with(self.user, profile=EmbeddingProfile())
 
     def test_job_created_started_and_typed_correctly(self):
         create_test_photos(number_of_photos=1, owner=self.user)
@@ -191,7 +211,7 @@ class BatchCalculateClipEmbeddingTestCase(TestCase):
 
         progress_at_rebuild = []
 
-        def record_rebuild(user):
+        def record_rebuild(user, profile=None):
             progress_at_rebuild.append(self.latest_job().progress_current)
             return 0
 
@@ -356,7 +376,7 @@ class BatchCalculateClipEmbeddingTestCase(TestCase):
         m_embed, m_index = self.run_job()
 
         m_embed.assert_not_called()
-        m_index.assert_called_once_with(self.user)
+        m_index.assert_called_once_with(self.user, profile=EmbeddingProfile())
         job = self.latest_job()
         self.assertTrue(job.finished)
         self.assertEqual(job.progress_target, 0)
@@ -380,7 +400,7 @@ class BatchCalculateClipEmbeddingTestCase(TestCase):
             photo.refresh_from_db()
             self.assertIsNone(photo.clip_embeddings)
 
-        m_index.assert_called_once_with(self.user)
+        m_index.assert_called_once_with(self.user, profile=EmbeddingProfile())
         job = self.latest_job()
         self.assertTrue(job.finished)
         self.assertFalse(job.failed)
@@ -415,7 +435,7 @@ class BatchCalculateClipEmbeddingTestCase(TestCase):
                 pk__in=[p.pk for p in broken], clip_embeddings__isnull=False
             ).exists()
         )
-        m_index.assert_called_once_with(self.user)
+        m_index.assert_called_once_with(self.user, profile=EmbeddingProfile())
         job = self.latest_job()
         self.assertTrue(job.finished)
         self.assertEqual(job.progress_target, 66)
@@ -481,7 +501,7 @@ class BatchCalculateClipEmbeddingTestCase(TestCase):
             photo.refresh_from_db()
             self.assertIsNone(photo.clip_embeddings)
 
-        m_index.assert_called_once_with(self.user)
+        m_index.assert_called_once_with(self.user, profile=EmbeddingProfile())
         job = self.latest_job()
         self.assertTrue(job.finished)
         self.assertFalse(job.failed)
@@ -539,7 +559,7 @@ class BatchCalculateClipEmbeddingTestCase(TestCase):
             1,
         )
         self.assertEqual(len(photos), 3)
-        m_index.assert_called_once_with(self.user)
+        m_index.assert_called_once_with(self.user, profile=EmbeddingProfile())
         self.assertTrue(self.latest_job().finished)
 
     def test_shorter_embedding_list_than_batch_leaves_extras_untouched(self):
@@ -555,7 +575,7 @@ class BatchCalculateClipEmbeddingTestCase(TestCase):
             owner=self.user, clip_embeddings__isnull=False
         ).count()
         self.assertEqual(written, 1)
-        m_index.assert_called_once_with(self.user)
+        m_index.assert_called_once_with(self.user, profile=EmbeddingProfile())
         job = self.latest_job()
         self.assertTrue(job.finished)
         self.assertEqual(job.progress_current, 3)

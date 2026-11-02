@@ -112,7 +112,7 @@ class SearchListViewSet(ListViewSet):
             Photo.objects.filter(
                 Q(pk__in=own.values("pk")) | Q(pk__in=shared.values("pk"))
             )
-        )
+        ).order_by(*own.query.order_by)
 
 
 class MetadataValuesView(APIView):

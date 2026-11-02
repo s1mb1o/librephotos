@@ -13,12 +13,12 @@ from api.models.album_thing import set_photo_album_things
 from api.models.photo_caption import PhotoCaption
 from api.models.photo_ocr import PhotoOcr
 from api.models.photo_search import PhotoSearch
-from api.search.semantic import OPENCLIP, TAG_THING_TYPE
+from api.search.semantic import OPENCLIP, SIGLIP2, TAG_THING_TYPES
 
 # The keys of ``PhotoCaption.captions_json`` a model wrote: the generated
 # caption (a historical name, whichever model wrote it) and OpenCLIP's things.
 # ``user_caption`` and ``imported_description`` are the user's.
-GENERATED_CAPTION_KEYS = ("im2txt", OPENCLIP)
+GENERATED_CAPTION_KEYS = ("im2txt", "captioning", OPENCLIP, SIGLIP2, "tagging_model")
 
 # The search embedding and the model that made it.
 _EMBEDDING_FIELDS = (
@@ -48,6 +48,7 @@ def _discard_search_embedding(photo: Photo) -> None:
     embedding would write it back.
     """
     Photo.objects.filter(pk=photo.pk).update(**dict.fromkeys(_EMBEDDING_FIELDS))
+    photo.semantic_embeddings.all().delete()
     for field in _EMBEDDING_FIELDS:
         setattr(photo, field, None)
 
@@ -85,7 +86,8 @@ def discard_generated_content(photo: Photo) -> None:
     the old picture still finds it.
     """
     _discard_generated_captions(photo)
-    set_photo_album_things(photo, [], TAG_THING_TYPE)
+    for kind in TAG_THING_TYPES:
+        set_photo_album_things(photo, [], kind)
     _discard_search_embedding(photo)
     _discard_text(photo)
     _rebuild_search_row(photo)

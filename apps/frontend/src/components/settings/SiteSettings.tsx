@@ -7,6 +7,7 @@ import { useGetSettingsQuery } from "../../api_client/settings/hooks";
 import { ErrorState } from "../common/ErrorState";
 import { PageLoader } from "../common/PageLoader";
 import { useListFailure } from "../common/useListFailure";
+import { AIModelSettings } from "./AIModelSettings";
 import { AutoScanSetting } from "./AutoScanSetting";
 import { PlaceNameLanguageSetting } from "./PlaceNameLanguageSetting";
 import { CONTROL_SPAN, LABEL_SPAN, MissingPhotosLimitSetting, SkipPatternsSetting } from "./ScanSettings";
@@ -65,13 +66,6 @@ const MAP_TILE_PROVIDERS: ModelOption[] = [
   { value: "osm", label: "OpenStreetMap" },
   { value: "none", label: "" },
 ];
-
-const CAPTIONING_MODELS: ModelOption[] = [
-  { value: "lfm2_vl_450m", label: "LFM2.5-VL", hint: "default" },
-  { value: "none", label: "" },
-];
-
-const DEFAULT_CAPTIONING_MODEL = "lfm2_vl_450m";
 
 const OCR_MODELS: ModelOption[] = [
   { value: "none", label: "" },
@@ -144,7 +138,6 @@ function SiteSettingsForm() {
   const [allowUpload, setAllowUpload] = useState(false);
   const [nextcloudEnabled, setNextcloudEnabled] = useState(false);
   const [autoCreateUserDirectory, setAutoCreateUserDirectory] = useState(false);
-  const [captioningModel, setCaptioningModel] = useState(DEFAULT_CAPTIONING_MODEL);
   const [ocrModel, setOcrModel] = useState(OCR_DISABLED);
   // Restored when the user backs out of the OCR confirmation dialog.
   const [previousOcrModel, setPreviousOcrModel] = useState(OCR_DISABLED);
@@ -187,7 +180,6 @@ function SiteSettingsForm() {
       setAllowUpload(settings.allow_upload);
       setNextcloudEnabled(settings.nextcloud_enabled);
       setAutoCreateUserDirectory(settings.auto_create_user_directory ?? false);
-      setCaptioningModel(settings.captioning_model);
       setOcrModel(normalizeOcrModel(settings.ocr_model));
       setPreviousOcrModel(normalizeOcrModel(settings.ocr_model));
       setFaceRecognitionModel(settings.face_recognition_model);
@@ -324,27 +316,7 @@ function SiteSettingsForm() {
                 }}
               />
             </Grid.Col>
-            <Grid.Col span={LABEL_SPAN}>
-              <Stack gap={0}>
-                <Text>{t("sitesettings.captioning_model_header")}</Text>
-                <Text fz="sm" c="dimmed">
-                  {t("sitesettings.captioning_model_description")}
-                </Text>
-              </Stack>
-            </Grid.Col>
-            <Grid.Col span={CONTROL_SPAN}>
-              <Select
-                searchable
-                allowDeselect={false}
-                data={translateOptions(CAPTIONING_MODELS, t, t("sitesettings.model_none"))}
-                value={captioningModel}
-                onChange={model => {
-                  if (!model) return;
-                  save({ captioning_model: model });
-                  setCaptioningModel(model);
-                }}
-              />
-            </Grid.Col>
+            {settings && <AIModelSettings settings={settings} />}
             <Grid.Col span={LABEL_SPAN}>
               <Stack gap={0}>
                 <Text>{t("sitesettings.ocr_model_header")}</Text>

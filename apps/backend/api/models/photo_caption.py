@@ -11,7 +11,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 import api.models
-from api.search.semantic import OPENCLIP, TAG_THING_TYPE
+from api.search.semantic import OPENCLIP, SIGLIP2, TAG_THING_TYPE
 
 if TYPE_CHECKING:
     from django.db.models import QuerySet
@@ -193,15 +193,26 @@ class PhotoCaption(models.Model):
         search_instance.recreate_search_captions()
         search_instance.save()
 
-    def store_tags(self, tags: Iterable[str], commit: bool = True) -> None:
-        """File OpenCLIP's tags for this photo: ``captions_json``, the search
-        captions and the photo's tag albums."""
+    def store_tags(
+        self, tags: Iterable[str], commit: bool = True, model: str = OPENCLIP
+    ) -> None:
+        """Store generated Things in captions, search, and the model's albums."""
         if self.captions_json is None:
             self.captions_json = {}
         tags_result = {"tags": list(tags)}
-        self.captions_json[OPENCLIP] = tags_result
+        self.captions_json[model] = tags_result
+        if model != OPENCLIP or "tagging_model" in self.captions_json:
+            self.captions_json["tagging_model"] = model
         self.recreate_search_captions()
-        self._update_tag_album_things(tags_result)
+        if model == OPENCLIP:
+            self._update_tag_album_things(tags_result)
+        else:
+            api.models.album_thing.set_photo_album_things(
+                self.photo, tags_result["tags"], f"{model}_tag"
+            )
+        other = SIGLIP2 if model == OPENCLIP else OPENCLIP
+        for album in self._photo_album_things([f"{other}_tag"]):
+            album.photos.remove(self.photo)
         if commit:
             self.save()
 

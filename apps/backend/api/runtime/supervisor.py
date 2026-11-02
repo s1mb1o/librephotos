@@ -85,9 +85,9 @@ def _captioning_model_selected() -> bool:
     like _ocr_model_selected.
     """
     try:
-        from api.runtime.ml_models import captioning_model_selected
+        from api.runtime.ml_models import local_captioning_selected
 
-        return captioning_model_selected()
+        return local_captioning_selected()
     except DatabaseError:
         return True
 
@@ -99,6 +99,18 @@ SERVICE_SITE_GATES = {
     "ocr": _ocr_model_selected,
     "image_captioning": _captioning_model_selected,
 }
+
+
+def _local_semantic_model_selected() -> bool:
+    try:
+        from api.search.profiles import local_semantics_required
+
+        return local_semantics_required()
+    except DatabaseError:
+        return True
+
+
+SERVICE_SITE_GATES["tags"] = _local_semantic_model_selected
 
 
 def is_service_enabled(service: str) -> bool:

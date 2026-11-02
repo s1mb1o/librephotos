@@ -56,6 +56,13 @@ A self-hosted photo manager. This is a monorepo; each app has its own stack and 
   `pip install` only takes `-r requirements*.txt`, so Renovate owns every bump (pgautoupgrade majors come as
   their own PR). `apps/backend/api/tests/infra/test_deploy_images.py` enforces all of it.
 
+## Deployment pitfall
+
+Do not stop an active scan with a direct container replacement.
+Use `deploy/docker-srv/deploy.sh` and its verified queue drain.
+A direct queue cluster shutdown can deadlock during worker recycling.
+Run `deploy/docker-srv/tests/README.md` after queue lifecycle changes.
+
 ## Commands
 
 - Backend (`apps/backend`): `python manage.py test api.tests`, `ruff check .`, `ruff format .`,

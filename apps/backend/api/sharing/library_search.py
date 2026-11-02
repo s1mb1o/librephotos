@@ -22,7 +22,7 @@ from django.db.models import F, Q, QuerySet
 
 from api.models import AlbumThing, Face, LibraryShare, Person, Photo, User
 from api.models.photo import shared_library_q
-from api.search.semantic import TAG_THING_TYPE
+from api.search.semantic import TAG_THING_TYPES
 from api.sharing.grants import LibraryGrant
 from api.sharing.library_photos import timeline_shares
 
@@ -30,7 +30,7 @@ from api.sharing.library_photos import timeline_shares
 def _things_q(term: str) -> Q:
     """Photos in a thing album (an OpenCLIP tag) whose title holds ``term``."""
     links = AlbumThing.photos.through.objects.filter(
-        albumthing__thing_type=TAG_THING_TYPE, albumthing__title__icontains=term
+        albumthing__thing_type__in=TAG_THING_TYPES, albumthing__title__icontains=term
     )
     return Q(pk__in=links.values("photo_id"))
 
